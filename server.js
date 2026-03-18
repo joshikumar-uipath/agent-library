@@ -5,7 +5,7 @@ const path = require('path');
 const multer = require('multer');
 
 const app = express();
-const PORT = 3456;
+const PORT = process.env.PORT || 3456;
 const DATA_FILE = path.join(__dirname, 'data', 'videos.json');
 const AGENTS_FILE = path.join(__dirname, 'data', 'agents.json');
 const THUMBS_DIR = path.join(__dirname, 'data', 'thumbnails');

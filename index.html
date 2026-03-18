@@ -2831,7 +2831,7 @@
     };
 
     // ── Video Database ───────────────────────────────────
-    const API = 'http://localhost:3456/api';
+    const API = (window.__API_BASE__ || 'http://localhost:3456') + '/api';
     // videoDatabase is now loaded from the API; kept as cache
     const videoDatabase = {};
 
@@ -3406,7 +3406,13 @@
             const metric = extractMetric(v.description);
             const safeTitle = v.title.replace(/'/g,"\\'");
             const hasThumb = v.thumbnailUrl && v.thumbnailUrl.trim();
-            const thumbBg = hasThumb ? `style="background-image:url('${v.thumbnailUrl.trim()}');background-size:cover;background-position:center;"` : '';
+            // Resolve relative thumbnail paths (e.g. /thumbnails/...) to absolute backend URL
+            const resolvedThumb = hasThumb
+                ? (v.thumbnailUrl.trim().startsWith('/')
+                    ? (window.__API_BASE__ || 'http://localhost:3456') + v.thumbnailUrl.trim()
+                    : v.thumbnailUrl.trim())
+                : null;
+            const thumbBg = resolvedThumb ? `style="background-image:url('${resolvedThumb}');background-size:cover;background-position:center;"` : '';
             const thumbCls = hasThumb ? 'thumb-custom' : thumbClass(v.aiType);
             return `
             <div class="video-card ${vcClass}">

@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.uipath/.auth.json
+.env.local
+data/thumbnails/

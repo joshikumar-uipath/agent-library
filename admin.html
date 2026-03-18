@@ -520,7 +520,7 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 </div>
 
 <script>
-const API = 'http://localhost:3456/api';
+const API = (window.__API_BASE__ || 'http://localhost:3456') + '/api';
 
 const CATEGORY_LABELS = {
   hr: 'Human Resources', healthcare: 'Healthcare & Life Sciences',
