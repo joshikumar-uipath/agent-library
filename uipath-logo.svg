@@ -1,24 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 68" fill="none">
-  <!-- Large 4-pointed star above the "i" -->
-  <path d="M80 4 L82.4 10.6 L89 13 L82.4 15.4 L80 22 L77.6 15.4 L71 13 L77.6 10.6 Z" fill="#FA4616"/>
-  <!-- Small 4-pointed star upper-right -->
-  <path d="M92 1 L93.3 4.7 L97 6 L93.3 7.3 L92 11 L90.7 7.3 L87 6 L90.7 4.7 Z" fill="#FA4616"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 52" fill="none">
+  <!-- Large 4-pointed star -->
+  <path d="M18 6 L20.2 12.8 L27 15 L20.2 17.2 L18 24 L15.8 17.2 L9 15 L15.8 12.8 Z" fill="#FA4616"/>
+  <!-- Small 4-pointed star (upper right of large) -->
+  <path d="M29 2 L30.1 5.9 L34 7 L30.1 8.1 L29 12 L27.9 8.1 L24 7 L27.9 5.9 Z" fill="#FA4616"/>
 
-  <!-- "U" -->
+  <!-- UiPath wordmark -->
   <text x="0" y="46"
-    font-family="'Nunito', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif"
-    font-weight="900" font-size="44" fill="#0D0D0D" letter-spacing="-1.5">U</text>
-  <!-- "i" in orange -->
-  <text x="32" y="46"
-    font-family="'Nunito', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif"
-    font-weight="900" font-size="44" fill="#FA4616" letter-spacing="-1.5">i</text>
-  <!-- "Path" -->
-  <text x="50" y="46"
-    font-family="'Nunito', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif"
-    font-weight="900" font-size="44" fill="#0D0D0D" letter-spacing="-1.5">Path</text>
-
-  <!-- "AGENTIC AUTOMATION" -->
-  <text x="2" y="64"
-    font-family="'Nunito', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif"
-    font-weight="800" font-size="10.5" fill="#0D0D0D" letter-spacing="3.5">AGENTIC AUTOMATION</text>
+    font-family="'Nunito', 'Arial Rounded MT Bold', sans-serif"
+    font-weight="900" font-size="40" fill="#111111" letter-spacing="-1">UiPath</text>
 </svg>
