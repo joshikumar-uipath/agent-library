@@ -5,7 +5,7 @@
     "name": "Finance Advisor",
     "description": "Delivers personalized financial advice, budget analysis, and investment recommendations",
     "category": "Finance",
-    "useCases": "Investment strategy \u2022 Risk analysis \u2022 Budget optimization",
+    "useCases": "Investment strategy • Risk analysis • Budget optimization",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -15,7 +15,7 @@
     "name": "Ledger Agent",
     "description": "Monitors account balances, detects anomalies, and delivers insightful analyses",
     "category": "Finance",
-    "useCases": "Account monitoring \u2022 Anomaly detection \u2022 Financial reporting",
+    "useCases": "Account monitoring • Anomaly detection • Financial reporting",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -25,7 +25,7 @@
     "name": "Fraud Detection Agent",
     "description": "Identifies suspicious transactions and prevents financial fraud in real-time",
     "category": "Finance",
-    "useCases": "Transaction monitoring \u2022 Fraud prevention \u2022 Risk assessment",
+    "useCases": "Transaction monitoring • Fraud prevention • Risk assessment",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -35,7 +35,7 @@
     "name": "Employee Advisor",
     "description": "Manages formal requests for new positions and job offers",
     "category": "HR",
-    "useCases": "Recruitment \u2022 Position management \u2022 Offer processing",
+    "useCases": "Recruitment • Position management • Offer processing",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -45,7 +45,7 @@
     "name": "HR Companion Agent",
     "description": "Provides invaluable HR support for employees",
     "category": "HR",
-    "useCases": "Employee support \u2022 HR guidance \u2022 Policy assistance",
+    "useCases": "Employee support • HR guidance • Policy assistance",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -55,7 +55,7 @@
     "name": "Lead Scoring Agent",
     "description": "Ranks and prioritizes leads to optimize conversion potential",
     "category": "Sales",
-    "useCases": "Lead qualification \u2022 Priority ranking \u2022 Conversion optimization",
+    "useCases": "Lead qualification • Priority ranking • Conversion optimization",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -65,7 +65,7 @@
     "name": "Contract Review Agent",
     "description": "Extracts key clauses and reviews legal documents",
     "category": "Legal",
-    "useCases": "Contract analysis \u2022 Legal review \u2022 Clause extraction",
+    "useCases": "Contract analysis • Legal review • Clause extraction",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -75,7 +75,7 @@
     "name": "Predictive Maintenance",
     "description": "Prevents equipment failures through proactive monitoring",
     "category": "Operations",
-    "useCases": "Equipment monitoring \u2022 Failure prevention \u2022 Scheduling",
+    "useCases": "Equipment monitoring • Failure prevention • Scheduling",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -85,7 +85,7 @@
     "name": "Supply Chain Optimizer",
     "description": "Emphasizes logistics and supply chain efficiency",
     "category": "Operations",
-    "useCases": "Logistics optimization \u2022 Supply chain \u2022 Efficiency",
+    "useCases": "Logistics optimization • Supply chain • Efficiency",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -95,7 +95,7 @@
     "name": "AI Customer Support",
     "description": "Handles customer queries efficiently 24/7",
     "category": "Customer",
-    "useCases": "Customer support \u2022 Query handling \u2022 24/7 assistance",
+    "useCases": "Customer support • Query handling • 24/7 assistance",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -105,7 +105,7 @@
     "name": "Sentiment Analysis",
     "description": "Monitors customer satisfaction levels in real time",
     "category": "Customer",
-    "useCases": "Sentiment monitoring \u2022 Feedback \u2022 Satisfaction",
+    "useCases": "Sentiment monitoring • Feedback • Satisfaction",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -115,7 +115,7 @@
     "name": "Content Generation",
     "description": "Creates blogs, ads, and social media posts",
     "category": "Marketing",
-    "useCases": "Content creation \u2022 Social media \u2022 Ad copywriting",
+    "useCases": "Content creation • Social media • Ad copywriting",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -125,7 +125,7 @@
     "name": "Regulatory Compliance",
     "description": "Ensures policy adherence and compliance tracking",
     "category": "Legal",
-    "useCases": "Compliance monitoring \u2022 Policy \u2022 Regulatory tracking",
+    "useCases": "Compliance monitoring • Policy • Regulatory tracking",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -135,7 +135,7 @@
     "name": "AI Meeting Notes",
     "description": "Automatically transcribes and summarizes meetings",
     "category": "General",
-    "useCases": "Meeting transcription \u2022 Note taking \u2022 Action items",
+    "useCases": "Meeting transcription • Note taking • Action items",
     "iframeUrl": "",
     "downloadUrl": ""
   },
@@ -145,7 +145,7 @@
     "name": "AI-powered Search",
     "description": "Finds relevant documents and knowledge quickly",
     "category": "General",
-    "useCases": "Document search \u2022 Information retrieval \u2022 Knowledge",
+    "useCases": "Document search • Information retrieval • Knowledge",
     "iframeUrl": "",
     "downloadUrl": ""
   }

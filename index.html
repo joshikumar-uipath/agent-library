@@ -2408,7 +2408,7 @@
 <footer class="site-footer">
     <span class="site-footer-badge">&#x2764;&#xFE0F; Made with UiPath Coded App SDK</span>
     <span class="site-footer-divider">·</span>
-    <span class="site-footer-copy">&copy; 2025 UiPath. All rights reserved.</span>
+    <span class="site-footer-copy">&copy; 2026 UiPath. All rights reserved.</span>
 </footer>
 
 <!-- ═══════════════════════════════════════════════
@@ -3026,8 +3026,15 @@
         if (!base) { showToast('Agent not found', 'info'); return; }
 
         const agent = richAgent
-            ? { ...richAgent, ...(liveAgent ? { name: liveAgent.name, description: liveAgent.description, icon: liveAgent.icon || richAgent.icon, iframeUrl: liveAgent.iframeUrl, downloadUrl: liveAgent.downloadUrl } : {}) }
-            : { ...liveAgent, useCases: null, benefits: null, timeline: null };
+            ? { ...richAgent, ...(liveAgent ? {
+                name: liveAgent.name, description: liveAgent.description,
+                icon: liveAgent.icon || richAgent.icon,
+                iframeUrl: liveAgent.iframeUrl, downloadUrl: liveAgent.downloadUrl,
+                ...(liveAgent.benefits ? { benefits: liveAgent.benefits } : {}),
+                ...(liveAgent.useCases ? { useCases: liveAgent.useCases } : {}),
+                ...(liveAgent.timeline ? { timeline: liveAgent.timeline } : {})
+              } : {}) }
+            : { ...liveAgent };
 
         document.getElementById('aiAgentsGrid').classList.remove('active');
         document.getElementById('agentDetailView').classList.add('active');
@@ -3104,32 +3111,25 @@
         </div>
 
         <!-- ── IMPACT METRICS STRIP ──────────────────────────── -->
-        <div class="agent-metrics-strip">
-            <div class="agent-metric-card">
-                <div class="agent-metric-icon">&#x1F4C9;</div>
-                <div class="agent-metric-val">3.2<small style="font-size:1.1rem">x</small></div>
-                <div class="agent-metric-label">ROI in Year 1</div>
-                <div class="agent-metric-sub">Based on enterprise deployments</div>
-            </div>
-            <div class="agent-metric-card blue">
-                <div class="agent-metric-icon">&#x23F1;</div>
-                <div class="agent-metric-val">78<small style="font-size:1rem">%</small></div>
-                <div class="agent-metric-label">Time Saved</div>
-                <div class="agent-metric-sub">On manual tasks automated</div>
-            </div>
-            <div class="agent-metric-card green">
-                <div class="agent-metric-icon">&#x2705;</div>
-                <div class="agent-metric-val">99<small style="font-size:1rem">%</small></div>
-                <div class="agent-metric-label">Accuracy Rate</div>
-                <div class="agent-metric-sub">Across production workloads</div>
-            </div>
-            <div class="agent-metric-card purple">
-                <div class="agent-metric-icon">&#x1F4C5;</div>
-                <div class="agent-metric-val">&lt;8<small style="font-size:1rem">wk</small></div>
-                <div class="agent-metric-label">Time to Value</div>
-                <div class="agent-metric-sub">From kickoff to production</div>
-            </div>
-        </div>
+        ${(() => {
+            const defaultMetrics = [
+                { icon:'&#x1F4C9;', value:'3.2x', label:'ROI in Year 1', sub:'Based on enterprise deployments', color:'' },
+                { icon:'&#x23F1;', value:'78%', label:'Time Saved', sub:'On manual tasks automated', color:'blue' },
+                { icon:'&#x2705;', value:'99%', label:'Accuracy Rate', sub:'Across production workloads', color:'green' },
+                { icon:'&#x1F4C5;', value:'&lt;8wk', label:'Time to Value', sub:'From kickoff to production', color:'purple' }
+            ];
+            const icons = ['&#x1F4C9;','&#x23F1;','&#x2705;','&#x1F4C5;'];
+            const colors = ['','blue','green','purple'];
+            const mData = (agent.metrics && agent.metrics.length === 4) ? agent.metrics : defaultMetrics;
+            return `<div class="agent-metrics-strip">` +
+                mData.map((m, idx) => `
+                <div class="agent-metric-card ${m.color !== undefined ? m.color : colors[idx]}">
+                    <div class="agent-metric-icon">${m.icon || icons[idx]}</div>
+                    <div class="agent-metric-val">${m.value}</div>
+                    <div class="agent-metric-label">${m.label}</div>
+                    <div class="agent-metric-sub">${m.sub || ''}</div>
+                </div>`).join('') + `</div>`;
+        })()}
 
         <!-- ── HOW IT WORKS + CAPABILITIES ───────────────────── -->
         <div class="agent-two-col" style="margin-bottom:20px;">
@@ -3142,38 +3142,24 @@
                     </div>
                 </div>
                 <div class="hiw-flow">
-                    <div class="hiw-step">
-                        <div class="hiw-step-left"><div class="hiw-num">1</div><div class="hiw-connector"></div></div>
-                        <div class="hiw-content">
-                            <div class="hiw-title">Trigger &amp; Data Ingestion</div>
-                            <div class="hiw-desc">Agent activates on schedule, event, or API call. Pulls structured and unstructured data from connected systems in real-time.</div>
-                            <span class="hiw-badge">&#x26A1; Millisecond response</span>
-                        </div>
-                    </div>
-                    <div class="hiw-step">
-                        <div class="hiw-step-left"><div class="hiw-num">2</div><div class="hiw-connector"></div></div>
-                        <div class="hiw-content">
-                            <div class="hiw-title">AI Reasoning &amp; Decision</div>
-                            <div class="hiw-desc">LLM-powered reasoning engine evaluates context, applies business rules, and determines optimal actions — with full audit trail.</div>
-                            <span class="hiw-badge">&#x1F9E0; Claude / GPT-4 powered</span>
-                        </div>
-                    </div>
-                    <div class="hiw-step">
-                        <div class="hiw-step-left"><div class="hiw-num">3</div><div class="hiw-connector"></div></div>
-                        <div class="hiw-content">
-                            <div class="hiw-title">Action &amp; Orchestration</div>
-                            <div class="hiw-desc">Executes approved actions across systems — updating records, sending notifications, triggering downstream workflows.</div>
-                            <span class="hiw-badge">&#x1F517; 200+ integrations</span>
-                        </div>
-                    </div>
-                    <div class="hiw-step">
-                        <div class="hiw-step-left"><div class="hiw-num">4</div></div>
-                        <div class="hiw-content">
-                            <div class="hiw-title">Human-in-the-Loop &amp; Learning</div>
-                            <div class="hiw-desc">Escalates edge cases for human review. Continuously learns from feedback to improve accuracy and decision confidence.</div>
-                            <span class="hiw-badge">&#x1F4CA; Self-improving</span>
-                        </div>
-                    </div>
+                    ${(() => {
+                        const defaultSteps = [
+                            { title: 'Trigger &amp; Data Ingestion', description: 'Agent activates on schedule, event, or API call. Pulls structured and unstructured data from connected systems in real-time.', badge: '&#x26A1; Millisecond response' },
+                            { title: 'AI Reasoning &amp; Decision', description: 'LLM-powered reasoning engine evaluates context, applies business rules, and determines optimal actions — with full audit trail.', badge: '&#x1F9E0; Claude / GPT-4 powered' },
+                            { title: 'Action &amp; Orchestration', description: 'Executes approved actions across systems — updating records, sending notifications, triggering downstream workflows.', badge: '&#x1F517; 200+ integrations' },
+                            { title: 'Human-in-the-Loop &amp; Learning', description: 'Escalates edge cases for human review. Continuously learns from feedback to improve accuracy and decision confidence.', badge: '&#x1F4CA; Self-improving' }
+                        ];
+                        const steps = (agent.howItWorks && agent.howItWorks.length === 4) ? agent.howItWorks : defaultSteps;
+                        return steps.map((s, idx) => `
+                        <div class="hiw-step">
+                            <div class="hiw-step-left"><div class="hiw-num">${idx+1}</div>${idx < 3 ? '<div class="hiw-connector"></div>' : ''}</div>
+                            <div class="hiw-content">
+                                <div class="hiw-title">${s.title}</div>
+                                <div class="hiw-desc">${s.description}</div>
+                                ${s.badge ? `<span class="hiw-badge">${s.badge}</span>` : ''}
+                            </div>
+                        </div>`).join('');
+                    })()}
                 </div>
             </div>
             <div class="agent-card">

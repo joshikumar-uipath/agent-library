@@ -153,9 +153,28 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 .overlay.open { display:flex; }
 
 .drawer {
-  background:var(--white); width:540px; height:100vh; overflow-y:auto;
+  background:var(--white); width:600px; height:100vh; overflow-y:auto;
   box-shadow:-16px 0 48px rgba(0,0,0,0.15);
   animation:slideIn 0.3s cubic-bezier(0.34, 1.1, 0.64, 1);
+}
+
+/* ── Repeating field groups ── */
+.repeating-item {
+  background:var(--bg); border:1px solid var(--border); border-radius:8px;
+  padding:10px 12px; margin-bottom:8px;
+}
+.repeating-item-hdr {
+  display:flex; align-items:center; gap:8px; font-size:0.7rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.4px; color:var(--text2); margin-bottom:8px;
+}
+.repeating-num {
+  width:18px; height:18px; background:var(--orange); color:white; border-radius:50%;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:0.6rem; font-weight:800; flex-shrink:0;
+}
+.week-label {
+  font-size:0.65rem; font-weight:700; color:var(--muted); margin-left:auto;
+  background:var(--border-light); padding:2px 8px; border-radius:6px;
 }
 @keyframes slideIn { from { transform:translateX(40px); opacity:0; } to { transform:translateX(0); opacity:1; } }
 
@@ -340,7 +359,7 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
     </div>
   </nav>
   <div class="sidebar-footer">
-    <a class="view-site-btn" href="/" target="_blank" id="viewSiteBtn">&#x1F517; View Live Site</a>
+    <a class="view-site-btn" href="./index.html" target="_blank" id="viewSiteBtn">&#x1F517; View Live Site</a>
   </div>
 </aside>
 
@@ -420,13 +439,15 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 
       <!-- AGENT-ONLY FIELDS -->
       <div id="agentOnlyFields" style="display:none">
+
+        <!-- Identity -->
         <div class="form-section">
-          <div class="form-section-title">&#x1F916; Agent Details</div>
+          <div class="form-section-title">&#x1F916; Agent Identity</div>
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Icon (Emoji)</label>
               <input class="form-input" id="fIcon" placeholder="e.g. &#x1F4B0; &#x1F916; &#x2699;&#xFE0F;">
-              <div class="form-hint">Paste an emoji character directly</div>
+              <div class="form-hint">Paste an emoji directly</div>
             </div>
             <div class="form-group">
               <label class="form-label">Category <span>*</span></label>
@@ -444,12 +465,184 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
               </select>
             </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Key Use Cases</label>
-            <input class="form-input" id="fUseCases" placeholder="e.g. Invoice processing • Approval routing • Audit trail">
-            <div class="form-hint">Separate with bullet points (•)</div>
+        </div>
+
+        <!-- Hero Stats -->
+        <div class="form-section">
+          <div class="form-section-title">&#x1F4CA; Hero Statistics</div>
+          <div class="form-hint" style="margin-bottom:12px;">3 bold KPI cards in the dark hero banner (e.g. "35% ROI Increase")</div>
+
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">1</div> Stat Card 1</div>
+            <div class="form-row" style="margin-bottom:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Value</label><input class="form-input" id="fBenefit1Val" placeholder="e.g. 35% ROI Increase"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fBenefit1Desc" placeholder="e.g. Average portfolio performance"></div>
+            </div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">2</div> Stat Card 2</div>
+            <div class="form-row" style="margin-bottom:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Value</label><input class="form-input" id="fBenefit2Val" placeholder="e.g. 80% Time Saved"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fBenefit2Desc" placeholder="e.g. Automated analysis &amp; reporting"></div>
+            </div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">3</div> Stat Card 3</div>
+            <div class="form-row" style="margin-bottom:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Value</label><input class="form-input" id="fBenefit3Val" placeholder="e.g. 95% Accuracy"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fBenefit3Desc" placeholder="e.g. Precise risk assessment"></div>
+            </div>
           </div>
         </div>
+
+        <!-- Core Capabilities / Use Cases -->
+        <div class="form-section">
+          <div class="form-section-title">&#x2728; Core Capabilities &amp; Use Cases</div>
+          <div class="form-hint" style="margin-bottom:12px;">Drives the "Core Capabilities" panel and "Enterprise Use Cases" cards on the agent page</div>
+
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">1</div> Capability 1</div>
+            <div class="form-row" style="margin-bottom:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Title</label><input class="form-input" id="fUC1Title" placeholder="e.g. Investment Portfolio Mgmt"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fUC1Desc" placeholder="e.g. Analyse trends and recommend..."></div>
+            </div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">2</div> Capability 2</div>
+            <div class="form-row" style="margin-bottom:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Title</label><input class="form-input" id="fUC2Title" placeholder="e.g. Budget Optimisation"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fUC2Desc" placeholder="e.g. Review spending and suggest..."></div>
+            </div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">3</div> Capability 3</div>
+            <div class="form-row" style="margin-bottom:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Title</label><input class="form-input" id="fUC3Title" placeholder="e.g. Risk Assessment"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fUC3Desc" placeholder="e.g. Evaluate financial risks..."></div>
+            </div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">4</div> Capability 4</div>
+            <div class="form-row" style="margin-bottom:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Title</label><input class="form-input" id="fUC4Title" placeholder="e.g. Compliance Monitoring"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fUC4Desc" placeholder="e.g. Automated regulatory checks..."></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Impact Metrics Strip -->
+        <div class="form-section">
+          <div class="form-section-title">&#x1F4CA; Impact Metrics Strip</div>
+          <div class="form-hint" style="margin-bottom:12px;">4 metric cards shown below the hero banner (e.g. "3.2x ROI in Year 1")</div>
+
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">1</div> Metric 1 <span class="week-label">default strip</span></div>
+            <div class="form-row" style="margin-bottom:6px">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Value</label><input class="form-input" id="fMetric1Val" placeholder="e.g. 3.2x"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Label</label><input class="form-input" id="fMetric1Label" placeholder="e.g. ROI in Year 1"></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Sub-label</label><input class="form-input" id="fMetric1Sub" placeholder="e.g. Based on enterprise deployments"></div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">2</div> Metric 2 <span class="week-label">blue strip</span></div>
+            <div class="form-row" style="margin-bottom:6px">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Value</label><input class="form-input" id="fMetric2Val" placeholder="e.g. 78%"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Label</label><input class="form-input" id="fMetric2Label" placeholder="e.g. Time Saved"></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Sub-label</label><input class="form-input" id="fMetric2Sub" placeholder="e.g. On manual tasks automated"></div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">3</div> Metric 3 <span class="week-label">green strip</span></div>
+            <div class="form-row" style="margin-bottom:6px">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Value</label><input class="form-input" id="fMetric3Val" placeholder="e.g. 99%"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Label</label><input class="form-input" id="fMetric3Label" placeholder="e.g. Accuracy Rate"></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Sub-label</label><input class="form-input" id="fMetric3Sub" placeholder="e.g. Across production workloads"></div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">4</div> Metric 4 <span class="week-label">purple strip</span></div>
+            <div class="form-row" style="margin-bottom:6px">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Value</label><input class="form-input" id="fMetric4Val" placeholder="e.g. &lt;8wk"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Label</label><input class="form-input" id="fMetric4Label" placeholder="e.g. Time to Value"></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Sub-label</label><input class="form-input" id="fMetric4Sub" placeholder="e.g. From kickoff to production"></div>
+          </div>
+        </div>
+
+        <!-- How the Agent Works -->
+        <div class="form-section">
+          <div class="form-section-title">&#x2699;&#xFE0F; How the Agent Works</div>
+          <div class="form-hint" style="margin-bottom:12px;">4 numbered workflow steps (leave blank to use standard UiPath messaging)</div>
+
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">1</div> Step 1</div>
+            <div class="form-row" style="margin-bottom:6px">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Step Title</label><input class="form-input" id="fHIW1Title" placeholder="e.g. Data Collection"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Badge</label><input class="form-input" id="fHIW1Badge" placeholder="e.g. ⚡ Real-time"></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fHIW1Desc" placeholder="e.g. Ingest transaction data from all payment channels..."></div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">2</div> Step 2</div>
+            <div class="form-row" style="margin-bottom:6px">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Step Title</label><input class="form-input" id="fHIW2Title" placeholder="e.g. AI Analysis"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Badge</label><input class="form-input" id="fHIW2Badge" placeholder="e.g. 🧠 ML-powered"></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fHIW2Desc" placeholder="e.g. Score risk using ML models..."></div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">3</div> Step 3</div>
+            <div class="form-row" style="margin-bottom:6px">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Step Title</label><input class="form-input" id="fHIW3Title" placeholder="e.g. Action &amp; Alert"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Badge</label><input class="form-input" id="fHIW3Badge" placeholder="e.g. 🔗 200+ integrations"></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fHIW3Desc" placeholder="e.g. Block transactions and alert teams instantly..."></div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">4</div> Step 4</div>
+            <div class="form-row" style="margin-bottom:6px">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Step Title</label><input class="form-input" id="fHIW4Title" placeholder="e.g. Human Review &amp; Learning"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Badge</label><input class="form-input" id="fHIW4Badge" placeholder="e.g. 📊 Self-improving"></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fHIW4Desc" placeholder="e.g. Analyst review refines model accuracy..."></div>
+          </div>
+        </div>
+
+        <!-- Implementation Timeline -->
+        <div class="form-section">
+          <div class="form-section-title">&#x1F4C5; Implementation Timeline</div>
+          <div class="form-hint" style="margin-bottom:12px;">4 deployment phases shown in the timeline section at the bottom of the agent page</div>
+
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">1</div> Phase 1 <span class="week-label">Week 1–2</span></div>
+            <div class="form-row" style="margin-bottom:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Title</label><input class="form-input" id="fTL1Title" placeholder="e.g. Data Integration"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fTL1Desc" placeholder="e.g. Connect financial accounts..."></div>
+            </div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">2</div> Phase 2 <span class="week-label">Week 3–4</span></div>
+            <div class="form-row" style="margin-bottom:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Title</label><input class="form-input" id="fTL2Title" placeholder="e.g. AI Training"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fTL2Desc" placeholder="e.g. Configure personalised parameters..."></div>
+            </div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">3</div> Phase 3 <span class="week-label">Week 5–6</span></div>
+            <div class="form-row" style="margin-bottom:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Title</label><input class="form-input" id="fTL3Title" placeholder="e.g. Testing Phase"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fTL3Desc" placeholder="e.g. Validate recommendations..."></div>
+            </div>
+          </div>
+          <div class="repeating-item">
+            <div class="repeating-item-hdr"><div class="repeating-num">4</div> Phase 4 <span class="week-label">Week 7–8</span></div>
+            <div class="form-row" style="margin-bottom:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Title</label><input class="form-input" id="fTL4Title" placeholder="e.g. Full Deployment"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Description</label><input class="form-input" id="fTL4Desc" placeholder="e.g. Launch comprehensive system..."></div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- SHARED: Embed / Links -->
@@ -520,7 +713,6 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 
 <script>
 const API = (window.__API_BASE__ || 'http://localhost:3456') + '/api';
-    document.getElementById('viewSiteBtn').href = window.location.href.replace(/\/admin\.html.*$/, '/');
 
 const CATEGORY_LABELS = {
   hr: 'Human Resources', healthcare: 'Healthcare & Life Sciences',
@@ -613,7 +805,7 @@ function renderList() {
           <div class="row-title">${a.name}</div>
           <div class="row-meta">
             <span class="pill ${agentCatColor(a.category)}">${a.category}</span>
-            ${a.useCases ? `<span class="row-duration" style="font-size:0.75rem;color:var(--text2)">&#x2022; ${a.useCases}</span>` : ''}
+            ${a.useCases ? `<span class="row-duration" style="font-size:0.75rem;color:var(--text2)">&#x2022; ${Array.isArray(a.useCases) ? a.useCases.length + ' capabilities' : a.useCases}</span>` : ''}
           </div>
         </div>
         <div class="row-status">
@@ -716,7 +908,48 @@ function openDrawer(id) {
     document.getElementById('fDesc').value = item?.description || '';
     document.getElementById('fIcon').value = item?.icon || '';
     document.getElementById('fAgentCategory').value = item?.category || 'General';
-    document.getElementById('fUseCases').value = item?.useCases || '';
+
+    // Benefits (hero stats)
+    const benefits = Array.isArray(item?.benefits) ? item.benefits : [];
+    [1,2,3].forEach(i => {
+      const b = benefits[i-1] || {};
+      document.getElementById(`fBenefit${i}Val`).value = b.title || '';
+      document.getElementById(`fBenefit${i}Desc`).value = b.description || '';
+    });
+
+    // Use cases (structured array)
+    const useCases = Array.isArray(item?.useCases) ? item.useCases : [];
+    [1,2,3,4].forEach(i => {
+      const uc = useCases[i-1] || {};
+      document.getElementById(`fUC${i}Title`).value = uc.title || '';
+      document.getElementById(`fUC${i}Desc`).value = uc.description || '';
+    });
+
+    // Impact metrics
+    const metrics = Array.isArray(item?.metrics) ? item.metrics : [];
+    [1,2,3,4].forEach(i => {
+      const m = metrics[i-1] || {};
+      document.getElementById(`fMetric${i}Val`).value = m.value || '';
+      document.getElementById(`fMetric${i}Label`).value = m.label || '';
+      document.getElementById(`fMetric${i}Sub`).value = m.sub || '';
+    });
+
+    // How the agent works
+    const howItWorks = Array.isArray(item?.howItWorks) ? item.howItWorks : [];
+    [1,2,3,4].forEach(i => {
+      const h = howItWorks[i-1] || {};
+      document.getElementById(`fHIW${i}Title`).value = h.title || '';
+      document.getElementById(`fHIW${i}Desc`).value = h.description || '';
+      document.getElementById(`fHIW${i}Badge`).value = h.badge || '';
+    });
+
+    // Timeline
+    const timeline = Array.isArray(item?.timeline) ? item.timeline : [];
+    [1,2,3,4].forEach(i => {
+      const t = timeline[i-1] || {};
+      document.getElementById(`fTL${i}Title`).value = t.title || '';
+      document.getElementById(`fTL${i}Desc`).value = t.description || '';
+    });
   } else {
     document.getElementById('fTitle').value = item?.title || '';
     document.getElementById('fDesc').value = item?.description || '';
@@ -766,14 +999,49 @@ async function saveAgent() {
   if (!name) { showToast('Name is required', 'error'); document.getElementById('fTitle').focus(); return; }
   if (!description) { showToast('Description is required', 'error'); document.getElementById('fDesc').focus(); return; }
 
+  // Build structured arrays (filter out empty entries)
+  const benefits = [1,2,3].map(i => ({
+    title: document.getElementById(`fBenefit${i}Val`).value.trim(),
+    description: document.getElementById(`fBenefit${i}Desc`).value.trim()
+  })).filter(b => b.title);
+
+  const useCases = [1,2,3,4].map(i => ({
+    title: document.getElementById(`fUC${i}Title`).value.trim(),
+    description: document.getElementById(`fUC${i}Desc`).value.trim()
+  })).filter(uc => uc.title);
+
+  // Build metrics array
+  const metrics = [1,2,3,4].map(i => ({
+    value: document.getElementById(`fMetric${i}Val`).value.trim(),
+    label: document.getElementById(`fMetric${i}Label`).value.trim(),
+    sub: document.getElementById(`fMetric${i}Sub`).value.trim()
+  })).filter(m => m.value && m.label);
+
+  // Build howItWorks array
+  const howItWorks = [1,2,3,4].map(i => ({
+    title: document.getElementById(`fHIW${i}Title`).value.trim(),
+    description: document.getElementById(`fHIW${i}Desc`).value.trim(),
+    badge: document.getElementById(`fHIW${i}Badge`).value.trim()
+  })).filter(h => h.title);
+
+  const timeline = [1,2,3,4].map(i => ({
+    title: document.getElementById(`fTL${i}Title`).value.trim(),
+    description: document.getElementById(`fTL${i}Desc`).value.trim()
+  })).filter(t => t.title);
+
   const payload = {
     name,
     description,
     icon: document.getElementById('fIcon').value.trim(),
     category: document.getElementById('fAgentCategory').value,
-    useCases: document.getElementById('fUseCases').value.trim(),
+    benefits: benefits.length ? benefits : undefined,
+    useCases: useCases.length ? useCases : undefined,
+    metrics: metrics.length ? metrics : undefined,
+    howItWorks: howItWorks.length ? howItWorks : undefined,
+    timeline: timeline.length ? timeline : undefined,
     iframeUrl: document.getElementById('fIframe').value.trim(),
-    downloadUrl: document.getElementById('fDownload').value.trim()
+    downloadUrl: document.getElementById('fDownload').value.trim(),
+    thumbnailUrl: document.getElementById('fThumbnailUrl').value.trim()
   };
 
   try {

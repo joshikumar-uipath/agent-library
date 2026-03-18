@@ -1,11 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 52" fill="none">
-  <!-- Large 4-pointed star -->
-  <path d="M18 6 L20.2 12.8 L27 15 L20.2 17.2 L18 24 L15.8 17.2 L9 15 L15.8 12.8 Z" fill="#FA4616"/>
-  <!-- Small 4-pointed star (upper right of large) -->
-  <path d="M29 2 L30.1 5.9 L34 7 L30.1 8.1 L29 12 L27.9 8.1 L24 7 L27.9 5.9 Z" fill="#FA4616"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 265" fill="none">
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@900&amp;display=swap');</style>
+  </defs>
 
-  <!-- UiPath wordmark -->
-  <text x="0" y="46"
-    font-family="'Nunito', 'Arial Rounded MT Bold', sans-serif"
-    font-weight="900" font-size="40" fill="#111111" letter-spacing="-1">UiPath</text>
+  <!-- Large 4-pointed star (centered above the 'i') -->
+  <path d="M123,18 L134,56 L172,67 L134,78 L123,116 L112,78 L74,67 L112,56 Z" fill="#FA4616"/>
+
+  <!-- Small 4-pointed star (upper-right of large star) -->
+  <path d="M186,2 L193,20 L211,27 L193,34 L186,52 L179,34 L161,27 L179,20 Z" fill="#FA4616"/>
+
+  <!-- UiPath: U and Path black, i orange, as one text flow -->
+  <text y="188" font-family="'Nunito','Arial Rounded MT Bold','Varela Round',sans-serif"
+        font-weight="900" font-size="132" x="0">
+    <tspan fill="#111111">U</tspan><tspan fill="#FA4616">i</tspan><tspan fill="#111111">Path</tspan>
+  </text>
+
+  <!-- AGENTIC AUTOMATION subtitle -->
+  <text x="4" y="238" font-family="'Nunito','Arial',sans-serif"
+        font-weight="800" font-size="28" fill="#111111" letter-spacing="6">AGENTIC AUTOMATION</text>
 </svg>
