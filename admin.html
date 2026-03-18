@@ -303,17 +303,13 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
   </div>
   <nav class="sidebar-nav" id="categoryNav">
     <div class="nav-section-label">Industry</div>
-    <div class="nav-item active" data-cat="hr" onclick="selectCategory('hr')">
-      <span>&#x1F465; Human Resources</span>
-      <span class="nav-count" id="count-hr">0</span>
+    <div class="nav-item active" data-cat="finance" onclick="selectCategory('finance')">
+      <span>&#x1F3E6; Banking &amp; Financial Services</span>
+      <span class="nav-count" id="count-finance">0</span>
     </div>
     <div class="nav-item" data-cat="healthcare" onclick="selectCategory('healthcare')">
       <span>&#x1F3E5; Healthcare</span>
       <span class="nav-count" id="count-healthcare">0</span>
-    </div>
-    <div class="nav-item" data-cat="finance" onclick="selectCategory('finance')">
-      <span>&#x1F4B0; Financial Services</span>
-      <span class="nav-count" id="count-finance">0</span>
     </div>
     <div class="nav-item" data-cat="manufacturing" onclick="selectCategory('manufacturing')">
       <span>&#x1F3ED; Manufacturing</span>
@@ -323,34 +319,78 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
       <span>&#x1F6CD;&#xFE0F; Retail</span>
       <span class="nav-count" id="count-retail">0</span>
     </div>
-    <div class="nav-item" data-cat="energy" onclick="selectCategory('energy')">
-      <span>&#x26A1; Energy</span>
-      <span class="nav-count" id="count-energy">0</span>
+    <div class="nav-item" data-cat="customer-experience" onclick="selectCategory('customer-experience')">
+      <span>&#x1F91D; Customer Experience</span>
+      <span class="nav-count" id="count-customer-experience">0</span>
     </div>
-    <div class="nav-item" data-cat="logistics" onclick="selectCategory('logistics')">
-      <span>&#x1F69A; Logistics</span>
-      <span class="nav-count" id="count-logistics">0</span>
+    <div class="nav-item" data-cat="high-tech" onclick="selectCategory('high-tech')">
+      <span>&#x1F4BB; High Tech</span>
+      <span class="nav-count" id="count-high-tech">0</span>
+    </div>
+    <div class="nav-item" data-cat="insurance" onclick="selectCategory('insurance')">
+      <span>&#x1F6E1;&#xFE0F; Insurance</span>
+      <span class="nav-count" id="count-insurance">0</span>
+    </div>
+    <div class="nav-item" data-cat="life-sciences" onclick="selectCategory('life-sciences')">
+      <span>&#x1F9EC; Life Sciences</span>
+      <span class="nav-count" id="count-life-sciences">0</span>
+    </div>
+    <div class="nav-item" data-cat="public-sector" onclick="selectCategory('public-sector')">
+      <span>&#x1F3DB;&#xFE0F; Public Sector</span>
+      <span class="nav-count" id="count-public-sector">0</span>
+    </div>
+    <div class="nav-item" data-cat="telecom" onclick="selectCategory('telecom')">
+      <span>&#x1F4F6; Telecom</span>
+      <span class="nav-count" id="count-telecom">0</span>
     </div>
     <div class="nav-section-label">Business Function</div>
-    <div class="nav-item" data-cat="sales-marketing" onclick="selectCategory('sales-marketing')">
-      <span>&#x1F4C8; Sales &amp; Marketing</span>
-      <span class="nav-count" id="count-sales-marketing">0</span>
-    </div>
-    <div class="nav-item" data-cat="operations" onclick="selectCategory('operations')">
-      <span>&#x2699;&#xFE0F; Operations</span>
-      <span class="nav-count" id="count-operations">0</span>
-    </div>
-    <div class="nav-item" data-cat="customer-service" onclick="selectCategory('customer-service')">
-      <span>&#x1F9E0; Customer Service</span>
-      <span class="nav-count" id="count-customer-service">0</span>
-    </div>
-    <div class="nav-item" data-cat="analytics" onclick="selectCategory('analytics')">
-      <span>&#x1F4CA; Analytics</span>
-      <span class="nav-count" id="count-analytics">0</span>
+    <div class="nav-item" data-cat="it" onclick="selectCategory('it')">
+      <span>&#x2699;&#xFE0F; IT</span>
+      <span class="nav-count" id="count-it">0</span>
     </div>
     <div class="nav-item" data-cat="finance-ops" onclick="selectCategory('finance-ops')">
       <span>&#x1F4B9; Finance &amp; Accounting</span>
       <span class="nav-count" id="count-finance-ops">0</span>
+    </div>
+    <div class="nav-item" data-cat="hr" onclick="selectCategory('hr')">
+      <span>&#x1F465; Human Resources</span>
+      <span class="nav-count" id="count-hr">0</span>
+    </div>
+    <div class="nav-item" data-cat="supply-chain" onclick="selectCategory('supply-chain')">
+      <span>&#x1F4E6; Supply Chain</span>
+      <span class="nav-count" id="count-supply-chain">0</span>
+    </div>
+    <div class="nav-item" data-cat="customer-service" onclick="selectCategory('customer-service')">
+      <span>&#x1F3A7; Contact Centre</span>
+      <span class="nav-count" id="count-customer-service">0</span>
+    </div>
+    <div class="nav-item" data-cat="legal-compliance" onclick="selectCategory('legal-compliance')">
+      <span>&#x2696;&#xFE0F; Legal &amp; Compliance</span>
+      <span class="nav-count" id="count-legal-compliance">0</span>
+    </div>
+    <div class="nav-item" data-cat="qa-testing" onclick="selectCategory('qa-testing')">
+      <span>&#x1F50D; QA &amp; Testing</span>
+      <span class="nav-count" id="count-qa-testing">0</span>
+    </div>
+    <div class="nav-item" data-cat="sales-marketing" onclick="selectCategory('sales-marketing')">
+      <span>&#x1F4C8; Sales &amp; Marketing</span>
+      <span class="nav-count" id="count-sales-marketing">0</span>
+    </div>
+    <div class="nav-item" data-cat="procurement" onclick="selectCategory('procurement')">
+      <span>&#x1F6D2; Procurement</span>
+      <span class="nav-count" id="count-procurement">0</span>
+    </div>
+    <div class="nav-item" data-cat="operations" onclick="selectCategory('operations')">
+      <span>&#x1F3ED; Operations</span>
+      <span class="nav-count" id="count-operations">0</span>
+    </div>
+    <div class="nav-item" data-cat="analytics" onclick="selectCategory('analytics')">
+      <span>&#x1F4CA; Data &amp; Analytics</span>
+      <span class="nav-count" id="count-analytics">0</span>
+    </div>
+    <div class="nav-item" data-cat="risk-mgmt" onclick="selectCategory('risk-mgmt')">
+      <span>&#x1F6E1;&#xFE0F; Risk Management</span>
+      <span class="nav-count" id="count-risk-mgmt">0</span>
     </div>
     <div class="nav-section-label">AI Agents</div>
     <div class="nav-item" data-cat="__agents__" onclick="selectCategory('__agents__')">
@@ -715,12 +755,21 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 const API = (window.__API_BASE__ || 'http://localhost:3456') + '/api';
 
 const CATEGORY_LABELS = {
-  hr: 'Human Resources', healthcare: 'Healthcare & Life Sciences',
-  finance: 'Financial Services', manufacturing: 'Manufacturing',
-  retail: 'Retail & E-commerce', energy: 'Energy & Utilities',
-  logistics: 'Logistics & Transportation', 'sales-marketing': 'Sales & Marketing',
-  operations: 'Operations', 'customer-service': 'Customer Service',
-  analytics: 'Analytics & Intelligence', 'finance-ops': 'Finance & Accounting',
+  // Industry
+  finance: 'Banking & Financial Services', 'customer-experience': 'Customer Experience',
+  healthcare: 'Healthcare', 'high-tech': 'High Tech',
+  insurance: 'Insurance', 'life-sciences': 'Life Sciences',
+  'public-sector': 'Public Sector', manufacturing: 'Manufacturing',
+  retail: 'Retail', telecom: 'Telecom',
+  // Legacy industry (kept for existing data)
+  energy: 'Energy & Utilities', logistics: 'Logistics & Transportation',
+  // Business Function
+  it: 'IT', 'finance-ops': 'Finance & Accounting',
+  hr: 'Human Resources', 'supply-chain': 'Supply Chain',
+  'customer-service': 'Contact Centre', 'legal-compliance': 'Legal & Compliance',
+  'qa-testing': 'QA & Testing', 'sales-marketing': 'Sales & Marketing',
+  procurement: 'Procurement', operations: 'Operations',
+  analytics: 'Data & Analytics', 'risk-mgmt': 'Risk Management',
   '__agents__': 'AI Agents'
 };
 
