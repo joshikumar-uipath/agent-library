@@ -341,7 +341,7 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
     </div>
   </nav>
   <div class="sidebar-footer">
-    <a class="view-site-btn" href="/" target="_blank">&#x1F517; View Live Site</a>
+    <a class="view-site-btn" href="/" target="_blank" id="viewSiteBtn">&#x1F517; View Live Site</a>
   </div>
 </aside>
 
@@ -521,6 +521,7 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 
 <script>
 const API = (window.__API_BASE__ || 'http://localhost:3456') + '/api';
+    document.getElementById('viewSiteBtn').href = document.querySelector('base')?.href || '/';
 
 const CATEGORY_LABELS = {
   hr: 'Human Resources', healthcare: 'Healthcare & Life Sciences',
