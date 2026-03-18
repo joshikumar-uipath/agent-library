@@ -2,15 +2,41 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
 
 const app = express();
 const PORT = 3456;
 const DATA_FILE = path.join(__dirname, 'data', 'videos.json');
 const AGENTS_FILE = path.join(__dirname, 'data', 'agents.json');
+const THUMBS_DIR = path.join(__dirname, 'data', 'thumbnails');
+fs.mkdirSync(THUMBS_DIR, { recursive: true }); // ensure directory exists
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname)); // serve index.html, admin.html
+app.use('/thumbnails', express.static(THUMBS_DIR)); // serve uploaded thumbnails
+
+// ── Thumbnail upload ──────────────────────────────────
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, THUMBS_DIR),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname) || '.jpg';
+    cb(null, `thumb-${Date.now()}${ext}`);
+  }
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB max
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Only image files allowed'));
+  }
+});
+
+app.post('/api/upload/thumbnail', upload.single('thumbnail'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  res.json({ url: `/thumbnails/${req.file.filename}` });
+});
 
 // ── Helpers ──────────────────────────────────────────
 function readData() {

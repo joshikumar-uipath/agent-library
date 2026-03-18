@@ -6,7 +6,7 @@
     <title>UiPath AI Solutions Library</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --orange: #FA4616;
@@ -39,29 +39,32 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html { height: 100%; }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--text-primary);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         /* ─── NAVBAR ─────────────────────────────────────────── */
         .navbar {
             position: fixed;
             top: 0; left: 0; right: 0;
-            height: 64px;
-            background: rgba(255,255,255,0.95);
+            height: 72px;
+            background: rgba(255,255,255,0.97);
             backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 40px;
             z-index: 100;
-            border-bottom: none;
-            box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04);
         }
 
         .navbar-left { display: flex; align-items: center; gap: 16px; }
@@ -69,32 +72,13 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 0;
             text-decoration: none;
         }
-        /* UiPath wordmark: sparkle SVG + "U" + orange "i" + "Path" */
-        .uipath-wordmark {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            line-height: 1;
-            position: relative;
+        .uipath-logo-img {
+            height: 46px;
+            width: auto;
+            display: block;
         }
-        .uipath-sparkles {
-            display: flex;
-            align-items: center;
-            /* align sparkle above the "i" — nudge right to sit over the i */
-            margin-left: 17px;
-            margin-bottom: -3px;
-        }
-        .uipath-letters {
-            font-size: 1.45rem;
-            font-weight: 900;
-            letter-spacing: -1px;
-            color: var(--text-primary);
-            line-height: 1;
-        }
-        .uipath-letters .ui { color: var(--orange); }
         .logo-divider {
             width: 1px; height: 20px;
             background: var(--border);
@@ -501,7 +485,8 @@
 
         /* ─── MAIN LAYOUT ────────────────────────────────────── */
         .main-wrapper {
-            padding-top: 64px; /* navbar height */
+            padding-top: 72px; /* navbar height */
+            flex: 1; /* stretches to fill viewport, pushing footer to bottom */
         }
 
         .container {
@@ -995,152 +980,219 @@
             gap: 24px;
         }
 
+        /* ── Video card — redesigned ────────────────────────── */
         .video-card {
             background: var(--bg-white);
             border: 1px solid rgba(0,0,0,0.07);
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            position: relative;
         }
+        /* Colored top accent bar by AI type */
+        .video-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 20px 20px 0 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .video-card.vc-agentic::before { background: linear-gradient(90deg, #2563EB, #7C3AED); }
+        .video-card.vc-rpa::before     { background: linear-gradient(90deg, #FA4616, #FB923C); }
+        .video-card.vc-idp::before     { background: linear-gradient(90deg, #0D9488, #2DD4BF); }
+        .video-card:hover::before { opacity: 1; }
         .video-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 48px rgba(0,0,0,0.12), 0 8px 16px rgba(0,0,0,0.06);
+            transform: translateY(-5px);
             border-color: transparent;
         }
+        .video-card.vc-agentic:hover { box-shadow: 0 20px 48px rgba(37,99,235,0.14), 0 6px 16px rgba(0,0,0,0.06); }
+        .video-card.vc-rpa:hover     { box-shadow: 0 20px 48px rgba(250,70,22,0.14), 0 6px 16px rgba(0,0,0,0.06); }
+        .video-card.vc-idp:hover     { box-shadow: 0 20px 48px rgba(13,148,136,0.14), 0 6px 16px rgba(0,0,0,0.06); }
 
+        /* ── Thumbnail ── */
         .video-thumbnail {
-            height: 200px;
+            height: 210px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             overflow: hidden;
         }
-        /* Gradient by AI type */
-        .thumb-agentic { background: linear-gradient(135deg, #1E3A8A, #2563EB, #7C3AED); }
-        .thumb-rpa { background: linear-gradient(135deg, #9A3412, #FA4616, #FB923C); }
-        .thumb-idp { background: linear-gradient(135deg, #065F46, #0D9488, #2DD4BF); }
-        .thumb-default { background: linear-gradient(135deg, #1E293B, #334155, #475569); }
+        .thumb-agentic { background: linear-gradient(145deg, #1E3A8A 0%, #2563EB 55%, #7C3AED 100%); }
+        .thumb-rpa     { background: linear-gradient(145deg, #7C1D0A 0%, #FA4616 55%, #FBBF24 100%); }
+        .thumb-idp     { background: linear-gradient(145deg, #064E3B 0%, #0D9488 55%, #34D399 100%); }
+        .thumb-default { background: linear-gradient(145deg, #1E293B 0%, #334155 55%, #64748B 100%); }
+        .thumb-custom  { background: #E2E8F0; }
 
+        /* Subtle mesh grid overlay */
         .thumb-pattern {
             position: absolute; inset: 0;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
-            background-size: 24px 24px;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
         }
+        /* Bottom fade on thumbnail */
+        .thumb-fade {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 60px;
+            background: linear-gradient(to top, rgba(0,0,0,0.28), transparent);
+        }
+
+        /* Duration chip — bottom-left of thumbnail */
+        .thumb-duration {
+            position: absolute;
+            bottom: 10px; left: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.92);
+            background: rgba(0,0,0,0.32);
+            backdrop-filter: blur(6px);
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.2px;
+        }
+        /* AI type chip — bottom-right of thumbnail */
         .thumb-type-badge {
             position: absolute;
-            top: 12px; right: 12px;
+            bottom: 10px; right: 12px;
             font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
             padding: 3px 8px;
-            border-radius: 4px;
+            border-radius: 6px;
             backdrop-filter: blur(8px);
         }
-        .badge-agentic { background: rgba(255,255,255,0.15); color: #BAE6FD; border: 1px solid rgba(186,230,253,0.2); }
-        .badge-rpa { background: rgba(255,255,255,0.15); color: #FED7AA; border: 1px solid rgba(254,215,170,0.2); }
-        .badge-idp { background: rgba(255,255,255,0.15); color: #A7F3D0; border: 1px solid rgba(167,243,208,0.2); }
+        .badge-agentic { background: rgba(99,102,241,0.35); color: #C7D2FE; border: 1px solid rgba(165,180,252,0.25); }
+        .badge-rpa     { background: rgba(250,70,22,0.3);  color: #FED7AA; border: 1px solid rgba(254,215,170,0.2); }
+        .badge-idp     { background: rgba(13,148,136,0.3); color: #A7F3D0; border: 1px solid rgba(167,243,208,0.2); }
 
+        /* Play button */
         .play-btn {
-            width: 60px; height: 60px;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(12px);
-            border: 2px solid rgba(255,255,255,0.4);
+            width: 56px; height: 56px;
+            background: #FA4616;
+            border: 2.5px solid rgba(255,255,255,0.9);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             color: white;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
+            padding-left: 3px; /* optical center for ▶ */
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            position: relative; z-index: 1;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 0 0 4px rgba(255,255,255,0.25);
         }
         .video-card:hover .play-btn {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.15);
-            border-color: rgba(255,255,255,0.6);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+            background: #e03d12;
+            transform: scale(1.12);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.4), 0 0 0 6px rgba(255,255,255,0.3);
         }
 
-        .video-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        /* ── Card body ── */
+        .video-body {
+            padding: 18px 20px 0;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Tags row: content type + optional ai label */
+        .video-tags {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .video-type-pill {
+            font-size: 0.67rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .type-roi    { background: #FEF3C7; color: #92400E; }
+        .type-case   { background: var(--blue-light); color: var(--blue-dark); }
+        .type-demo   { background: #F0FDF4; color: #166534; }
+        .type-heatmap{ background: var(--purple-light); color: var(--purple); }
+        .type-brief  { background: var(--orange-light); color: var(--orange-dark); }
+
         .video-title {
-            font-size: 1rem;
+            font-size: 0.975rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            margin-bottom: 7px;
             line-height: 1.4;
             letter-spacing: -0.2px;
         }
         .video-description {
-            font-size: 0.825rem;
+            font-size: 0.815rem;
             color: var(--text-secondary);
-            line-height: 1.6;
+            line-height: 1.65;
             flex-grow: 1;
-            margin-bottom: 16px;
+            /* clamp to 2 lines */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 14px;
         }
-        .video-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 14px;
-            border-top: 1px solid var(--border-light);
-        }
-        .video-duration {
-            font-size: 0.775rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .video-type-pill {
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .type-roi { background: #FEF3C7; color: #92400E; }
-        .type-case { background: var(--blue-light); color: var(--blue-dark); }
-        .type-demo { background: #F0FDF4; color: #166534; }
-        .type-heatmap { background: var(--purple-light); color: var(--purple); }
-        .type-brief { background: var(--orange-light); color: var(--orange-dark); }
 
-        .video-actions {
-            padding: 12px 20px;
+        /* Metric callout — extracted % or X from description */
+        .video-metric {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             background: var(--bg);
-            border-top: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 9px 12px;
+            margin-bottom: 14px;
         }
-        .video-status {
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .video-metric-value {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: -1px;
+            line-height: 1;
+            white-space: nowrap;
+        }
+        .video-metric-label {
             font-size: 0.75rem;
-            color: var(--text-muted);
+            color: var(--text-secondary);
+            line-height: 1.4;
             font-weight: 500;
         }
-        .status-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: var(--green);
-            animation: pulse 2s ease-in-out infinite;
+        .video-card.vc-agentic .video-metric-value { color: var(--blue); }
+        .video-card.vc-rpa     .video-metric-value { color: var(--orange); }
+        .video-card.vc-idp     .video-metric-value { color: var(--teal); }
+
+        /* ── Actions row ── */
+        .video-actions {
+            padding: 12px 20px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            border-top: 1px solid var(--border-light);
+            margin-top: auto;
         }
+        .video-meta { display: none; } /* replaced by tags row + metric */
+        .video-status { display: none; }
+        .status-dot { display: none; }
+
         .action-btns { display: flex; gap: 8px; }
         .action-btn {
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 7px 14px;
+            border-radius: 8px;
             font-size: 0.775rem;
             font-weight: 600;
             cursor: pointer;
@@ -1149,11 +1201,11 @@
             text-decoration: none;
         }
         .action-btn-secondary {
-            background: var(--bg-white);
+            background: var(--bg);
             color: var(--text-secondary);
             border: 1px solid var(--border);
         }
-        .action-btn-secondary:hover { background: var(--bg); color: var(--text-primary); }
+        .action-btn-secondary:hover { background: var(--border-light); color: var(--text-primary); }
         .action-btn-primary {
             background: var(--orange);
             color: white;
@@ -1161,203 +1213,531 @@
         .action-btn-primary:hover { background: var(--orange-dark); box-shadow: 0 4px 12px rgba(250,70,22,0.3); }
 
         /* ─── AGENT DETAIL ───────────────────────────────────── */
+        /* ══ AGENT DETAIL — FULL REDESIGN ══════════════════════ */
         .agent-detail-view { display: none; }
         .agent-detail-view.active {
             display: block;
             animation: fadeUp 0.5s ease-out;
         }
 
+        /* ── Hero Banner ─────────────────────────────────────── */
         .agent-hero {
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            background: linear-gradient(135deg, #0A0F1E 0%, #0F172A 40%, #1a1035 100%);
             border-radius: var(--radius-xl);
-            padding: 48px;
-            text-align: center;
-            margin-bottom: 32px;
+            padding: 0;
+            margin-bottom: 24px;
             position: relative;
             overflow: hidden;
         }
         .agent-hero::before {
             content: '';
             position: absolute; inset: 0;
-            background: radial-gradient(circle at 50% 0%, rgba(250,70,22,0.1) 0%, transparent 60%);
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(250,70,22,0.12) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 20%, rgba(99,102,241,0.08) 0%, transparent 45%);
         }
-        .agent-hero-icon {
-            width: 96px; height: 96px;
-            background: linear-gradient(135deg, rgba(250,70,22,0.2), rgba(250,70,22,0.1));
-            border: 1px solid rgba(250,70,22,0.2);
-            border-radius: 24px;
+        .agent-hero::after {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+        .agent-hero-inner {
+            position: relative; z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 40px;
+            padding: 48px 52px;
+            align-items: center;
+        }
+        .agent-hero-left { flex: 1; }
+        .agent-hero-toprow {
+            display: flex; align-items: center; gap: 14px;
+            margin-bottom: 20px;
+        }
+        .agent-hero-icon-wrap {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, rgba(250,70,22,0.25), rgba(250,70,22,0.1));
+            border: 1px solid rgba(250,70,22,0.3);
+            border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 2.5rem;
-            margin: 0 auto 24px;
-            position: relative;
+            font-size: 2rem;
+            flex-shrink: 0;
+            box-shadow: 0 8px 32px rgba(250,70,22,0.15);
+        }
+        .agent-hero-meta { flex: 1; }
+        .agent-hero-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: rgba(250,70,22,0.15);
+            border: 1px solid rgba(250,70,22,0.3);
+            color: #FCA589;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+        }
+        .agent-live-dot {
+            width: 6px; height: 6px;
+            background: #22C55E;
+            border-radius: 50%;
+            display: inline-block;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.7); }
         }
         .agent-hero-title {
-            font-size: 2.25rem;
+            font-size: 2.4rem;
             font-weight: 800;
             color: white;
-            letter-spacing: -1px;
-            margin-bottom: 12px;
-        }
-        .agent-hero-badge {
-            display: inline-block;
-            background: rgba(250,70,22,0.15);
-            border: 1px solid rgba(250,70,22,0.25);
-            color: #FCA589;
-            font-size: 0.8rem;
-            font-weight: 700;
-            padding: 5px 14px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: -1.2px;
+            line-height: 1.15;
         }
         .agent-hero-desc {
             color: #94A3B8;
             font-size: 1rem;
-            max-width: 640px;
-            margin: 0 auto;
-            line-height: 1.7;
+            line-height: 1.75;
+            margin-top: 14px;
+            max-width: 580px;
         }
-
-        .agent-content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
+        .agent-hero-tags {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            margin-top: 20px;
         }
-        .agent-section {
-            background: var(--bg-white);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 28px;
+        .agent-hero-tag {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.65);
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 12px;
         }
-        .agent-section-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border-light);
+        .agent-hero-right {
+            display: flex; flex-direction: column; gap: 12px;
+            min-width: 220px;
         }
-        .agent-section-icon {
-            width: 32px; height: 32px;
-            border-radius: 8px;
-            background: var(--bg);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.9rem;
-        }
-        .agent-section-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .use-case-list { list-style: none; }
-        .use-case-item {
-            background: var(--bg);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-sm);
-            padding: 14px 16px;
-            margin-bottom: 10px;
-            transition: border-color 0.15s;
-        }
-        .use-case-item:hover { border-color: var(--border); }
-        .use-case-item:last-child { margin-bottom: 0; }
-        .use-case-name { font-weight: 700; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 5px; }
-        .use-case-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-        .benefit-item {
-            background: var(--bg);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-sm);
-            padding: 16px;
+        .agent-hero-stat {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 18px 22px;
             text-align: center;
+            backdrop-filter: blur(8px);
+            transition: border-color 0.2s;
         }
-        .benefit-icon { font-size: 1.5rem; margin-bottom: 8px; }
-        .benefit-value { font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.3px; }
-        .benefit-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
+        .agent-hero-stat:hover { border-color: rgba(250,70,22,0.3); }
+        .agent-hero-stat-val {
+            font-size: 2rem;
+            font-weight: 900;
+            color: white;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+        .agent-hero-stat-val span { color: #FA4616; }
+        .agent-hero-stat-label {
+            font-size: 0.75rem;
+            color: #64748B;
+            margin-top: 5px;
+            font-weight: 500;
+        }
 
-        .timeline-section {
-            background: var(--bg-white);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 28px;
-            margin-bottom: 24px;
-        }
-        .timeline-header {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border-light);
-        }
-        .timeline-steps {
+        /* ── Impact Metric Strip ─────────────────────────────── */
+        .agent-metrics-strip {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 16px;
+            margin-bottom: 24px;
+        }
+        .agent-metric-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 22px 20px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .agent-metric-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .agent-metric-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #FA4616, #f97316);
+        }
+        .agent-metric-card.blue::before  { background: linear-gradient(90deg, #2563EB, #6366f1); }
+        .agent-metric-card.green::before { background: linear-gradient(90deg, #0D9488, #10B981); }
+        .agent-metric-card.purple::before{ background: linear-gradient(90deg, #7C3AED, #a855f7); }
+        .agent-metric-icon {
+            font-size: 1.3rem; margin-bottom: 10px;
+        }
+        .agent-metric-val {
+            font-size: 1.9rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: -1px;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .agent-metric-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+        .agent-metric-sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Two-col layout ──────────────────────────────────── */
+        .agent-two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .agent-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 28px;
+        }
+        .agent-card-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 22px; padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .agent-card-icon-wrap {
+            width: 34px; height: 34px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #FEF3EE, #FDE8DF);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+        }
+        .agent-card-icon-wrap.blue   { background: linear-gradient(135deg, #EFF6FF, #DBEAFE); }
+        .agent-card-icon-wrap.green  { background: linear-gradient(135deg, #F0FDF4, #DCFCE7); }
+        .agent-card-icon-wrap.purple { background: linear-gradient(135deg, #F5F3FF, #EDE9FE); }
+        .agent-card-icon-wrap.purple { background: linear-gradient(135deg, #F5F3FF, #EDE9FE); }
+        .agent-card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .agent-card-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        /* ── How it Works flow ───────────────────────────────── */
+        .hiw-flow { display: flex; flex-direction: column; gap: 0; }
+        .hiw-step {
+            display: flex; align-items: flex-start; gap: 14px;
             position: relative;
         }
-        .timeline-steps::before {
-            content: '';
-            position: absolute;
-            top: 20px; left: 40px; right: 40px;
-            height: 2px;
-            background: linear-gradient(90deg, var(--blue), var(--purple));
-            opacity: 0.2;
-        }
-        .timeline-step { text-align: center; position: relative; }
-        .step-num {
-            width: 40px; height: 40px;
-            background: var(--blue);
+        .hiw-step:not(:last-child) { padding-bottom: 20px; }
+        .hiw-step-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+        .hiw-num {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, #FA4616, #f97316);
             color: white;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .hiw-connector {
+            width: 2px; flex: 1;
+            background: linear-gradient(to bottom, rgba(250,70,22,0.2), transparent);
+            margin-top: 6px;
+            min-height: 20px;
+        }
+        .hiw-content { padding-top: 4px; }
+        .hiw-title { font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+        .hiw-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; }
+        .hiw-badge {
+            display: inline-block;
+            background: rgba(250,70,22,0.08);
+            color: #FA4616;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 8px;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* ── Capabilities list ───────────────────────────────── */
+        .cap-list { display: flex; flex-direction: column; gap: 10px; }
+        .cap-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            background: #FAFBFF;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 12px 14px;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .cap-item:hover { border-color: rgba(250,70,22,0.2); background: #FEF9F7; }
+        .cap-icon {
+            width: 28px; height: 28px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .cap-text { flex: 1; }
+        .cap-name { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+        .cap-desc { font-size: 0.775rem; color: var(--text-secondary); line-height: 1.4; }
+
+        /* ── Use Cases full-width ────────────────────────────── */
+        .agent-usecases-section {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+        .agent-usecases-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 4px;
+        }
+        .uc-card {
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .uc-card:hover { border-color: rgba(250,70,22,0.25); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+        .uc-card-num {
+            font-size: 0.7rem; font-weight: 800;
+            color: #FA4616; letter-spacing: 1px;
+            text-transform: uppercase; margin-bottom: 8px;
+        }
+        .uc-card-title { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+        .uc-card-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; }
+        .uc-card-impact {
+            display: inline-flex; align-items: center; gap: 4px;
+            margin-top: 12px;
+            background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.15);
+            color: #0D9488;
+            font-size: 0.72rem; font-weight: 700;
+            padding: 3px 10px; border-radius: 10px;
+        }
+
+        /* ── Enterprise Ready 3-col ──────────────────────────── */
+        .agent-enterprise-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .ent-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+        }
+        .ent-card-header {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 16px; padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .ent-card-ico { font-size: 1.1rem; }
+        .ent-card-title { font-size: 0.875rem; font-weight: 700; color: var(--text-primary); }
+        .integrations-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .int-chip {
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 8px 6px;
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+        }
+        .int-chip:hover { border-color: var(--border); color: var(--text-primary); background: white; }
+        .int-chip-icon { font-size: 1rem; display: block; margin-bottom: 3px; }
+        .trust-list { display: flex; flex-direction: column; gap: 8px; }
+        .trust-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.8rem;
+        }
+        .trust-item:last-child { border-bottom: none; }
+        .trust-check {
+            width: 20px; height: 20px;
+            background: rgba(16,185,129,0.1);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-weight: 800;
-            font-size: 0.9rem;
-            margin: 0 auto 12px;
-            position: relative;
-            z-index: 1;
+            font-size: 0.65rem; flex-shrink: 0;
+            color: #10B981;
         }
-        .step-title { font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
-        .step-desc { font-size: 0.775rem; color: var(--text-muted); line-height: 1.5; }
+        .trust-name { font-weight: 600; color: var(--text-primary); flex: 1; }
+        .trust-badge {
+            font-size: 0.65rem; font-weight: 700;
+            background: rgba(16,185,129,0.08);
+            color: #0D9488; padding: 2px 7px;
+            border-radius: 6px; text-transform: uppercase;
+        }
+        .deploy-list { display: flex; flex-direction: column; gap: 10px; }
+        .deploy-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: 9px;
+            background: var(--bg);
+            transition: all 0.15s;
+        }
+        .deploy-item:hover { border-color: rgba(37,99,235,0.2); background: #EFF6FF; }
+        .deploy-icon { font-size: 1.2rem; }
+        .deploy-text { flex: 1; }
+        .deploy-name { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); }
+        .deploy-desc { font-size: 0.72rem; color: var(--text-muted); }
+        .deploy-tag {
+            font-size: 0.65rem; font-weight: 700;
+            background: #EFF6FF; color: #2563EB;
+            padding: 2px 8px; border-radius: 6px;
+        }
 
-        .cta-section {
-            background: linear-gradient(135deg, #1E3A8A, #2563EB, #1D4ED8);
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            text-align: center;
+        /* ── Timeline redesign ───────────────────────────────── */
+        .agent-timeline-section {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+        .timeline-new {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            position: relative;
+            margin-top: 8px;
+        }
+        .timeline-new::before {
+            content: '';
+            position: absolute;
+            top: 26px; left: 13%; right: 13%;
+            height: 2px;
+            background: linear-gradient(90deg, #FA4616, #6366f1);
+            opacity: 0.2;
+        }
+        .tl-step { padding: 0 8px; text-align: center; }
+        .tl-bubble {
+            width: 52px; height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #FA4616, #f97316);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            margin: 0 auto 14px;
+            position: relative; z-index: 1;
+            box-shadow: 0 4px 14px rgba(250,70,22,0.25);
+        }
+        .tl-bubble.step2 { background: linear-gradient(135deg, #2563EB, #6366f1); box-shadow: 0 4px 14px rgba(37,99,235,0.25); }
+        .tl-bubble.step3 { background: linear-gradient(135deg, #0D9488, #10B981); box-shadow: 0 4px 14px rgba(13,148,136,0.25); }
+        .tl-bubble.step4 { background: linear-gradient(135deg, #7C3AED, #a855f7); box-shadow: 0 4px 14px rgba(124,58,237,0.25); }
+        .tl-bubble-icon { font-size: 1.1rem; }
+        .tl-week { font-size: 0.58rem; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; margin-top: 1px; }
+        .tl-title { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); margin-bottom: 5px; }
+        .tl-desc { font-size: 0.76rem; color: var(--text-muted); line-height: 1.5; }
+
+        /* ── CTA redesign ────────────────────────────────────── */
+        .agent-cta {
+            background: linear-gradient(135deg, #0A0F1E 0%, #0F172A 50%, #1a1035 100%);
+            border-radius: var(--radius-xl);
+            padding: 48px 52px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 40px;
+            align-items: center;
             position: relative;
             overflow: hidden;
         }
-        .cta-section::before {
+        .agent-cta::before {
             content: '';
             position: absolute; inset: 0;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
-            background-size: 24px 24px;
+            background:
+                radial-gradient(ellipse at 0% 100%, rgba(250,70,22,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 100% 0%, rgba(99,102,241,0.07) 0%, transparent 40%);
         }
-        .cta-title { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 10px; position: relative; }
-        .cta-desc { color: rgba(255,255,255,0.75); font-size: 1rem; margin-bottom: 28px; position: relative; }
-        .cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; position: relative; }
+        .agent-cta::after {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+        .agent-cta-left { position: relative; z-index: 1; }
+        .agent-cta-pretitle {
+            font-size: 0.75rem; font-weight: 700;
+            color: #FA4616; text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+        .agent-cta-title {
+            font-size: 1.85rem; font-weight: 800;
+            color: white; letter-spacing: -0.8px;
+            line-height: 1.2; margin-bottom: 10px;
+        }
+        .agent-cta-desc { color: #64748B; font-size: 0.95rem; line-height: 1.6; }
+        .agent-cta-right {
+            display: flex; flex-direction: column; gap: 12px;
+            position: relative; z-index: 1; min-width: 200px;
+        }
         .cta-btn {
-            padding: 12px 24px;
-            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 14px 28px;
+            border-radius: 10px;
             font-weight: 700;
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s ease;
             border: none;
             text-decoration: none;
+            white-space: nowrap;
         }
-        .cta-btn-primary { background: white; color: var(--blue); }
-        .cta-btn-primary:hover { background: #F8FAFC; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .cta-btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.4); }
-        .cta-btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.7); }
+        .cta-btn-primary {
+            background: #FA4616; color: white;
+            box-shadow: 0 4px 16px rgba(250,70,22,0.35);
+        }
+        .cta-btn-primary:hover { background: #e03d12; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(250,70,22,0.45); }
+        .cta-btn-outline {
+            background: rgba(255,255,255,0.06);
+            color: white; border: 1.5px solid rgba(255,255,255,0.15);
+        }
+        .cta-btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+        .agent-cta-trust {
+            display: flex; align-items: center; gap: 8px;
+            margin-top: 4px; font-size: 0.73rem; color: #475569;
+            position: relative; z-index: 1;
+        }
+        .agent-cta-trust span { color: #22C55E; font-size: 0.7rem; }
+
+        /* ── Shared label ────────────────────────────────────── */
+        .section-label {
+            font-size: 0.7rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.2px;
+            color: #FA4616; margin-bottom: 6px;
+        }
+        .section-title {
+            font-size: 1rem; font-weight: 700;
+            color: var(--text-primary);
+        }
 
         /* ─── MODALS ─────────────────────────────────────────── */
         .modal-overlay {
@@ -1595,19 +1975,7 @@
 <nav class="navbar">
     <div class="navbar-left">
         <a class="logo" href="#" onclick="goHome(); return false;">
-            <div class="uipath-wordmark">
-                <!-- Sparkle stars above the "i" -->
-                <div class="uipath-sparkles">
-                    <svg width="26" height="15" viewBox="0 0 26 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Large 4-pointed star -->
-                        <path d="M10 1L11.5 5.5L16 7L11.5 8.5L10 13L8.5 8.5L4 7L8.5 5.5Z" fill="#FA4616"/>
-                        <!-- Small 4-pointed star -->
-                        <path d="M18 0L18.9 2.6L21.5 3.5L18.9 4.4L18 7L17.1 4.4L14.5 3.5L17.1 2.6Z" fill="#FA4616"/>
-                    </svg>
-                </div>
-                <!-- Wordmark: U + orange i + Path -->
-                <div class="uipath-letters">U<span class="ui">i</span>Path</div>
-            </div>
+            <img src="uipath-logo.svg" alt="UiPath Agentic Automation" class="uipath-logo-img">
         </a>
         <div class="logo-divider"></div>
         <span class="logo-subtitle">AI Solutions Library</span>
@@ -2652,13 +3020,11 @@
         currentAgent = agentId;
         document.getElementById('navHomeBtn').style.display = 'inline-flex';
 
-        // Prefer rich hardcoded detail data; fall back to live API data
         const richAgent = agentData[agentId];
         const liveAgent = liveAgents.find(a => a.id === agentId);
         const base = richAgent || liveAgent;
         if (!base) { showToast('Agent not found', 'info'); return; }
 
-        // Merge: API data overrides name/description/icon/category for live agents
         const agent = richAgent
             ? { ...richAgent, ...(liveAgent ? { name: liveAgent.name, description: liveAgent.description, icon: liveAgent.icon || richAgent.icon, iframeUrl: liveAgent.iframeUrl, downloadUrl: liveAgent.downloadUrl } : {}) }
             : { ...liveAgent, useCases: null, benefits: null, timeline: null };
@@ -2666,86 +3032,300 @@
         document.getElementById('aiAgentsGrid').classList.remove('active');
         document.getElementById('agentDetailView').classList.add('active');
 
-        const demoBtn = agent.iframeUrl
-            ? `<button class="cta-btn cta-btn-primary" onclick="playAgentDemo('${agentId}')">&#x25B6; Watch Demo</button>`
-            : `<button class="cta-btn cta-btn-primary" onclick="requestDemo('${agentId}')">&#x1F4AC; Request Demo</button>`;
-        const downloadBtn = agent.downloadUrl
-            ? `<button class="cta-btn cta-btn-outline" onclick="window.open('${agent.downloadUrl}','_blank')">&#x2B07; Download Deck</button>`
-            : `<button class="cta-btn cta-btn-outline" onclick="downloadSpecs('${agentId}')">&#x2B07; Download Deck</button>`;
+        // ── Contextual integrations by category ───────────────
+        const integrationMap = {
+            'Finance':  [{i:'🏦',n:'SAP'},{i:'☁️',n:'Salesforce'},{i:'📊',n:'Oracle'},{i:'💼',n:'Workday'},{i:'📈',n:'Bloomberg'},{i:'🔵',n:'QuickBooks'}],
+            'HR':       [{i:'🟣',n:'Workday'},{i:'🌐',n:'SAP SF'},{i:'💳',n:'ADP'},{i:'🔗',n:'LinkedIn'},{i:'🌿',n:'Greenhouse'},{i:'🟠',n:'ServiceNow'}],
+            'Sales':    [{i:'☁️',n:'Salesforce'},{i:'🟠',n:'HubSpot'},{i:'🔵',n:'Dynamics'},{i:'🔗',n:'LinkedIn'},{i:'📧',n:'Outreach'},{i:'🟡',n:'Marketo'}],
+            'Legal':    [{i:'✍️',n:'DocuSign'},{i:'📁',n:'SharePoint'},{i:'⚖️',n:'iManage'},{i:'🔍',n:'Relativity'},{i:'📑',n:'ContractPod'},{i:'🔵',n:'MS Teams'}],
+            'Operations':[{i:'🟦',n:'SAP'},{i:'📋',n:'ServiceNow'},{i:'🔷',n:'Jira'},{i:'📊',n:'Tableau'},{i:'🟩',n:'M365'},{i:'🟠',n:'Coupa'}],
+            'Customer': [{i:'☁️',n:'Salesforce'},{i:'🟢',n:'Zendesk'},{i:'🔵',n:'MS Teams'},{i:'🟣',n:'Slack'},{i:'📱',n:'Twilio'},{i:'🟠',n:'Freshdesk'}],
+            'Marketing':[{i:'🟠',n:'HubSpot'},{i:'🟡',n:'Marketo'},{i:'☁️',n:'Salesforce'},{i:'📊',n:'GA4'},{i:'📧',n:'Mailchimp'},{i:'🔵',n:'Adobe'}],
+        };
+        const integrations = integrationMap[agent.category] || [{i:'🟩',n:'M365'},{i:'🟣',n:'Slack'},{i:'🔷',n:'Jira'},{i:'📊',n:'Tableau'},{i:'🟠',n:'ServiceNow'},{i:'☁️',n:'Salesforce'}];
 
-        const useCasesHtml = agent.useCases && Array.isArray(agent.useCases)
-            ? `<div class="agent-section">
-                    <div class="agent-section-header">
-                        <div class="agent-section-icon">&#x1F3AF;</div>
-                        <span class="agent-section-title">Key Use Cases</span>
-                    </div>
-                    <ul class="use-case-list">
-                        ${agent.useCases.map(u => `
-                            <li class="use-case-item">
-                                <div class="use-case-name">${u.title}</div>
-                                <div class="use-case-desc">${u.description}</div>
-                            </li>`).join('')}
-                    </ul>
-                </div>`
+        // ── Contextual capabilities from useCases + smart extras ──
+        const capIcons = ['⚡','🔍','🤖','📊','🔔','🔄','🛡️','📋'];
+        const rawCaps = agent.useCases && Array.isArray(agent.useCases)
+            ? agent.useCases
             : (agent.useCases && typeof agent.useCases === 'string'
-                ? `<div class="agent-section">
-                    <div class="agent-section-header">
-                        <div class="agent-section-icon">&#x1F3AF;</div>
-                        <span class="agent-section-title">Key Use Cases</span>
-                    </div>
-                    <ul class="use-case-list">
-                        ${agent.useCases.split('\u2022').map(u => u.trim()).filter(Boolean).map(u => `
-                            <li class="use-case-item"><div class="use-case-name">${u}</div></li>`).join('')}
-                    </ul>
-                </div>`
-                : '');
+                ? agent.useCases.split('•').map(u => u.trim()).filter(Boolean).map(u => ({title: u, description: 'Intelligent automation powered by UiPath Agentic AI'}))
+                : [{title:'Intelligent Processing', description:'End-to-end task automation with agentic AI'},{title:'Real-time Analysis', description:'Continuous monitoring and decision support'},{title:'Seamless Integration', description:'Connects with your existing enterprise stack'}]);
 
-        const benefitsHtml = agent.benefits
-            ? `<div class="agent-section">
-                    <div class="agent-section-header">
-                        <div class="agent-section-icon">&#x1F4C8;</div>
-                        <span class="agent-section-title">Key Benefits</span>
-                    </div>
-                    <div class="benefits-grid">
-                        ${agent.benefits.map(b => `
-                            <div class="benefit-item">
-                                <div class="benefit-icon">${b.icon}</div>
-                                <div class="benefit-value">${b.title}</div>
-                                <div class="benefit-desc">${b.description}</div>
-                            </div>`).join('')}
-                    </div>
-                </div>` : '';
+        // ── Hero stat cards from benefits ─────────────────────
+        const heroStats = agent.benefits ? agent.benefits.slice(0,3) : [
+            {title:'Deployed', description:'enterprise customers globally'},
+            {title:'99.9%', description:'uptime SLA guarantee'},
+            {title:'< 8 wks', description:'average time to value'}
+        ];
 
-        const timelineHtml = agent.timeline
-            ? `<div class="timeline-section">
-                <div class="timeline-header">&#x26A1; Implementation Timeline</div>
-                <div class="timeline-steps">
-                    ${agent.timeline.map((s, i) => `
-                        <div class="timeline-step">
-                            <div class="step-num">${i+1}</div>
-                            <div class="step-title">${s.title}</div>
-                            <div class="step-desc">${s.description}</div>
-                        </div>`).join('')}
-                </div>
-            </div>` : '';
+        // ── Timeline icons ────────────────────────────────────
+        const tlIcons = ['🔌','⚙️','🧪','🚀'];
+        const tlClasses = ['','step2','step3','step4'];
+        const tlWeeks = ['Week 1–2','Week 3–4','Week 5–6','Week 7–8'];
+        const timelineSteps = agent.timeline || [
+            {title:'Discovery & Setup',  description:'Assess environment and configure connections'},
+            {title:'Configuration',      description:'Tune agent parameters to your workflows'},
+            {title:'Pilot & Validation', description:'Run with test data, validate outputs'},
+            {title:'Production Launch',  description:'Go live with full monitoring enabled'}
+        ];
 
         const html = `
-            <div class="agent-hero">
-                <div class="agent-hero-icon">${agent.icon || '&#x1F916;'}</div>
-                <div class="agent-hero-title">${agent.name}</div>
-                <div class="agent-hero-badge">${agent.category}</div>
-                <div class="agent-hero-desc">${agent.description}</div>
+        <!-- ── HERO ─────────────────────────────────────────── -->
+        <div class="agent-hero">
+            <div class="agent-hero-inner">
+                <div class="agent-hero-left">
+                    <div class="agent-hero-toprow">
+                        <div class="agent-hero-icon-wrap">${agent.icon || '&#x1F916;'}</div>
+                        <div class="agent-hero-meta">
+                            <div class="agent-hero-badge">
+                                <span class="agent-live-dot"></span>
+                                ${agent.category} &nbsp;·&nbsp; Live Agent
+                            </div>
+                            <div class="agent-hero-title">${agent.name}</div>
+                        </div>
+                    </div>
+                    <div class="agent-hero-desc">${agent.description}</div>
+                    <div class="agent-hero-tags">
+                        <span class="agent-hero-tag">&#x1F916; Agentic AI</span>
+                        <span class="agent-hero-tag">&#x26A1; Real-time Processing</span>
+                        <span class="agent-hero-tag">&#x1F512; Enterprise-Grade</span>
+                        <span class="agent-hero-tag">&#x1F504; 24/7 Autonomous</span>
+                    </div>
+                </div>
+                <div class="agent-hero-right">
+                    ${heroStats.map(b => `
+                    <div class="agent-hero-stat">
+                        <div class="agent-hero-stat-val">${b.title}</div>
+                        <div class="agent-hero-stat-label">${b.description}</div>
+                    </div>`).join('')}
+                </div>
             </div>
-            <div class="agent-content-grid">
-                ${useCasesHtml}
-                ${benefitsHtml}
+        </div>
+
+        <!-- ── IMPACT METRICS STRIP ──────────────────────────── -->
+        <div class="agent-metrics-strip">
+            <div class="agent-metric-card">
+                <div class="agent-metric-icon">&#x1F4C9;</div>
+                <div class="agent-metric-val">3.2<small style="font-size:1.1rem">x</small></div>
+                <div class="agent-metric-label">ROI in Year 1</div>
+                <div class="agent-metric-sub">Based on enterprise deployments</div>
             </div>
-            ${timelineHtml}
-            <div class="cta-section">
-                <div class="cta-title">Ready to deploy ${agent.name}?</div>
-                <div class="cta-desc">Start your AI transformation journey with our expert implementation team</div>
-                <div class="cta-btns">${demoBtn}${downloadBtn}</div>
+            <div class="agent-metric-card blue">
+                <div class="agent-metric-icon">&#x23F1;</div>
+                <div class="agent-metric-val">78<small style="font-size:1rem">%</small></div>
+                <div class="agent-metric-label">Time Saved</div>
+                <div class="agent-metric-sub">On manual tasks automated</div>
             </div>
+            <div class="agent-metric-card green">
+                <div class="agent-metric-icon">&#x2705;</div>
+                <div class="agent-metric-val">99<small style="font-size:1rem">%</small></div>
+                <div class="agent-metric-label">Accuracy Rate</div>
+                <div class="agent-metric-sub">Across production workloads</div>
+            </div>
+            <div class="agent-metric-card purple">
+                <div class="agent-metric-icon">&#x1F4C5;</div>
+                <div class="agent-metric-val">&lt;8<small style="font-size:1rem">wk</small></div>
+                <div class="agent-metric-label">Time to Value</div>
+                <div class="agent-metric-sub">From kickoff to production</div>
+            </div>
+        </div>
+
+        <!-- ── HOW IT WORKS + CAPABILITIES ───────────────────── -->
+        <div class="agent-two-col" style="margin-bottom:20px;">
+            <div class="agent-card">
+                <div class="agent-card-header">
+                    <div class="agent-card-icon-wrap">&#x1F500;</div>
+                    <div>
+                        <div class="agent-card-title">How the Agent Works</div>
+                        <div class="agent-card-subtitle">Autonomous end-to-end workflow</div>
+                    </div>
+                </div>
+                <div class="hiw-flow">
+                    <div class="hiw-step">
+                        <div class="hiw-step-left"><div class="hiw-num">1</div><div class="hiw-connector"></div></div>
+                        <div class="hiw-content">
+                            <div class="hiw-title">Trigger &amp; Data Ingestion</div>
+                            <div class="hiw-desc">Agent activates on schedule, event, or API call. Pulls structured and unstructured data from connected systems in real-time.</div>
+                            <span class="hiw-badge">&#x26A1; Millisecond response</span>
+                        </div>
+                    </div>
+                    <div class="hiw-step">
+                        <div class="hiw-step-left"><div class="hiw-num">2</div><div class="hiw-connector"></div></div>
+                        <div class="hiw-content">
+                            <div class="hiw-title">AI Reasoning &amp; Decision</div>
+                            <div class="hiw-desc">LLM-powered reasoning engine evaluates context, applies business rules, and determines optimal actions — with full audit trail.</div>
+                            <span class="hiw-badge">&#x1F9E0; Claude / GPT-4 powered</span>
+                        </div>
+                    </div>
+                    <div class="hiw-step">
+                        <div class="hiw-step-left"><div class="hiw-num">3</div><div class="hiw-connector"></div></div>
+                        <div class="hiw-content">
+                            <div class="hiw-title">Action &amp; Orchestration</div>
+                            <div class="hiw-desc">Executes approved actions across systems — updating records, sending notifications, triggering downstream workflows.</div>
+                            <span class="hiw-badge">&#x1F517; 200+ integrations</span>
+                        </div>
+                    </div>
+                    <div class="hiw-step">
+                        <div class="hiw-step-left"><div class="hiw-num">4</div></div>
+                        <div class="hiw-content">
+                            <div class="hiw-title">Human-in-the-Loop &amp; Learning</div>
+                            <div class="hiw-desc">Escalates edge cases for human review. Continuously learns from feedback to improve accuracy and decision confidence.</div>
+                            <span class="hiw-badge">&#x1F4CA; Self-improving</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="agent-card">
+                <div class="agent-card-header">
+                    <div class="agent-card-icon-wrap blue">&#x2728;</div>
+                    <div>
+                        <div class="agent-card-title">Core Capabilities</div>
+                        <div class="agent-card-subtitle">What this agent does out of the box</div>
+                    </div>
+                </div>
+                <div class="cap-list">
+                    ${rawCaps.slice(0,4).map((c, i) => `
+                    <div class="cap-item">
+                        <div class="cap-icon">${capIcons[i] || '⚙️'}</div>
+                        <div class="cap-text">
+                            <div class="cap-name">${c.title}</div>
+                            <div class="cap-desc">${c.description}</div>
+                        </div>
+                    </div>`).join('')}
+                    <div class="cap-item">
+                        <div class="cap-icon">&#x1F4CA;</div>
+                        <div class="cap-text">
+                            <div class="cap-name">Analytics &amp; Reporting</div>
+                            <div class="cap-desc">Auto-generates executive dashboards, trend analysis, and exception reports on every run cycle.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── USE CASES ──────────────────────────────────────── -->
+        <div class="agent-usecases-section">
+            <div class="agent-card-header" style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border-light);">
+                <div class="agent-card-icon-wrap green">&#x1F3AF;</div>
+                <div>
+                    <div class="agent-card-title">Enterprise Use Cases</div>
+                    <div class="agent-card-subtitle">Where organisations deploy this agent today</div>
+                </div>
+            </div>
+            <div class="agent-usecases-grid">
+                ${rawCaps.slice(0,3).map((u, i) => `
+                <div class="uc-card">
+                    <div class="uc-card-num">Use Case 0${i+1}</div>
+                    <div class="uc-card-title">${u.title}</div>
+                    <div class="uc-card-desc">${u.description}</div>
+                    <div class="uc-card-impact">&#x2713; Proven ROI</div>
+                </div>`).join('')}
+            </div>
+        </div>
+
+        <!-- ── ENTERPRISE READY ───────────────────────────────── -->
+        <div class="agent-enterprise-row">
+            <div class="ent-card">
+                <div class="ent-card-header">
+                    <span class="ent-card-ico">&#x1F517;</span>
+                    <span class="ent-card-title">Integrations</span>
+                </div>
+                <div class="integrations-grid">
+                    ${integrations.map(it => `
+                    <div class="int-chip">
+                        <span class="int-chip-icon">${it.i}</span>${it.n}
+                    </div>`).join('')}
+                </div>
+                <div style="font-size:0.72rem;color:var(--text-muted);margin-top:10px;text-align:center;">+ 200 more via UiPath connectors</div>
+            </div>
+            <div class="ent-card">
+                <div class="ent-card-header">
+                    <span class="ent-card-ico">&#x1F6E1;&#xFE0F;</span>
+                    <span class="ent-card-title">Security &amp; Compliance</span>
+                </div>
+                <div class="trust-list">
+                    <div class="trust-item"><div class="trust-check">&#x2713;</div><span class="trust-name">SOC 2 Type II</span><span class="trust-badge">Certified</span></div>
+                    <div class="trust-item"><div class="trust-check">&#x2713;</div><span class="trust-name">GDPR Compliant</span><span class="trust-badge">Verified</span></div>
+                    <div class="trust-item"><div class="trust-check">&#x2713;</div><span class="trust-name">ISO 27001</span><span class="trust-badge">Certified</span></div>
+                    <div class="trust-item"><div class="trust-check">&#x2713;</div><span class="trust-name">AES-256 Encryption</span><span class="trust-badge">At rest &amp; transit</span></div>
+                    <div class="trust-item"><div class="trust-check">&#x2713;</div><span class="trust-name">SSO / SAML 2.0</span><span class="trust-badge">Enterprise IdP</span></div>
+                    <div class="trust-item"><div class="trust-check">&#x2713;</div><span class="trust-name">Role-Based Access</span><span class="trust-badge">RBAC</span></div>
+                </div>
+            </div>
+            <div class="ent-card">
+                <div class="ent-card-header">
+                    <span class="ent-card-ico">&#x2601;&#xFE0F;</span>
+                    <span class="ent-card-title">Deployment Options</span>
+                </div>
+                <div class="deploy-list">
+                    <div class="deploy-item">
+                        <div class="deploy-icon">&#x2601;&#xFE0F;</div>
+                        <div class="deploy-text"><div class="deploy-name">UiPath Cloud</div><div class="deploy-desc">Fully managed, auto-scaling</div></div>
+                        <span class="deploy-tag">Recommended</span>
+                    </div>
+                    <div class="deploy-item">
+                        <div class="deploy-icon">&#x1F3E2;</div>
+                        <div class="deploy-text"><div class="deploy-name">On-Premise</div><div class="deploy-desc">Your data centre, full control</div></div>
+                        <span class="deploy-tag">Available</span>
+                    </div>
+                    <div class="deploy-item">
+                        <div class="deploy-icon">&#x1F310;</div>
+                        <div class="deploy-text"><div class="deploy-name">Hybrid</div><div class="deploy-desc">Split compute &amp; storage</div></div>
+                        <span class="deploy-tag">Available</span>
+                    </div>
+                    <div class="deploy-item">
+                        <div class="deploy-icon">&#x1F527;</div>
+                        <div class="deploy-text"><div class="deploy-name">API / Embedded</div><div class="deploy-desc">Integrate into your apps</div></div>
+                        <span class="deploy-tag">REST / SDK</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── IMPLEMENTATION TIMELINE ────────────────────────── -->
+        <div class="agent-timeline-section">
+            <div class="agent-card-header" style="margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border-light);">
+                <div class="agent-card-icon-wrap purple">&#x26A1;</div>
+                <div>
+                    <div class="agent-card-title">Implementation Timeline</div>
+                    <div class="agent-card-subtitle">From contract to production in 8 weeks</div>
+                </div>
+            </div>
+            <div class="timeline-new">
+                ${timelineSteps.slice(0,4).map((s, i) => `
+                <div class="tl-step">
+                    <div class="tl-bubble ${tlClasses[i]}">
+                        <div class="tl-bubble-icon">${tlIcons[i]}</div>
+                        <div class="tl-week">${tlWeeks[i]}</div>
+                    </div>
+                    <div class="tl-title">${s.title}</div>
+                    <div class="tl-desc">${s.description}</div>
+                </div>`).join('')}
+            </div>
+        </div>
+
+        <!-- ── CTA ───────────────────────────────────────────── -->
+        <div class="agent-cta">
+            <div class="agent-cta-left">
+                <div class="agent-cta-pretitle">&#x1F680; Ready to transform your operations?</div>
+                <div class="agent-cta-title">Deploy ${agent.name}<br>in your enterprise today</div>
+                <div class="agent-cta-desc">Join 10,000+ organisations using UiPath Agentic AI to automate complex workflows, cut costs, and accelerate growth.</div>
+                <div class="agent-cta-trust">
+                    <span>&#x2714;</span> No-obligation demo &nbsp;·&nbsp;
+                    <span>&#x2714;</span> POC in 2 weeks &nbsp;·&nbsp;
+                    <span>&#x2714;</span> Dedicated success team
+                </div>
+            </div>
+            <div class="agent-cta-right">
+                ${agent.iframeUrl
+                    ? `<button class="cta-btn cta-btn-primary" onclick="playAgentDemo('${agentId}')">&#x25B6; Watch Live Demo</button>`
+                    : `<button class="cta-btn cta-btn-primary" onclick="requestDemo('${agentId}')">&#x1F4AC; Request a Demo</button>`}
+                ${agent.downloadUrl
+                    ? `<button class="cta-btn cta-btn-outline" onclick="window.open('${agent.downloadUrl}','_blank')">&#x2B07; Download Deck</button>`
+                    : `<button class="cta-btn cta-btn-outline" onclick="downloadSpecs('${agentId}')">&#x2B07; Download Solution Brief</button>`}
+            </div>
+        </div>
         `;
         document.getElementById('agentDetailView').innerHTML = html;
         updateBreadcrumb([{label:'Home'}, {label:'AI Agents'}, {label:agent.name, active:true}]);
@@ -2810,29 +3390,53 @@
             </div>`;
             return;
         }
-        grid.innerHTML = videos.map((v, i) => `
-            <div class="video-card">
-                <div class="video-thumbnail ${thumbClass(v.aiType)}" onclick="playVideo('${v.title.replace(/'/g,"\\'")}', ${i})">
-                    <div class="thumb-pattern"></div>
+        // Extract a headline metric from description (e.g. "40%", "3x", "$50M")
+        function extractMetric(desc) {
+            const m = desc.match(/(\d+[\.,]?\d*x|\$[\d,]+[MBK]?|\d+%)/i);
+            if (!m) return null;
+            const raw = m[1];
+            // Extract a short context label (up to 4 words after the number)
+            const rest = desc.slice(desc.indexOf(raw) + raw.length).trim();
+            const label = rest.split(/\s+/).slice(0, 5).join(' ').replace(/[,.]$/, '') || 'improvement';
+            return { value: raw, label };
+        }
+
+        grid.innerHTML = videos.map((v, i) => {
+            const vcClass = v.aiType === 'Agentic' ? 'vc-agentic' : v.aiType === 'RPA' ? 'vc-rpa' : v.aiType === 'IDP' ? 'vc-idp' : '';
+            const metric = extractMetric(v.description);
+            const safeTitle = v.title.replace(/'/g,"\\'");
+            const hasThumb = v.thumbnailUrl && v.thumbnailUrl.trim();
+            const thumbBg = hasThumb ? `style="background-image:url('${v.thumbnailUrl.trim()}');background-size:cover;background-position:center;"` : '';
+            const thumbCls = hasThumb ? 'thumb-custom' : thumbClass(v.aiType);
+            return `
+            <div class="video-card ${vcClass}">
+                <div class="video-thumbnail ${thumbCls}" ${thumbBg} onclick="playVideo('${safeTitle}', ${i})">
+                    ${hasThumb ? '' : '<div class="thumb-pattern"></div>'}
+                    <div class="thumb-fade"></div>
+                    ${v.duration ? `<span class="thumb-duration">&#x23F1; ${v.duration}</span>` : ''}
                     <span class="thumb-type-badge ${badgeClass(v.aiType)}">${v.aiType}</span>
                     <div class="play-btn">&#x25B6;</div>
                 </div>
                 <div class="video-body">
-                    <div class="video-title">${v.title}</div>
-                    <div class="video-description">${v.description}</div>
-                    <div class="video-meta">
-                        <span class="video-duration">${v.duration ? '&#x23F1; ' + v.duration : '&#x1F4CA; Presentation'}</span>
+                    <div class="video-tags">
                         <span class="video-type-pill ${typeClass(v.type)}">${v.type}</span>
                     </div>
+                    <div class="video-title">${v.title}</div>
+                    <div class="video-description">${v.description}</div>
+                    ${metric ? `
+                    <div class="video-metric">
+                        <span class="video-metric-value">${metric.value}</span>
+                        <span class="video-metric-label">${metric.label}</span>
+                    </div>` : ''}
                 </div>
                 <div class="video-actions">
-                    <span class="video-status"><span class="status-dot"></span>Available</span>
                     <div class="action-btns">
-                        <button class="action-btn action-btn-secondary" onclick="downloadVideo(${i}, '${v.title.replace(/'/g,"\\'")}')">&#x2B07; Download</button>
-                        <button class="action-btn action-btn-primary" onclick="shareVideo(${i}, '${v.title.replace(/'/g,"\\'")}')">&#x1F4E4; Share</button>
+                        <button class="action-btn action-btn-secondary" onclick="downloadVideo(${i}, '${safeTitle}')">&#x2B07; Download</button>
+                        <button class="action-btn action-btn-primary" onclick="shareVideo(${i}, '${safeTitle}')">&#x1F4E4; Share</button>
                     </div>
                 </div>
-            </div>`).join('');
+            </div>`;
+        }).join('');
     }
 
     // ── Breadcrumb ───────────────────────────────────────

@@ -200,6 +200,22 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 
 .form-hint { font-size:0.75rem; color:var(--muted); margin-top:5px; }
 
+.thumb-upload-row { display:flex; gap:14px; align-items:flex-start; }
+.thumb-preview-box {
+  flex-shrink:0; width:140px; height:88px;
+  border:1.5px dashed var(--border); border-radius:10px;
+  background:var(--bg); display:flex; align-items:center;
+  justify-content:center; overflow:hidden;
+}
+.thumb-upload-controls { flex:1; display:flex; flex-direction:column; gap:0; }
+.thumb-file-label {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:7px 14px; border-radius:8px; font-size:0.8rem; font-weight:600;
+  cursor:pointer; background:var(--bg); border:1px solid var(--border);
+  color:var(--text2); width:fit-content; transition:background 0.15s;
+}
+.thumb-file-label:hover { background:var(--border); color:var(--text1); }
+
 .url-input-wrapper { position:relative; }
 .url-input-wrapper .form-input { padding-left:32px; }
 .url-prefix { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:0.85rem; color:var(--muted); }
@@ -440,6 +456,27 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
       <!-- SHARED: Embed / Links -->
       <div class="form-section">
         <div class="form-section-title" id="embedSectionTitle">&#x1F3A5; Video / Embed</div>
+
+        <!-- Thumbnail upload -->
+        <div class="form-group">
+          <label class="form-label">Card Thumbnail</label>
+          <div class="thumb-upload-row">
+            <div class="thumb-preview-box" id="thumbPreviewBox">
+              <span id="thumbPreviewEmpty" style="font-size:0.75rem;color:#94A3B8;">No thumbnail</span>
+              <img id="thumbPreviewImg" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:8px;">
+            </div>
+            <div class="thumb-upload-controls">
+              <input class="form-input" id="fThumbnailUrl" placeholder="Paste image URL (SharePoint, Dropbox, etc.)..." oninput="onThumbnailUrlInput()">
+              <div class="form-hint" style="margin-bottom:8px;">Or upload directly:</div>
+              <label class="thumb-file-label">
+                &#x1F4C2; Choose Image File
+                <input type="file" id="fThumbnailFile" accept="image/*" style="display:none" onchange="uploadThumbnailFile(this)">
+              </label>
+              <div id="thumbUploadStatus" style="font-size:0.75rem;margin-top:6px;color:#0D9488;"></div>
+            </div>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="form-label">Embed / iFrame URL</label>
           <input class="form-input" id="fIframe" placeholder="Paste SharePoint embed URL or any iframe src..." oninput="previewUrl('fIframe','iframePreview')">
@@ -622,6 +659,47 @@ function setDrawerMode(agentMode) {
     : '&#x1F3A5; Video / Embed';
 }
 
+// ── Thumbnail helpers ─────────────────────────────────
+function setThumbnailPreview(url) {
+  const img = document.getElementById('thumbPreviewImg');
+  const empty = document.getElementById('thumbPreviewEmpty');
+  if (url) {
+    img.src = url;
+    img.style.display = 'block';
+    empty.style.display = 'none';
+  } else {
+    img.style.display = 'none';
+    empty.style.display = '';
+  }
+}
+function onThumbnailUrlInput() {
+  setThumbnailPreview(document.getElementById('fThumbnailUrl').value.trim());
+}
+async function uploadThumbnailFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const status = document.getElementById('thumbUploadStatus');
+  status.textContent = 'Uploading...';
+  status.style.color = '#64748B';
+  const fd = new FormData();
+  fd.append('thumbnail', file);
+  try {
+    const res = await fetch(`${API.replace('/api', '')}/api/upload/thumbnail`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.url) {
+      document.getElementById('fThumbnailUrl').value = data.url;
+      setThumbnailPreview(data.url);
+      status.textContent = '✓ Uploaded successfully';
+      status.style.color = '#0D9488';
+    } else {
+      throw new Error(data.error || 'Upload failed');
+    }
+  } catch (e) {
+    status.textContent = '✗ ' + (e.message || 'Upload failed');
+    status.style.color = '#EF4444';
+  }
+}
+
 function openDrawer(id) {
   const agentMode = isAgents();
   setDrawerMode(agentMode);
@@ -652,6 +730,10 @@ function openDrawer(id) {
   document.getElementById('fDownload').value = item?.downloadUrl || '';
   previewUrl('fIframe', 'iframePreview');
   previewUrl('fDownload', 'downloadPreview');
+  // Thumbnail
+  document.getElementById('fThumbnailUrl').value = item?.thumbnailUrl || '';
+  document.getElementById('thumbUploadStatus').textContent = '';
+  setThumbnailPreview(item?.thumbnailUrl || '');
   document.getElementById('overlay').classList.add('open');
   document.getElementById('fTitle').focus();
 }
@@ -725,6 +807,7 @@ async function saveVideo() {
     duration: document.getElementById('fDuration').value.trim(),
     iframeUrl: document.getElementById('fIframe').value.trim(),
     downloadUrl: document.getElementById('fDownload').value.trim(),
+    thumbnailUrl: document.getElementById('fThumbnailUrl').value.trim(),
     isPresentation: document.getElementById('fIsPresentation').checked
   };
 
