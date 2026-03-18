@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — AI Solutions Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: #FA4616; --blue: #2563EB; --blue-dark: #1D4ED8;
+  --green: #10B981; --red: #EF4444; --yellow: #F59E0B;
+  --text: #0F172A; --text2: #475569; --muted: #94A3B8;
+  --bg: #F8FAFC; --white: #FFFFFF;
+  --border: #E2E8F0; --border-light: #F1F5F9;
+  --shadow: 0 4px 12px rgba(0,0,0,0.08);
+  --radius: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); display:flex; height:100vh; overflow:hidden; -webkit-font-smoothing:antialiased; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 260px; background:#0F172A; border-right:none;
+  display:flex; flex-direction:column; flex-shrink:0;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+}
+.sidebar-header {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.sidebar-logo {
+  display:flex; align-items:center; gap:8px; margin-bottom:4px;
+}
+.logo-mark { width:32px; height:32px; background:var(--orange); border-radius:8px; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:13px; letter-spacing:-0.5px; box-shadow:0 4px 12px rgba(250,70,22,0.4); }
+.logo-name { font-weight:800; font-size:0.9rem; color:white; }
+.sidebar-sub { font-size:0.75rem; color:rgba(255,255,255,0.35); margin-top:2px; }
+
+.sidebar-nav { flex:1; overflow-y:auto; padding:16px 0; }
+.nav-section-label {
+  font-size:0.6rem; font-weight:700; text-transform:uppercase; letter-spacing:1px;
+  color:rgba(255,255,255,0.3); padding:16px 20px 6px;
+}
+.nav-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:9px 16px 9px 20px; cursor:pointer; transition:all 0.15s;
+  font-size:0.84rem; font-weight:500; color:rgba(255,255,255,0.55);
+  border-left:3px solid transparent; margin:1px 8px; border-radius:8px;
+}
+.nav-item:hover { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.85); }
+.nav-item.active { background:rgba(250,70,22,0.12); color:white; border-left-color:var(--orange); font-weight:600; margin:1px 8px; }
+.nav-count {
+  background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:0.7rem;
+  font-weight:700; padding:2px 7px; border-radius:10px;
+}
+.nav-item.active .nav-count { background:var(--orange); color:white; }
+
+.sidebar-footer {
+  padding:16px 20px; border-top:1px solid rgba(255,255,255,0.06);
+}
+.view-site-btn {
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  width:100%; padding:10px; background:rgba(250,70,22,0.15); color:rgba(255,255,255,0.85);
+  border:1px solid rgba(250,70,22,0.3); border-radius:var(--radius); font-size:0.84rem; font-weight:700;
+  cursor:pointer; text-decoration:none; transition:all 0.2s;
+}
+.view-site-btn:hover { background:var(--orange); color:white; box-shadow:0 4px 16px rgba(250,70,22,0.3); }
+
+/* ── MAIN CONTENT ── */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+.topbar {
+  background:var(--white); border-bottom:1px solid var(--border);
+  padding:18px 32px; display:flex; align-items:center; justify-content:space-between;
+  flex-shrink:0; box-shadow:0 1px 0 rgba(0,0,0,0.04);
+}
+.topbar-title { font-size:1.2rem; font-weight:800; color:var(--text); letter-spacing:-0.3px; }
+.topbar-sub { font-size:0.8rem; color:var(--muted); margin-top:3px; }
+
+.add-btn {
+  display:flex; align-items:center; gap:6px;
+  background:var(--orange); color:white; border:none;
+  padding:10px 20px; border-radius:var(--radius);
+  font-size:0.875rem; font-weight:700; cursor:pointer; transition:all 0.2s;
+  box-shadow:0 2px 8px rgba(250,70,22,0.25);
+}
+.add-btn:hover { background:#E03D10; transform:translateY(-1px); box-shadow:0 4px 16px rgba(250,70,22,0.35); }
+
+/* ── VIDEO LIST ── */
+.content-area { flex:1; overflow-y:auto; padding:28px 32px; }
+
+.video-list { display:flex; flex-direction:column; gap:10px; }
+
+.video-row {
+  background:var(--white); border:1px solid var(--border); border-radius:12px;
+  padding:16px 20px; display:flex; align-items:center; gap:16px;
+  transition:all 0.2s; cursor:default;
+}
+.video-row:hover { border-color:#93C5FD; box-shadow:0 4px 20px rgba(37,99,235,0.08), 0 1px 4px rgba(0,0,0,0.04); transform:translateY(-1px); }
+
+.row-thumb {
+  width:80px; height:52px; border-radius:8px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:1.3rem;
+  color:rgba(255,255,255,0.7);
+}
+.thumb-agentic { background:linear-gradient(135deg,#1E3A8A,#2563EB); }
+.thumb-rpa     { background:linear-gradient(135deg,#9A3412,#FA4616); }
+.thumb-idp     { background:linear-gradient(135deg,#065F46,#0D9488); }
+.thumb-default { background:linear-gradient(135deg,#1E293B,#475569); }
+
+.row-info { flex:1; min-width:0; }
+.row-title { font-size:0.9rem; font-weight:700; color:var(--text); margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.row-meta { display:flex; gap:8px; align-items:center; }
+.pill {
+  font-size:0.65rem; font-weight:700; padding:2px 7px; border-radius:8px;
+  text-transform:uppercase; letter-spacing:0.3px;
+}
+.pill-agentic { background:#EFF6FF; color:#1D4ED8; }
+.pill-rpa     { background:#FEF0EC; color:#C2410C; }
+.pill-idp     { background:#F0FDFA; color:#0F766E; }
+.pill-type    { background:var(--border-light); color:var(--text2); }
+.row-duration { font-size:0.75rem; color:var(--muted); }
+
+.row-status {
+  display:flex; align-items:center; gap:5px;
+  font-size:0.75rem; font-weight:600;
+}
+.status-dot { width:6px; height:6px; border-radius:50%; }
+.status-dot.has-video { background:var(--green); }
+.status-dot.no-video  { background:var(--yellow); }
+
+.row-actions { display:flex; gap:6px; flex-shrink:0; }
+.icon-btn {
+  width:34px; height:34px; border-radius:8px; border:1px solid var(--border);
+  background:var(--white); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:0.9rem; transition:all 0.15s; color:var(--text2);
+}
+.icon-btn:hover { background:var(--blue-light, #EFF6FF); border-color:#93C5FD; color:var(--blue); transform:scale(1.05); }
+.icon-btn.danger:hover { background:#FEF2F2; border-color:#FECACA; color:var(--red); transform:scale(1.05); }
+
+.empty-state {
+  text-align:center; padding:60px 20px; color:var(--muted);
+}
+.empty-icon { font-size:2.5rem; margin-bottom:12px; }
+.empty-title { font-weight:700; color:var(--text2); margin-bottom:6px; }
+.empty-sub { font-size:0.875rem; }
+
+/* ── MODAL / DRAWER ── */
+.overlay {
+  position:fixed; inset:0; background:rgba(15,23,42,0.5); backdrop-filter:blur(4px);
+  z-index:100; display:none; align-items:flex-start; justify-content:flex-end;
+}
+.overlay.open { display:flex; }
+
+.drawer {
+  background:var(--white); width:540px; height:100vh; overflow-y:auto;
+  box-shadow:-16px 0 48px rgba(0,0,0,0.15);
+  animation:slideIn 0.3s cubic-bezier(0.34, 1.1, 0.64, 1);
+}
+@keyframes slideIn { from { transform:translateX(40px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+
+.drawer-header {
+  position:sticky; top:0; background:var(--white); z-index:1;
+  padding:20px 24px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.drawer-title { font-size:1rem; font-weight:800; }
+.drawer-close {
+  width:32px; height:32px; border:1px solid var(--border); background:var(--bg);
+  border-radius:7px; cursor:pointer; font-size:1rem; color:var(--muted);
+  display:flex; align-items:center; justify-content:center; transition:all 0.15s;
+}
+.drawer-close:hover { color:var(--text); background:var(--border); }
+
+.drawer-body { padding:24px; }
+
+.form-section { margin-bottom:24px; }
+.form-section-title {
+  font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;
+  color:var(--muted); margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border-light);
+}
+
+.form-group { margin-bottom:16px; }
+.form-label { display:block; font-size:0.8rem; font-weight:600; color:var(--text2); margin-bottom:6px; }
+.form-label span { color:var(--red); }
+
+.form-input, .form-select, .form-textarea {
+  width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px;
+  background:var(--bg); font-size:0.875rem; color:var(--text); font-family:inherit;
+  transition:all 0.15s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline:none; border-color:var(--orange); background:var(--white);
+  box-shadow:0 0 0 3px rgba(250,70,22,0.08);
+}
+.form-input::placeholder, .form-textarea::placeholder { color:var(--muted); }
+.form-textarea { resize:vertical; min-height:80px; }
+
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+.form-hint { font-size:0.75rem; color:var(--muted); margin-top:5px; }
+
+.url-input-wrapper { position:relative; }
+.url-input-wrapper .form-input { padding-left:32px; }
+.url-prefix { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:0.85rem; color:var(--muted); }
+
+.preview-box {
+  background:var(--bg); border:1px solid var(--border); border-radius:8px;
+  padding:12px; margin-top:8px; font-size:0.775rem; color:var(--text2);
+  word-break:break-all; display:none;
+}
+.preview-box.has-url { display:block; }
+
+.drawer-footer {
+  position:sticky; bottom:0; background:var(--white);
+  padding:16px 24px; border-top:1px solid var(--border);
+  display:flex; gap:10px; justify-content:flex-end;
+}
+.btn {
+  padding:10px 20px; border-radius:8px; font-size:0.875rem; font-weight:700;
+  cursor:pointer; transition:all 0.15s; border:none;
+}
+.btn-ghost { background:var(--bg); color:var(--text2); border:1px solid var(--border); }
+.btn-ghost:hover { background:var(--border); }
+.btn-primary { background:var(--orange); color:white; box-shadow:0 2px 8px rgba(250,70,22,0.25); }
+.btn-primary:hover { background:#E03D10; box-shadow:0 4px 16px rgba(250,70,22,0.35); }
+.btn-danger { background:var(--red); color:white; }
+.btn-danger:hover { background:#DC2626; }
+
+/* ── Delete confirm ── */
+.confirm-modal {
+  position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px);
+  z-index:200; display:none; align-items:center; justify-content:center;
+}
+.confirm-modal.open { display:flex; }
+.confirm-box {
+  background:var(--white); border-radius:16px; padding:32px; max-width:400px; width:90%;
+  text-align:center; box-shadow:0 32px 64px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.08);
+  animation:popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  border:1px solid rgba(0,0,0,0.06);
+}
+@keyframes popIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+.confirm-icon { font-size:2rem; margin-bottom:12px; }
+.confirm-title { font-size:1rem; font-weight:800; margin-bottom:8px; }
+.confirm-desc { font-size:0.875rem; color:var(--text2); margin-bottom:24px; line-height:1.5; }
+.confirm-btns { display:flex; gap:10px; justify-content:center; }
+
+/* ── Toast ── */
+.toast {
+  position:fixed; bottom:24px; right:24px; background:var(--text); color:white;
+  padding:12px 20px; border-radius:8px; font-size:0.875rem; font-weight:600;
+  z-index:300; box-shadow:var(--shadow); animation:toastIn 0.3s ease;
+}
+@keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.toast.success { background:var(--green); }
+.toast.error   { background:var(--red); }
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ───────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <div class="logo-mark">Ui</div>
+      <span class="logo-name">AI Library</span>
+    </div>
+    <div class="sidebar-sub">Content Management</div>
+  </div>
+  <nav class="sidebar-nav" id="categoryNav">
+    <div class="nav-section-label">Industry</div>
+    <div class="nav-item active" data-cat="hr" onclick="selectCategory('hr')">
+      <span>&#x1F465; Human Resources</span>
+      <span class="nav-count" id="count-hr">0</span>
+    </div>
+    <div class="nav-item" data-cat="healthcare" onclick="selectCategory('healthcare')">
+      <span>&#x1F3E5; Healthcare</span>
+      <span class="nav-count" id="count-healthcare">0</span>
+    </div>
+    <div class="nav-item" data-cat="finance" onclick="selectCategory('finance')">
+      <span>&#x1F4B0; Financial Services</span>
+      <span class="nav-count" id="count-finance">0</span>
+    </div>
+    <div class="nav-item" data-cat="manufacturing" onclick="selectCategory('manufacturing')">
+      <span>&#x1F3ED; Manufacturing</span>
+      <span class="nav-count" id="count-manufacturing">0</span>
+    </div>
+    <div class="nav-item" data-cat="retail" onclick="selectCategory('retail')">
+      <span>&#x1F6CD;&#xFE0F; Retail</span>
+      <span class="nav-count" id="count-retail">0</span>
+    </div>
+    <div class="nav-item" data-cat="energy" onclick="selectCategory('energy')">
+      <span>&#x26A1; Energy</span>
+      <span class="nav-count" id="count-energy">0</span>
+    </div>
+    <div class="nav-item" data-cat="logistics" onclick="selectCategory('logistics')">
+      <span>&#x1F69A; Logistics</span>
+      <span class="nav-count" id="count-logistics">0</span>
+    </div>
+    <div class="nav-section-label">Business Function</div>
+    <div class="nav-item" data-cat="sales-marketing" onclick="selectCategory('sales-marketing')">
+      <span>&#x1F4C8; Sales &amp; Marketing</span>
+      <span class="nav-count" id="count-sales-marketing">0</span>
+    </div>
+    <div class="nav-item" data-cat="operations" onclick="selectCategory('operations')">
+      <span>&#x2699;&#xFE0F; Operations</span>
+      <span class="nav-count" id="count-operations">0</span>
+    </div>
+    <div class="nav-item" data-cat="customer-service" onclick="selectCategory('customer-service')">
+      <span>&#x1F9E0; Customer Service</span>
+      <span class="nav-count" id="count-customer-service">0</span>
+    </div>
+    <div class="nav-item" data-cat="analytics" onclick="selectCategory('analytics')">
+      <span>&#x1F4CA; Analytics</span>
+      <span class="nav-count" id="count-analytics">0</span>
+    </div>
+    <div class="nav-item" data-cat="finance-ops" onclick="selectCategory('finance-ops')">
+      <span>&#x1F4B9; Finance &amp; Accounting</span>
+      <span class="nav-count" id="count-finance-ops">0</span>
+    </div>
+    <div class="nav-section-label">AI Agents</div>
+    <div class="nav-item" data-cat="__agents__" onclick="selectCategory('__agents__')">
+      <span>&#x1F916; All Agents</span>
+      <span class="nav-count" id="count-__agents__">0</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <a class="view-site-btn" href="/" target="_blank">&#x1F517; View Live Site</a>
+  </div>
+</aside>
+
+<!-- ── MAIN ──────────────────────────────────────────── -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="topbarTitle">Human Resources</div>
+      <div class="topbar-sub" id="topbarSub">Manage videos, demos, and case studies</div>
+    </div>
+    <button class="add-btn" id="addBtn" onclick="openDrawer(null)">+ Add Content</button>
+  </div>
+
+  <div class="content-area">
+    <div class="video-list" id="videoList">
+      <div class="empty-state">
+        <div class="empty-icon">&#x23F3;</div>
+        <div class="empty-title">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DRAWER (Add / Edit) ───────────────────────────── -->
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title" id="drawerTitle">Add Content</span>
+      <button class="drawer-close" onclick="closeDrawer()">&#x2715;</button>
+    </div>
+    <div class="drawer-body">
+      <input type="hidden" id="editId">
+
+      <div class="form-section">
+        <div class="form-section-title">&#x1F4CB; Basic Information</div>
+        <div class="form-group">
+          <label class="form-label">Title <span>*</span></label>
+          <input class="form-input" id="fTitle" placeholder="e.g. HR Onboarding Automation Demo" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description <span>*</span></label>
+          <textarea class="form-textarea" id="fDesc" placeholder="Brief description of what this video covers and the business impact..."></textarea>
+        </div>
+      </div>
+
+      <!-- VIDEO-ONLY FIELDS -->
+      <div id="videoOnlyFields">
+        <div class="form-section">
+          <div class="form-section-title">&#x1F4CA; Classification</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Content Type <span>*</span></label>
+              <select class="form-select" id="fType">
+                <option value="Demo Video">Demo Video</option>
+                <option value="Demo">Demo</option>
+                <option value="Case Study">Case Study</option>
+                <option value="ROI Study">ROI Study</option>
+                <option value="Heatmap">Heatmap</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">AI Type <span>*</span></label>
+              <select class="form-select" id="fAiType">
+                <option value="Agentic">Agentic</option>
+                <option value="RPA">RPA</option>
+                <option value="IDP">IDP</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration</label>
+            <input class="form-input" id="fDuration" placeholder="e.g. 6:40  (leave blank for presentations)">
+            <div class="form-hint">Format: MM:SS — leave blank for presentations/heatmaps</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AGENT-ONLY FIELDS -->
+      <div id="agentOnlyFields" style="display:none">
+        <div class="form-section">
+          <div class="form-section-title">&#x1F916; Agent Details</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Icon (Emoji)</label>
+              <input class="form-input" id="fIcon" placeholder="e.g. &#x1F4B0; &#x1F916; &#x2699;&#xFE0F;">
+              <div class="form-hint">Paste an emoji character directly</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category <span>*</span></label>
+              <select class="form-select" id="fAgentCategory">
+                <option value="Finance">Finance</option>
+                <option value="HR">HR</option>
+                <option value="Sales">Sales</option>
+                <option value="Legal">Legal</option>
+                <option value="Operations">Operations</option>
+                <option value="Customer">Customer</option>
+                <option value="Marketing">Marketing</option>
+                <option value="General">General</option>
+                <option value="IT">IT</option>
+                <option value="Procurement">Procurement</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Key Use Cases</label>
+            <input class="form-input" id="fUseCases" placeholder="e.g. Invoice processing • Approval routing • Audit trail">
+            <div class="form-hint">Separate with bullet points (•)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHARED: Embed / Links -->
+      <div class="form-section">
+        <div class="form-section-title" id="embedSectionTitle">&#x1F3A5; Video / Embed</div>
+        <div class="form-group">
+          <label class="form-label">Embed / iFrame URL</label>
+          <input class="form-input" id="fIframe" placeholder="Paste SharePoint embed URL or any iframe src..." oninput="previewUrl('fIframe','iframePreview')">
+          <div class="form-hint">SharePoint embed URL, YouTube embed, Vimeo, demo link, etc.</div>
+          <div class="preview-box" id="iframePreview"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Download / Source URL</label>
+          <input class="form-input" id="fDownload" placeholder="Paste download link or direct file URL..." oninput="previewUrl('fDownload','downloadPreview')">
+          <div class="form-hint">Link opened when user clicks Download / Source button</div>
+          <div class="preview-box" id="downloadPreview"></div>
+        </div>
+        <div class="form-group" id="isPresentationRow">
+          <label class="form-label">
+            <input type="checkbox" id="fIsPresentation" style="margin-right:6px;">
+            This is a presentation / PowerPoint (not a video)
+          </label>
+          <div class="form-hint">When checked, the player will embed it as a document viewer</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="drawer-footer">
+      <button class="btn btn-ghost" onclick="closeDrawer()">Cancel</button>
+      <button class="btn btn-primary" id="saveBtn" onclick="saveItem()">Save Content</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── DELETE CONFIRM ────────────────────────────────── -->
+<div class="confirm-modal" id="confirmModal">
+  <div class="confirm-box">
+    <div class="confirm-icon">&#x1F5D1;&#xFE0F;</div>
+    <div class="confirm-title">Delete this item?</div>
+    <div class="confirm-desc" id="confirmDesc">This will permanently remove the video from the library.</div>
+    <div class="confirm-btns">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:3456/api';
+
+const CATEGORY_LABELS = {
+  hr: 'Human Resources', healthcare: 'Healthcare & Life Sciences',
+  finance: 'Financial Services', manufacturing: 'Manufacturing',
+  retail: 'Retail & E-commerce', energy: 'Energy & Utilities',
+  logistics: 'Logistics & Transportation', 'sales-marketing': 'Sales & Marketing',
+  operations: 'Operations', 'customer-service': 'Customer Service',
+  analytics: 'Analytics & Intelligence', 'finance-ops': 'Finance & Accounting',
+  '__agents__': 'AI Agents'
+};
+
+let currentCategory = 'hr';
+let items = []; // videos or agents depending on currentCategory
+let pendingDeleteId = null;
+
+function isAgents() { return currentCategory === '__agents__'; }
+
+// ── Init ─────────────────────────────────────────────
+async function init() {
+  await loadCounts();
+  await loadCategory('hr');
+}
+
+async function loadCounts() {
+  try {
+    const cats = await fetch(`${API}/categories`).then(r => r.json());
+    cats.forEach(({ key, count }) => {
+      const el = document.getElementById(`count-${key}`);
+      if (el) el.textContent = count;
+    });
+    const agents = await fetch(`${API}/agents`).then(r => r.json());
+    const agentCount = document.getElementById('count-__agents__');
+    if (agentCount) agentCount.textContent = agents.length;
+  } catch(e) {}
+}
+
+async function selectCategory(cat) {
+  currentCategory = cat;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelector(`[data-cat="${cat}"]`)?.classList.add('active');
+  document.getElementById('topbarTitle').textContent = CATEGORY_LABELS[cat] || cat;
+  document.getElementById('topbarSub').textContent = isAgents()
+    ? 'Manage AI agent cards and their details'
+    : 'Manage videos, demos, and case studies';
+  document.getElementById('addBtn').textContent = isAgents() ? '+ Add Agent' : '+ Add Content';
+  await loadCategory(cat);
+}
+
+async function loadCategory(cat) {
+  try {
+    if (cat === '__agents__') {
+      items = await fetch(`${API}/agents`).then(r => r.json());
+    } else {
+      items = await fetch(`${API}/videos/${cat}`).then(r => r.json());
+    }
+    renderList();
+  } catch(e) {
+    showToast('Failed to load content', 'error');
+  }
+}
+
+// ── Render ───────────────────────────────────────────
+function thumbClass(aiType) {
+  return { Agentic:'thumb-agentic', RPA:'thumb-rpa', IDP:'thumb-idp' }[aiType] || 'thumb-default';
+}
+function pillClass(aiType) {
+  return { Agentic:'pill-agentic', RPA:'pill-rpa', IDP:'pill-idp' }[aiType] || '';
+}
+function agentCatColor(cat) {
+  return { Finance:'pill-agentic', HR:'pill-rpa', Sales:'pill-idp', Legal:'pill-type', Operations:'pill-rpa',
+    Customer:'pill-agentic', Marketing:'pill-idp', General:'pill-type', IT:'pill-agentic', Procurement:'pill-rpa' }[cat] || 'pill-type';
+}
+
+function renderList() {
+  const list = document.getElementById('videoList');
+  if (!items.length) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">&#x1F4ED;</div>
+      <div class="empty-title">No content yet</div>
+      <div class="empty-sub">Click "${isAgents() ? 'Add Agent' : 'Add Content'}" to add the first item</div>
+    </div>`;
+    return;
+  }
+
+  if (isAgents()) {
+    list.innerHTML = items.map(a => `
+      <div class="video-row" id="row-${a.id}">
+        <div class="row-thumb thumb-agentic" style="font-size:1.4rem;display:flex;align-items:center;justify-content:center;">${a.icon || '&#x1F916;'}</div>
+        <div class="row-info">
+          <div class="row-title">${a.name}</div>
+          <div class="row-meta">
+            <span class="pill ${agentCatColor(a.category)}">${a.category}</span>
+            ${a.useCases ? `<span class="row-duration" style="font-size:0.75rem;color:var(--text2)">&#x2022; ${a.useCases}</span>` : ''}
+          </div>
+        </div>
+        <div class="row-status">
+          <span class="status-dot ${a.iframeUrl ? 'has-video' : 'no-video'}"></span>
+          ${a.iframeUrl ? 'Has demo' : 'No demo'}
+        </div>
+        <div class="row-actions">
+          <button class="icon-btn" title="Edit" onclick="openDrawer('${a.id}')">&#x270F;&#xFE0F;</button>
+          <button class="icon-btn danger" title="Delete" onclick="askDelete('${a.id}', '${a.name.replace(/'/g,"\\'")}')">&#x1F5D1;</button>
+        </div>
+      </div>`).join('');
+  } else {
+    list.innerHTML = items.map(v => `
+      <div class="video-row" id="row-${v.id}">
+        <div class="row-thumb ${thumbClass(v.aiType)}">&#x25B6;</div>
+        <div class="row-info">
+          <div class="row-title">${v.title}</div>
+          <div class="row-meta">
+            <span class="pill ${pillClass(v.aiType)}">${v.aiType}</span>
+            <span class="pill pill-type">${v.type}</span>
+            ${v.duration ? `<span class="row-duration">&#x23F1; ${v.duration}</span>` : '<span class="row-duration">&#x1F4CA; Presentation</span>'}
+          </div>
+        </div>
+        <div class="row-status">
+          <span class="status-dot ${v.iframeUrl ? 'has-video' : 'no-video'}"></span>
+          ${v.iframeUrl ? 'Has embed' : 'No embed'}
+        </div>
+        <div class="row-actions">
+          <button class="icon-btn" title="Edit" onclick="openDrawer('${v.id}')">&#x270F;&#xFE0F;</button>
+          <button class="icon-btn danger" title="Delete" onclick="askDelete('${v.id}', '${v.title.replace(/'/g,"\\'")}')">&#x1F5D1;</button>
+        </div>
+      </div>`).join('');
+  }
+}
+
+// ── Drawer ───────────────────────────────────────────
+function setDrawerMode(agentMode) {
+  document.getElementById('videoOnlyFields').style.display = agentMode ? 'none' : '';
+  document.getElementById('agentOnlyFields').style.display = agentMode ? '' : 'none';
+  document.getElementById('isPresentationRow').style.display = agentMode ? 'none' : '';
+  document.getElementById('embedSectionTitle').innerHTML = agentMode
+    ? '&#x1F4BB; Demo / Links'
+    : '&#x1F3A5; Video / Embed';
+}
+
+function openDrawer(id) {
+  const agentMode = isAgents();
+  setDrawerMode(agentMode);
+
+  const item = id ? items.find(x => x.id === id) : null;
+  document.getElementById('editId').value = id || '';
+  document.getElementById('drawerTitle').textContent = item
+    ? (agentMode ? 'Edit Agent' : 'Edit Content')
+    : (agentMode ? 'Add Agent' : 'Add Content');
+  document.getElementById('saveBtn').textContent = item ? 'Save Changes' : (agentMode ? 'Add Agent' : 'Save Content');
+
+  if (agentMode) {
+    document.getElementById('fTitle').value = item?.name || '';
+    document.getElementById('fDesc').value = item?.description || '';
+    document.getElementById('fIcon').value = item?.icon || '';
+    document.getElementById('fAgentCategory').value = item?.category || 'General';
+    document.getElementById('fUseCases').value = item?.useCases || '';
+  } else {
+    document.getElementById('fTitle').value = item?.title || '';
+    document.getElementById('fDesc').value = item?.description || '';
+    document.getElementById('fType').value = item?.type || 'Demo Video';
+    document.getElementById('fAiType').value = item?.aiType || 'Agentic';
+    document.getElementById('fDuration').value = item?.duration || '';
+    document.getElementById('fIsPresentation').checked = item?.isPresentation || false;
+  }
+
+  document.getElementById('fIframe').value = item?.iframeUrl || '';
+  document.getElementById('fDownload').value = item?.downloadUrl || '';
+  previewUrl('fIframe', 'iframePreview');
+  previewUrl('fDownload', 'downloadPreview');
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('fTitle').focus();
+}
+
+function closeDrawer() {
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closeDrawer();
+}
+
+function previewUrl(inputId, previewId) {
+  const val = document.getElementById(inputId).value.trim();
+  const box = document.getElementById(previewId);
+  if (val) { box.textContent = val; box.classList.add('has-url'); }
+  else { box.classList.remove('has-url'); }
+}
+
+// ── Save (routes to video or agent) ──────────────────
+async function saveItem() {
+  if (isAgents()) await saveAgent();
+  else await saveVideo();
+}
+
+async function saveAgent() {
+  const id = document.getElementById('editId').value;
+  const name = document.getElementById('fTitle').value.trim();
+  const description = document.getElementById('fDesc').value.trim();
+  if (!name) { showToast('Name is required', 'error'); document.getElementById('fTitle').focus(); return; }
+  if (!description) { showToast('Description is required', 'error'); document.getElementById('fDesc').focus(); return; }
+
+  const payload = {
+    name,
+    description,
+    icon: document.getElementById('fIcon').value.trim(),
+    category: document.getElementById('fAgentCategory').value,
+    useCases: document.getElementById('fUseCases').value.trim(),
+    iframeUrl: document.getElementById('fIframe').value.trim(),
+    downloadUrl: document.getElementById('fDownload').value.trim()
+  };
+
+  try {
+    if (id) {
+      await fetch(`${API}/agents/${id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+      showToast('Agent updated ✓', 'success');
+    } else {
+      await fetch(`${API}/agents`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+      showToast('Agent added ✓', 'success');
+    }
+    closeDrawer();
+    await loadCategory('__agents__');
+    await loadCounts();
+  } catch(e) {
+    showToast('Save failed', 'error');
+  }
+}
+
+async function saveVideo() {
+  const id = document.getElementById('editId').value;
+  const title = document.getElementById('fTitle').value.trim();
+  const description = document.getElementById('fDesc').value.trim();
+  if (!title) { showToast('Title is required', 'error'); document.getElementById('fTitle').focus(); return; }
+  if (!description) { showToast('Description is required', 'error'); document.getElementById('fDesc').focus(); return; }
+
+  const payload = {
+    title,
+    description,
+    type: document.getElementById('fType').value,
+    aiType: document.getElementById('fAiType').value,
+    duration: document.getElementById('fDuration').value.trim(),
+    iframeUrl: document.getElementById('fIframe').value.trim(),
+    downloadUrl: document.getElementById('fDownload').value.trim(),
+    isPresentation: document.getElementById('fIsPresentation').checked
+  };
+
+  try {
+    if (id) {
+      await fetch(`${API}/videos/${currentCategory}/${id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+      showToast('Content updated ✓', 'success');
+    } else {
+      await fetch(`${API}/videos/${currentCategory}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+      showToast('Content added ✓', 'success');
+    }
+    closeDrawer();
+    await loadCategory(currentCategory);
+    await loadCounts();
+  } catch(e) {
+    showToast('Save failed', 'error');
+  }
+}
+
+// ── Delete ───────────────────────────────────────────
+function askDelete(id, name) {
+  pendingDeleteId = id;
+  document.getElementById('confirmDesc').textContent = `"${name}" will be permanently removed.`;
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmModal').classList.remove('open');
+  pendingDeleteId = null;
+}
+
+async function confirmDelete() {
+  if (!pendingDeleteId) return;
+  try {
+    const url = isAgents()
+      ? `${API}/agents/${pendingDeleteId}`
+      : `${API}/videos/${currentCategory}/${pendingDeleteId}`;
+    await fetch(url, { method:'DELETE' });
+    showToast('Deleted ✓', 'success');
+    closeConfirm();
+    await loadCategory(currentCategory);
+    await loadCounts();
+  } catch(e) {
+    showToast('Delete failed', 'error');
+  }
+}
+
+// ── Toast ────────────────────────────────────────────
+function showToast(msg, type = '') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ── Keyboard ─────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeDrawer(); closeConfirm(); }
+});
+
+init();
+</script>
+</body>
+</html>

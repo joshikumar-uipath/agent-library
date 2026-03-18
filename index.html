@@ -1,0 +1,3095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UiPath AI Solutions Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #FA4616;
+            --orange-dark: #D93A10;
+            --orange-light: #FEF0EC;
+            --blue: #2563EB;
+            --blue-dark: #1D4ED8;
+            --blue-light: #EFF6FF;
+            --purple: #7C3AED;
+            --purple-light: #F5F3FF;
+            --teal: #0D9488;
+            --teal-light: #F0FDFA;
+            --green: #10B981;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --bg: #F8FAFC;
+            --bg-white: #FFFFFF;
+            --border: #E2E8F0;
+            --border-light: #F1F5F9;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.06);
+            --shadow-xl: 0 24px 48px rgba(0,0,0,0.12), 0 8px 16px rgba(0,0,0,0.06);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ─── NAVBAR ─────────────────────────────────────────── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 64px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 100;
+            border-bottom: none;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+        }
+
+        .navbar-left { display: flex; align-items: center; gap: 16px; }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            text-decoration: none;
+        }
+        /* UiPath wordmark: sparkle SVG + "U" + orange "i" + "Path" */
+        .uipath-wordmark {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1;
+            position: relative;
+        }
+        .uipath-sparkles {
+            display: flex;
+            align-items: center;
+            /* align sparkle above the "i" — nudge right to sit over the i */
+            margin-left: 17px;
+            margin-bottom: -3px;
+        }
+        .uipath-letters {
+            font-size: 1.45rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+        .uipath-letters .ui { color: var(--orange); }
+        .logo-divider {
+            width: 1px; height: 20px;
+            background: var(--border);
+            margin: 0 16px;
+        }
+        .logo-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .navbar-badge {
+            background: linear-gradient(135deg, var(--orange-light), #FDE8E0);
+            color: var(--orange);
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(250,70,22,0.15);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .navbar-right { display: flex; align-items: center; gap: 12px; }
+
+        .nav-btn {
+            padding: 8px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .nav-btn-ghost:hover { background: var(--bg); color: var(--text-primary); }
+        .nav-btn-primary {
+            background: var(--orange);
+            color: white;
+        }
+        .nav-btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(250,70,22,0.3); }
+
+        /* ─── HERO ───────────────────────────────────────────── */
+        .hero {
+            padding: 110px 40px 80px;
+            background: #FAFBFF;
+            position: relative;
+            overflow: hidden;
+            min-height: 780px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                radial-gradient(ellipse 70% 60% at 50% 40%, rgba(250,70,22,0.05) 0%, transparent 65%),
+                radial-gradient(ellipse 50% 50% at 20% 80%, rgba(37,99,235,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 85% 25%, rgba(124,58,237,0.04) 0%, transparent 60%);
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent, var(--bg));
+            z-index: 3;
+        }
+        .hero-grid { display: none; }
+
+        /* ─── ORBITAL SYSTEM ─────────────────────────────────────────────
+           Perfect circles. Icons orbit continuously using the rotate →
+           translateX → counter-rotate pattern, keeping labels upright.
+           Ring-2: 2 icons, clockwise 18s.
+           Ring-3: 4 icons, counter-clockwise 30s.
+        ──────────────────────────────────────────────────────────────── */
+        .orbit-system {
+            position: absolute;
+            left: 50%; top: 50%;
+            width: 1000px; height: 1000px;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        /* Central fade mask — hides icons when they pass behind the hero content zone */
+        .orbit-system::after {
+            content: '';
+            position: absolute;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+            width: 620px; height: 660px;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at center,
+                rgba(250,251,255,1)  0%,
+                rgba(250,251,255,1)  38%,
+                rgba(250,251,255,0.85) 52%,
+                rgba(250,251,255,0.4)  68%,
+                transparent 80%);
+            z-index: 2;
+            pointer-events: none;
+        }
+        .orbit-ring {
+            position: absolute;
+            border-radius: 50%;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .orbit-ring-1 {
+            width: 340px; height: 340px;
+            border: 1.5px solid rgba(99,120,200,0.22);
+        }
+        .orbit-ring-2 {
+            width: 640px; height: 640px;
+            border: 1.5px solid rgba(99,120,200,0.18);
+        }
+        .orbit-ring-3 {
+            width: 940px; height: 940px;
+            border: 1.5px solid rgba(99,120,200,0.13);
+        }
+
+        /* ── Orbiting icons ──────────────────────────────────────────────
+           Each .orbit-icon is anchored at the orbit-system center (left/top 50%).
+           margin: -26px centers the 52px card on that anchor point.
+           Animation: rotate the whole element → translateX outward →
+           counter-rotate so the card/label stays upright.
+        ──────────────────────────────────────────────────────────────── */
+        .orbit-icon {
+            position: absolute;
+            left: 50%; top: 50%;
+            margin-left: -26px;
+            margin-top: -26px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
+        }
+        .float-icon-card {
+            width: 52px; height: 52px;
+            background: white;
+            border-radius: 14px;
+            border: 1px solid rgba(0,0,0,0.07);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.09), 0 1px 6px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+        .float-icon-label {
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+            background: white;
+            padding: 3px 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        /* Ring-2 orbit: radius 320px, clockwise, 30s — 5 icons, 72° apart */
+        .orbit-icon.r2 { animation: orbitCW320 30s linear infinite; }
+
+        /* Ring-3 orbit: radius 470px, counter-clockwise, 55s — 6 icons, 60° apart */
+        .orbit-icon.r3 { animation: orbitCCW470 55s linear infinite; }
+
+        @keyframes orbitCW320 {
+            from { transform: rotate(0deg)   translateX(320px) rotate(0deg); }
+            to   { transform: rotate(360deg) translateX(320px) rotate(-360deg); }
+        }
+        @keyframes orbitCCW470 {
+            from { transform: rotate(0deg)    translateX(470px) rotate(0deg); }
+            to   { transform: rotate(-360deg) translateX(470px) rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 560px;   /* narrow column — stays inside the ellipse */
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Social proof row */
+        .hero-social-proof {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .hero-rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 6px 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            white-space: nowrap;
+        }
+        .hero-stars { color: #F59E0B; font-size: 0.85rem; letter-spacing: -1px; }
+        .hero-rating-text {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .hero-rating-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .hero-proof-divider {
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+        .hero-fortune {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 6px 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            white-space: nowrap;
+        }
+
+        .hero-eyebrow {
+            display: none;
+        }
+        .hero h1 {
+            font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 1.12;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+        }
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, #FA4616 0%, #FF6B35 50%, #FF9A7A 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 460px;
+            margin: 0 auto 32px;
+            line-height: 1.75;
+            font-weight: 400;
+        }
+
+        /* CTA buttons */
+        .hero-ctas {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 52px;
+            flex-wrap: wrap;
+        }
+        .hero-cta-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--orange);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(250,70,22,0.3);
+            text-decoration: none;
+        }
+        .hero-cta-primary:hover {
+            background: var(--orange-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(250,70,22,0.35);
+        }
+        .hero-cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: var(--text-primary);
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 1.5px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            text-decoration: none;
+        }
+        .hero-cta-secondary:hover {
+            border-color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            flex-wrap: nowrap;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            width: 100%;
+        }
+        .hero-stat {
+            text-align: center;
+            padding: 0 16px;
+            flex: 1;
+        }
+        .hero-stat-value {
+            font-size: 1.9rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: -1.5px;
+            display: block;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        .hero-stat-label {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .hero-stat-divider {
+            width: 1px;
+            background: var(--border);
+            align-self: stretch;
+            margin: 4px 0;
+        }
+
+        /* Trust bar */
+        .trust-bar {
+            background: white;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+        .trust-bar-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        .trust-bar-items {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .trust-bar-item {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            opacity: 0.7;
+            letter-spacing: -0.2px;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+        .trust-bar-item:hover { opacity: 1; }
+
+        /* ─── MAIN LAYOUT ────────────────────────────────────── */
+        .main-wrapper {
+            padding-top: 64px; /* navbar height */
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 48px 64px;
+        }
+
+        /* ─── NAV BAR (breadcrumb + back) ────────────────────── */
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            min-height: 40px;
+        }
+
+        .back-button {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 9px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .back-button:hover {
+            background: var(--bg);
+            color: var(--text-primary);
+            border-color: #93C5FD;
+            transform: translateX(-3px);
+            box-shadow: 0 2px 8px rgba(37,99,235,0.1);
+        }
+        .back-button.visible { display: flex; }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+        .breadcrumb-item { cursor: default; transition: color 0.15s; }
+        .breadcrumb-item.breadcrumb-home { cursor: pointer; color: var(--blue); }
+        .breadcrumb-item.breadcrumb-home:hover { color: var(--blue-dark); text-decoration: underline; }
+        .breadcrumb-item.active { color: var(--text-primary); font-weight: 600; pointer-events: none; }
+        .breadcrumb-sep { color: var(--border); }
+
+        /* ─── SECTION HEADER ─────────────────────────────────── */
+        .section-header {
+            margin-bottom: 36px;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.8px;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* ─── CATEGORY GRID ──────────────────────────────────── */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .category-card {
+            background: var(--bg-white);
+            border: 1px solid rgba(0,0,0,0.07);
+            border-radius: 20px;
+            padding: 40px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .category-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        .category-card.blue::after { background: linear-gradient(90deg, var(--blue), #60A5FA); }
+        .category-card.purple::after { background: linear-gradient(90deg, var(--purple), #A78BFA); }
+        .category-card.orange::after { background: linear-gradient(90deg, var(--orange), #FB923C); }
+        .category-card:hover::after { opacity: 1; }
+        .category-card:hover {
+            transform: translateY(-8px);
+            border-color: transparent;
+        }
+        .category-card.blue:hover {
+            box-shadow: 0 24px 64px rgba(37,99,235,0.18), 0 8px 24px rgba(0,0,0,0.06);
+        }
+        .category-card.purple:hover {
+            box-shadow: 0 24px 64px rgba(124,58,237,0.18), 0 8px 24px rgba(0,0,0,0.06);
+        }
+        .category-card.orange:hover {
+            box-shadow: 0 24px 64px rgba(250,70,22,0.18), 0 8px 24px rgba(0,0,0,0.06);
+        }
+
+        .category-icon {
+            width: 72px; height: 72px;
+            border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 28px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        .category-card.blue .category-icon { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); }
+        .category-card.purple .category-icon { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); }
+        .category-card.orange .category-icon { background: linear-gradient(135deg, #FEE2E2, #FED7AA); }
+
+        .category-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+        .category-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            flex-grow: 1;
+            margin-bottom: 24px;
+        }
+        .category-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .category-chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .category-chip {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .category-card.blue .category-chip { background: var(--blue-light); color: var(--blue); }
+        .category-card.purple .category-chip { background: var(--purple-light); color: var(--purple); }
+        .category-card.orange .category-chip { background: var(--orange-light); color: var(--orange); }
+        .category-arrow {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        .category-card.blue .category-arrow { background: var(--blue-light); color: var(--blue); }
+        .category-card.purple .category-arrow { background: var(--purple-light); color: var(--purple); }
+        .category-card.orange .category-arrow { background: var(--orange-light); color: var(--orange); }
+        .category-card:hover .category-arrow { transform: translateX(3px); }
+
+        /* ─── SUBCATEGORY GRID ───────────────────────────────── */
+        .subcategory-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .subcategory-grid.active {
+            display: grid;
+            animation: fadeUp 0.5s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .subcategory-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .subcategory-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--blue), var(--purple));
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 0 2px 2px 0;
+        }
+        .subcategory-card:hover::before { transform: scaleY(1); }
+        .subcategory-card:hover {
+            border-color: #93C5FD;
+            box-shadow: 0 8px 32px rgba(37,99,235,0.1), 0 2px 8px rgba(0,0,0,0.04);
+            transform: translateX(4px);
+        }
+
+        .subcategory-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .subcategory-icon { font-size: 1.4rem; }
+        .subcategory-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+        .subcategory-desc { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+        .subcategory-footer { display: flex; align-items: center; justify-content: space-between; }
+        .video-count-badge {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .subcategory-arrow {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+        .subcategory-card:hover .subcategory-arrow { color: var(--blue); transform: translateX(2px); }
+
+        /* ─── AI AGENTS GRID ─────────────────────────────────── */
+        .ai-agents-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .ai-agents-grid.active {
+            display: grid;
+            animation: fadeUp 0.5s ease-out;
+        }
+
+        .ai-agent-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        .ai-agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .ai-agent-card:hover::before { opacity: 1; background: linear-gradient(90deg, var(--blue), var(--purple)); }
+        .ai-agent-card:hover {
+            border-color: #CBD5E1;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.06);
+            transform: translateY(-4px);
+        }
+
+        .agent-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .ai-agent-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #F1F5F9, #E2E8F0);
+            border: none;
+        }
+        .ai-agent-category {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .cat-finance { background: #FEF3C7; color: #D97706; }
+        .cat-hr { background: #FCE7F3; color: #BE185D; }
+        .cat-sales { background: var(--blue-light); color: var(--blue); }
+        .cat-legal { background: #F0FDF4; color: #15803D; }
+        .cat-operations { background: var(--purple-light); color: var(--purple); }
+        .cat-customer { background: var(--teal-light); color: var(--teal); }
+        .cat-marketing { background: var(--orange-light); color: var(--orange); }
+        .cat-general { background: var(--bg); color: var(--text-secondary); }
+
+        .ai-agent-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+        .ai-agent-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+        .agent-use-cases {
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            border: 1px solid var(--border-light);
+        }
+        .use-cases-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
+        }
+        .use-cases-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* ─── VIDEO LIBRARY ──────────────────────────────────── */
+        .video-library { display: none; }
+        .video-library.active {
+            display: block;
+            animation: fadeUp 0.5s ease-out;
+        }
+
+        .library-header-section {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .library-title { font-size: 2rem; font-weight: 800; color: var(--text-primary); letter-spacing: -1px; }
+        .library-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px; }
+
+        /* ─── FILTER SECTION ─────────────────────────────────── */
+        .filter-section {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+            position: sticky;
+            top: 72px;
+            z-index: 50;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        }
+        .filter-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .filter-label-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-label-title svg { color: var(--text-muted); }
+        .clear-filters-btn {
+            background: none;
+            border: none;
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+        .clear-filters-btn:hover { background: var(--blue-light); }
+
+        .filter-controls {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 12px;
+            align-items: end;
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 6px; }
+        .filter-group-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .filter-input, .filter-select {
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: all 0.15s;
+            width: 100%;
+        }
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: var(--blue);
+            background: var(--bg-white);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+        }
+        .filter-input::placeholder { color: var(--text-muted); }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--blue-light);
+            color: var(--blue);
+            border: 1px solid rgba(37,99,235,0.15);
+            font-size: 0.775rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .filter-tag-remove {
+            cursor: pointer;
+            font-size: 0.9rem;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.15s;
+        }
+        .filter-tag-remove:hover { opacity: 1; }
+
+        .results-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .results-count {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ─── VIDEO GRID ─────────────────────────────────────── */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .video-card {
+            background: var(--bg-white);
+            border: 1px solid rgba(0,0,0,0.07);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .video-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.12), 0 8px 16px rgba(0,0,0,0.06);
+            border-color: transparent;
+        }
+
+        .video-thumbnail {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Gradient by AI type */
+        .thumb-agentic { background: linear-gradient(135deg, #1E3A8A, #2563EB, #7C3AED); }
+        .thumb-rpa { background: linear-gradient(135deg, #9A3412, #FA4616, #FB923C); }
+        .thumb-idp { background: linear-gradient(135deg, #065F46, #0D9488, #2DD4BF); }
+        .thumb-default { background: linear-gradient(135deg, #1E293B, #334155, #475569); }
+
+        .thumb-pattern {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .thumb-type-badge {
+            position: absolute;
+            top: 12px; right: 12px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            backdrop-filter: blur(8px);
+        }
+        .badge-agentic { background: rgba(255,255,255,0.15); color: #BAE6FD; border: 1px solid rgba(186,230,253,0.2); }
+        .badge-rpa { background: rgba(255,255,255,0.15); color: #FED7AA; border: 1px solid rgba(254,215,170,0.2); }
+        .badge-idp { background: rgba(255,255,255,0.15); color: #A7F3D0; border: 1px solid rgba(167,243,208,0.2); }
+
+        .play-btn {
+            width: 60px; height: 60px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        .video-card:hover .play-btn {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.15);
+            border-color: rgba(255,255,255,0.6);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+        }
+
+        .video-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .video-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.4;
+            letter-spacing: -0.2px;
+        }
+        .video-description {
+            font-size: 0.825rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 16px;
+        }
+        .video-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-light);
+        }
+        .video-duration {
+            font-size: 0.775rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .video-type-pill {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .type-roi { background: #FEF3C7; color: #92400E; }
+        .type-case { background: var(--blue-light); color: var(--blue-dark); }
+        .type-demo { background: #F0FDF4; color: #166534; }
+        .type-heatmap { background: var(--purple-light); color: var(--purple); }
+        .type-brief { background: var(--orange-light); color: var(--orange-dark); }
+
+        .video-actions {
+            padding: 12px 20px;
+            background: var(--bg);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .video-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .action-btns { display: flex; gap: 8px; }
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.775rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            text-decoration: none;
+        }
+        .action-btn-secondary {
+            background: var(--bg-white);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .action-btn-secondary:hover { background: var(--bg); color: var(--text-primary); }
+        .action-btn-primary {
+            background: var(--orange);
+            color: white;
+        }
+        .action-btn-primary:hover { background: var(--orange-dark); box-shadow: 0 4px 12px rgba(250,70,22,0.3); }
+
+        /* ─── AGENT DETAIL ───────────────────────────────────── */
+        .agent-detail-view { display: none; }
+        .agent-detail-view.active {
+            display: block;
+            animation: fadeUp 0.5s ease-out;
+        }
+
+        .agent-hero {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            border-radius: var(--radius-xl);
+            padding: 48px;
+            text-align: center;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .agent-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(250,70,22,0.1) 0%, transparent 60%);
+        }
+        .agent-hero-icon {
+            width: 96px; height: 96px;
+            background: linear-gradient(135deg, rgba(250,70,22,0.2), rgba(250,70,22,0.1));
+            border: 1px solid rgba(250,70,22,0.2);
+            border-radius: 24px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 24px;
+            position: relative;
+        }
+        .agent-hero-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+        .agent-hero-badge {
+            display: inline-block;
+            background: rgba(250,70,22,0.15);
+            border: 1px solid rgba(250,70,22,0.25);
+            color: #FCA589;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .agent-hero-desc {
+            color: #94A3B8;
+            font-size: 1rem;
+            max-width: 640px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .agent-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .agent-section {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 28px;
+        }
+        .agent-section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .agent-section-icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem;
+        }
+        .agent-section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .use-case-list { list-style: none; }
+        .use-case-item {
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            transition: border-color 0.15s;
+        }
+        .use-case-item:hover { border-color: var(--border); }
+        .use-case-item:last-child { margin-bottom: 0; }
+        .use-case-name { font-weight: 700; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 5px; }
+        .use-case-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .benefit-item {
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+        }
+        .benefit-icon { font-size: 1.5rem; margin-bottom: 8px; }
+        .benefit-value { font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.3px; }
+        .benefit-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
+
+        .timeline-section {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+        .timeline-header {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .timeline-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            position: relative;
+        }
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px; left: 40px; right: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue), var(--purple));
+            opacity: 0.2;
+        }
+        .timeline-step { text-align: center; position: relative; }
+        .step-num {
+            width: 40px; height: 40px;
+            background: var(--blue);
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            margin: 0 auto 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .step-title { font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+        .step-desc { font-size: 0.775rem; color: var(--text-muted); line-height: 1.5; }
+
+        .cta-section {
+            background: linear-gradient(135deg, #1E3A8A, #2563EB, #1D4ED8);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .cta-title { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 10px; position: relative; }
+        .cta-desc { color: rgba(255,255,255,0.75); font-size: 1rem; margin-bottom: 28px; position: relative; }
+        .cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; position: relative; }
+        .cta-btn {
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            text-decoration: none;
+        }
+        .cta-btn-primary { background: white; color: var(--blue); }
+        .cta-btn-primary:hover { background: #F8FAFC; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .cta-btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.4); }
+        .cta-btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.7); }
+
+        /* ─── MODALS ─────────────────────────────────────────── */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(15,23,42,0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .share-modal {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            width: 90%;
+            max-width: 480px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--text-primary); }
+        .modal-close {
+            width: 32px; height: 32px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted);
+            font-size: 1rem;
+            transition: all 0.15s;
+        }
+        .modal-close:hover { background: var(--border); color: var(--text-primary); }
+
+        .share-options { display: grid; gap: 10px; margin-bottom: 20px; }
+        .share-option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .share-option:hover { border-color: var(--blue); background: var(--blue-light); }
+        .share-icon-box {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        .share-option.email .share-icon-box { background: #3B82F6; }
+        .share-option.linkedin .share-icon-box { background: #0077B5; }
+        .share-option.teams .share-icon-box { background: #6264A7; }
+        .share-option.slack .share-icon-box { background: #4A154B; }
+        .share-info h4 { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
+        .share-info p { font-size: 0.8rem; color: var(--text-muted); }
+
+        .copy-link-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+        }
+        .copy-link-label { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 10px; }
+        .copy-link-row { display: flex; gap: 8px; }
+        .copy-link-input {
+            flex: 1;
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: var(--bg-white);
+            font-family: monospace;
+        }
+        .copy-btn {
+            padding: 9px 16px;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .copy-btn:hover { background: var(--blue-dark); }
+        .copy-btn.copied { background: var(--green); }
+
+        /* Video player */
+        .video-player-modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.92);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+        }
+        .video-player-modal.active { display: flex; }
+        .video-player-container {
+            background: #0F172A;
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            width: 92vw;
+            height: 90vh;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .video-iframe-container { width: 100%; height: 100%; border-radius: 10px; overflow: hidden; }
+        .video-iframe { width: 100%; height: 100%; border: none; }
+        .video-player-close {
+            position: absolute;
+            top: -44px; right: 0;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+            transition: all 0.15s;
+        }
+        .video-player-close:hover { background: rgba(255,255,255,0.2); }
+
+        /* ─── TOAST NOTIFICATIONS ────────────────────────────── */
+        .toast {
+            position: fixed;
+            top: 80px; right: 24px;
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            z-index: 400;
+            box-shadow: var(--shadow-lg);
+            animation: toastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 320px;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .toast-success { background: var(--green); }
+        .toast-info { background: var(--blue); }
+
+        /* ─── RESPONSIVE ─────────────────────────────────────── */
+        @media (max-width: 1200px) {
+            .container { padding: 32px 40px; }
+            .category-grid { grid-template-columns: 1fr 1fr; }
+            .timeline-steps { grid-template-columns: repeat(2, 1fr); }
+            .filter-controls { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 1300px) {
+            /* Scale the whole orbit system down so icons stay outside narrower viewports */
+            .orbit-system { transform: translate(-50%, -50%) scale(0.82); }
+        }
+        @media (max-width: 1050px) {
+            .orbit-system { transform: translate(-50%, -50%) scale(0.68); }
+        }
+        @media (max-width: 900px) {
+            .hero { padding: 100px 24px 60px; min-height: 640px; }
+            .orbit-system { display: none; }
+            .trust-bar { padding: 16px 24px; gap: 24px; }
+            .trust-bar-items { gap: 20px; }
+            .container { padding: 24px 24px; }
+            .category-grid { grid-template-columns: 1fr; }
+            .agent-content-grid { grid-template-columns: 1fr; }
+            .benefits-grid { grid-template-columns: 1fr 1fr; }
+            .navbar { padding: 0 24px; }
+            .logo-subtitle, .logo-divider { display: none; }
+            .hero-stats { gap: 24px; }
+            .hero-stat-divider { display: none; }
+        }
+        @media (max-width: 600px) {
+            .filter-controls { grid-template-columns: 1fr; }
+            .video-grid { grid-template-columns: 1fr; }
+            .ai-agents-grid { grid-template-columns: 1fr 1fr; }
+            .hero h1 { font-size: 2.2rem; letter-spacing: -1.5px; }
+            .timeline-steps { grid-template-columns: 1fr; }
+            .timeline-steps::before { display: none; }
+            .navbar-badge { display: none; }
+            .hero-social-proof { flex-direction: column; gap: 8px; }
+            .hero-proof-divider { display: none; }
+            .trust-bar-items { gap: 16px; }
+            .trust-bar-item { font-size: 0.78rem; }
+            .hero-ctas { gap: 10px; }
+            .hero-cta-primary, .hero-cta-secondary { padding: 12px 22px; font-size: 0.9rem; }
+        }
+
+        /* ─── FOOTER ─────────────────────────────────────── */
+        .site-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 18px 40px;
+            border-top: 1px solid var(--border);
+            background: white;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+        .site-footer-badge {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .site-footer-divider { opacity: 0.4; }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════════════ -->
+<nav class="navbar">
+    <div class="navbar-left">
+        <a class="logo" href="#" onclick="goHome(); return false;">
+            <div class="uipath-wordmark">
+                <!-- Sparkle stars above the "i" -->
+                <div class="uipath-sparkles">
+                    <svg width="26" height="15" viewBox="0 0 26 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Large 4-pointed star -->
+                        <path d="M10 1L11.5 5.5L16 7L11.5 8.5L10 13L8.5 8.5L4 7L8.5 5.5Z" fill="#FA4616"/>
+                        <!-- Small 4-pointed star -->
+                        <path d="M18 0L18.9 2.6L21.5 3.5L18.9 4.4L18 7L17.1 4.4L14.5 3.5L17.1 2.6Z" fill="#FA4616"/>
+                    </svg>
+                </div>
+                <!-- Wordmark: U + orange i + Path -->
+                <div class="uipath-letters">U<span class="ui">i</span>Path</div>
+            </div>
+        </a>
+        <div class="logo-divider"></div>
+        <span class="logo-subtitle">AI Solutions Library</span>
+    </div>
+    <div class="navbar-right">
+        <button class="nav-btn nav-btn-ghost" id="navHomeBtn" onclick="goHome()" style="display:none">&#x1F3E0; Home</button>
+        <button class="nav-btn nav-btn-primary">Speak to an AI Advisor</button>
+    </div>
+</nav>
+
+<div class="main-wrapper">
+
+<!-- ═══════════════════════════════════════════════
+     HERO (shown only on main view)
+══════════════════════════════════════════════════ -->
+<div class="hero" id="heroSection">
+    <div class="hero-grid"></div>
+
+    <!-- Orbital system: perfect circle rings + continuously orbiting icons -->
+    <div class="orbit-system">
+        <div class="orbit-ring orbit-ring-1"></div>
+        <div class="orbit-ring orbit-ring-2"></div>
+        <div class="orbit-ring orbit-ring-3"></div>
+
+        <!-- Ring-2 (radius 320px, CW, 30s): 5 UiPath products, 72° apart → delay = 6s each -->
+        <div class="orbit-icon r2" style="animation-delay: 0s">
+            <div class="float-icon-card">&#x1F916;</div>
+            <div class="float-icon-label">Agent Builder</div>
+        </div>
+        <div class="orbit-icon r2" style="animation-delay: -6s">
+            <div class="float-icon-card">&#x1F4BB;</div>
+            <div class="float-icon-label">Coded Agents</div>
+        </div>
+        <div class="orbit-icon r2" style="animation-delay: -12s">
+            <div class="float-icon-card">&#x1F3AC;</div>
+            <div class="float-icon-label">ScreenPlay</div>
+        </div>
+        <div class="orbit-icon r2" style="animation-delay: -18s">
+            <div class="float-icon-card">&#x1F9EA;</div>
+            <div class="float-icon-label">Agentic Testing</div>
+        </div>
+        <div class="orbit-icon r2" style="animation-delay: -24s">
+            <div class="float-icon-card">&#x1F4F1;</div>
+            <div class="float-icon-label">Coded Apps</div>
+        </div>
+
+        <!-- Ring-3 (radius 470px, CCW, 55s): 6 UiPath products, 60° apart → delay = 9.17s each -->
+        <div class="orbit-icon r3" style="animation-delay: 0s">
+            <div class="float-icon-card">&#x1F3B5;</div>
+            <div class="float-icon-label">Maestro</div>
+        </div>
+        <div class="orbit-icon r3" style="animation-delay: -9.17s">
+            <div class="float-icon-card">&#x2764;&#xFE0F;&#x200D;&#x1FA79;</div>
+            <div class="float-icon-label">Healing Agent</div>
+        </div>
+        <div class="orbit-icon r3" style="animation-delay: -18.33s">
+            <div class="float-icon-card">&#x1F34E;</div>
+            <div class="float-icon-label">MacOS Automation</div>
+        </div>
+        <div class="orbit-icon r3" style="animation-delay: -27.5s">
+            <div class="float-icon-card">&#x1F6E1;&#xFE0F;</div>
+            <div class="float-icon-label">Governance</div>
+        </div>
+        <div class="orbit-icon r3" style="animation-delay: -36.67s">
+            <div class="float-icon-card">&#x1F50C;</div>
+            <div class="float-icon-label">MCP Servers</div>
+        </div>
+        <div class="orbit-icon r3" style="animation-delay: -45.83s">
+            <div class="float-icon-card">&#x1F4CB;</div>
+            <div class="float-icon-label">Case Management</div>
+        </div>
+    </div>
+
+    <div class="hero-content">
+        <!-- Social proof row — G2 verified stats -->
+        <div class="hero-social-proof">
+            <div class="hero-rating">
+                <span class="hero-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</span>
+                <span class="hero-rating-text">4.6</span>
+                <span class="hero-rating-sub">G2 Rating</span>
+            </div>
+            <div class="hero-proof-divider"></div>
+            <div class="hero-fortune">
+                &#x1F3C6; #1 in 11 categories
+            </div>
+            <div class="hero-proof-divider"></div>
+            <div class="hero-fortune">
+                &#x1F4C5; Since 2005
+            </div>
+        </div>
+
+        <h1>The <span class="gradient-text">AI Solutions</span><br>Library for Enterprise</h1>
+        <p class="hero-subtitle">
+            A curated showcase of enterprise-grade Agentic AI, RPA, and IDP implementations
+            with proven ROI — ready to deploy.
+        </p>
+
+        <!-- CTA buttons -->
+        <div class="hero-ctas">
+            <button class="hero-cta-primary" onclick="document.querySelector('.container').scrollIntoView({behavior:'smooth'})">
+                Explore Library &darr;
+            </button>
+            <a class="hero-cta-secondary" href="https://mea.staging.uipath.host/ai-roi" target="_blank" rel="noopener">
+                &#x1F4C8; Calculate ROI
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-value">12+</span>
+                <span class="hero-stat-label">Industries</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+                <span class="hero-stat-value">15+</span>
+                <span class="hero-stat-label">AI Agents</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+                <span class="hero-stat-value">200+</span>
+                <span class="hero-stat-label">Case Studies</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+                <span class="hero-stat-value">3x</span>
+                <span class="hero-stat-label">Avg. ROI</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trust bar -->
+<div class="trust-bar">
+    <span class="trust-bar-label">Deployed in</span>
+    <div class="trust-bar-items">
+        <span class="trust-bar-item">Banking &amp; Finance</span>
+        <span class="trust-bar-item">Healthcare</span>
+        <span class="trust-bar-item">Manufacturing</span>
+        <span class="trust-bar-item">Insurance</span>
+        <span class="trust-bar-item">Retail &amp; CPG</span>
+        <span class="trust-bar-item">Government</span>
+        <span class="trust-bar-item">Logistics</span>
+        <span class="trust-bar-item">Energy &amp; Utilities</span>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     MAIN CONTAINER
+══════════════════════════════════════════════════ -->
+<div class="container">
+
+    <!-- Nav bar (breadcrumb + back) -->
+    <div class="nav-bar">
+        <button class="back-button" id="backButton" onclick="navigateBack()">
+            &#8592; Back
+        </button>
+        <div class="breadcrumb" id="breadcrumb">
+            <span class="breadcrumb-item active">Home</span>
+        </div>
+    </div>
+
+    <!-- ── MAIN CATEGORIES ───────────────────────────────── -->
+    <div class="category-grid" id="categoryGrid">
+        <div class="category-card blue" onclick="showSubcategories('industry')">
+            <div class="category-icon">&#x1F3E2;</div>
+            <div class="category-title">Industry Solutions</div>
+            <div class="category-desc">
+                Sector-specific AI implementations showcasing measurable business impact
+                across healthcare, finance, manufacturing, and other key industries.
+            </div>
+            <div class="category-footer">
+                <div class="category-chips">
+                    <span class="category-chip">12 Industries</span>
+                    <span class="category-chip">ROI Focused</span>
+                </div>
+                <div class="category-arrow">&#x2192;</div>
+            </div>
+        </div>
+
+        <div class="category-card purple" onclick="showSubcategories('business')">
+            <div class="category-icon">&#x2699;&#xFE0F;</div>
+            <div class="category-title">Business Functions</div>
+            <div class="category-desc">
+                Cross-industry AI applications for core business processes including sales,
+                operations, customer service, and strategic analytics.
+            </div>
+            <div class="category-footer">
+                <div class="category-chips">
+                    <span class="category-chip">10 Functions</span>
+                    <span class="category-chip">Scalable</span>
+                </div>
+                <div class="category-arrow">&#x2192;</div>
+            </div>
+        </div>
+
+        <div class="category-card orange" onclick="showSubcategories('agents')">
+            <div class="category-icon">&#x1F916;</div>
+            <div class="category-title">Browse by AI Agents</div>
+            <div class="category-desc">
+                Explore specialized AI agents and their real-world applications across
+                different business scenarios and use cases.
+            </div>
+            <div class="category-footer">
+                <div class="category-chips">
+                    <span class="category-chip">15 Agent Types</span>
+                    <span class="category-chip">Intelligent</span>
+                </div>
+                <div class="category-arrow">&#x2192;</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── INDUSTRY SUBCATEGORIES ────────────────────────── -->
+    <div class="subcategory-grid" id="industryGrid">
+        <div class="subcategory-card" onclick="showVideoLibrary('healthcare')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x1F3E5;</div>
+                <div class="subcategory-title">Healthcare &amp; Life Sciences</div>
+            </div>
+            <div class="subcategory-desc">AI-driven diagnostic tools, patient care optimization, and regulatory compliance solutions with proven clinical outcomes.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">24 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+        <div class="subcategory-card" onclick="showVideoLibrary('finance')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x1F4B0;</div>
+                <div class="subcategory-title">Financial Services</div>
+            </div>
+            <div class="subcategory-desc">Risk management, fraud detection, and algorithmic trading solutions delivering measurable financial performance.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">31 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+        <div class="subcategory-card" onclick="showVideoLibrary('manufacturing')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x1F3ED;</div>
+                <div class="subcategory-title">Manufacturing</div>
+            </div>
+            <div class="subcategory-desc">Predictive maintenance, quality control, and supply chain optimization with demonstrated efficiency gains.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">19 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+        <div class="subcategory-card" onclick="showVideoLibrary('retail')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x1F6CD;&#xFE0F;</div>
+                <div class="subcategory-title">Retail &amp; E-commerce</div>
+            </div>
+            <div class="subcategory-desc">Inventory optimization, customer personalization, and demand forecasting driving revenue growth.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">27 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+        <div class="subcategory-card" onclick="showVideoLibrary('energy')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x26A1;</div>
+                <div class="subcategory-title">Energy &amp; Utilities</div>
+            </div>
+            <div class="subcategory-desc">Grid optimization, renewable energy management, and predictive maintenance reducing operational costs.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">18 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+        <div class="subcategory-card" onclick="showVideoLibrary('logistics')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x1F69A;</div>
+                <div class="subcategory-title">Logistics &amp; Transportation</div>
+            </div>
+            <div class="subcategory-desc">Route optimization, fleet management, and warehouse automation achieving significant cost savings.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">22 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── BUSINESS FUNCTION SUBCATEGORIES ──────────────── -->
+    <div class="subcategory-grid" id="businessGrid">
+        <div class="subcategory-card" onclick="showVideoLibrary('sales-marketing')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x1F4C8;</div>
+                <div class="subcategory-title">Sales &amp; Marketing</div>
+            </div>
+            <div class="subcategory-desc">Lead scoring, campaign optimization, and customer lifecycle management improving conversion rates.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">35 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+        <div class="subcategory-card" onclick="showVideoLibrary('operations')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x2699;&#xFE0F;</div>
+                <div class="subcategory-title">Operations</div>
+            </div>
+            <div class="subcategory-desc">Process automation, resource allocation, and workflow optimization enhancing operational efficiency.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">33 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+        <div class="subcategory-card" onclick="showVideoLibrary('customer-service')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x1F9E0;</div>
+                <div class="subcategory-title">Customer Service</div>
+            </div>
+            <div class="subcategory-desc">Intelligent chatbots, sentiment analysis, and automated support reducing response times and costs.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">42 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+        <div class="subcategory-card" onclick="showVideoLibrary('analytics')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x1F4CA;</div>
+                <div class="subcategory-title">Analytics &amp; Intelligence</div>
+            </div>
+            <div class="subcategory-desc">Business intelligence, predictive modeling, and real-time analytics enabling data-driven decisions.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">37 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+        <div class="subcategory-card" onclick="showVideoLibrary('hr')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x1F465;</div>
+                <div class="subcategory-title">Human Resources</div>
+            </div>
+            <div class="subcategory-desc">Talent acquisition, performance management, and employee engagement optimization reducing turnover.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">28 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+        <div class="subcategory-card" onclick="showVideoLibrary('finance-ops')">
+            <div class="subcategory-header">
+                <div class="subcategory-icon">&#x1F4B9;</div>
+                <div class="subcategory-title">Finance &amp; Accounting</div>
+            </div>
+            <div class="subcategory-desc">Invoice processing, financial reporting, and budget forecasting improving accuracy and speed.</div>
+            <div class="subcategory-footer">
+                <span class="video-count-badge">26 Case Studies</span>
+                <span class="subcategory-arrow">&#x2192;</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── AI AGENTS GRID (loaded from API) ─────────────── -->
+    <div class="ai-agents-grid" id="aiAgentsGrid">
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:#94A3B8;">&#x23F3; Loading agents...</div>
+    </div>
+
+    <!-- ── AGENT DETAIL VIEW ─────────────────────────────── -->
+    <div class="agent-detail-view" id="agentDetailView"></div>
+
+    <!-- ── VIDEO LIBRARY ─────────────────────────────────── -->
+    <div class="video-library" id="videoLibrary">
+        <div class="library-header-section">
+            <div>
+                <div class="library-title" id="libraryTitle">Case Studies</div>
+                <div class="library-subtitle" id="librarySubtitle">Executive-level demonstrations and ROI analysis</div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-top">
+                <span class="filter-label-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                    Filter Content
+                </span>
+                <button class="clear-filters-btn" onclick="clearAllFilters()">Clear all</button>
+            </div>
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label class="filter-group-label">Search</label>
+                    <input type="text" class="filter-input" placeholder="&#x1F50D; Search videos, companies, topics..." id="searchInput" oninput="applyFilters()">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-group-label">Content Type</label>
+                    <select class="filter-select" id="typeFilter" onchange="applyFilters()">
+                        <option value="">All Types</option>
+                        <option value="ROI Study">ROI Study</option>
+                        <option value="Case Study">Case Study</option>
+                        <option value="Heatmap">Heatmap</option>
+                        <option value="Demo">Demo Video</option>
+                        <option value="Demo Video">Demo Video</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-group-label">AI Type</label>
+                    <select class="filter-select" id="aiTypeFilter" onchange="applyFilters()">
+                        <option value="">All AI Types</option>
+                        <option value="RPA">RPA</option>
+                        <option value="Agentic">Agentic</option>
+                        <option value="IDP">IDP</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-group-label">Duration</label>
+                    <select class="filter-select" id="durationFilter" onchange="applyFilters()">
+                        <option value="">All Durations</option>
+                        <option value="short">Short (&lt; 10 min)</option>
+                        <option value="medium">Medium (10-15 min)</option>
+                        <option value="long">Long (&gt; 15 min)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-tags" id="filterTags"></div>
+        </div>
+
+        <div class="results-bar">
+            <span class="results-count" id="resultsCount">Showing all videos</span>
+        </div>
+        <div class="video-grid" id="videoGrid"></div>
+    </div>
+
+</div><!-- /container -->
+</div><!-- /main-wrapper -->
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════ -->
+<footer class="site-footer">
+    <span class="site-footer-badge">&#x2764;&#xFE0F; Made with UiPath Coded App SDK</span>
+    <span class="site-footer-divider">·</span>
+    <span class="site-footer-copy">&copy; 2025 UiPath. All rights reserved.</span>
+</footer>
+
+<!-- ═══════════════════════════════════════════════
+     SHARE MODAL
+══════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="shareModal">
+    <div class="share-modal">
+        <div class="modal-header">
+            <span class="modal-title">Share this video</span>
+            <button class="modal-close" onclick="closeShareModal()">&#x2715;</button>
+        </div>
+        <div class="share-options">
+            <div class="share-option email" onclick="shareViaEmail()">
+                <div class="share-icon-box">&#x2709;&#xFE0F;</div>
+                <div class="share-info">
+                    <h4>Email</h4>
+                    <p>Send via your default email client</p>
+                </div>
+            </div>
+            <div class="share-option linkedin" onclick="shareViaLinkedIn()">
+                <div class="share-icon-box">&#x1F4BC;</div>
+                <div class="share-info">
+                    <h4>LinkedIn</h4>
+                    <p>Share with your professional network</p>
+                </div>
+            </div>
+            <div class="share-option teams" onclick="shareViaTeams()">
+                <div class="share-icon-box">&#x1F4F9;</div>
+                <div class="share-info">
+                    <h4>Microsoft Teams</h4>
+                    <p>Share with your team or channel</p>
+                </div>
+            </div>
+            <div class="share-option slack" onclick="shareViaSlack()">
+                <div class="share-icon-box">&#x1F4AC;</div>
+                <div class="share-info">
+                    <h4>Slack</h4>
+                    <p>Send to a Slack channel or DM</p>
+                </div>
+            </div>
+        </div>
+        <div class="copy-link-box">
+            <div class="copy-link-label">Or copy link to share</div>
+            <div class="copy-link-row">
+                <input type="text" class="copy-link-input" id="shareLink" readonly>
+                <button class="copy-btn" id="copyBtn" onclick="copyShareLink()">Copy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     VIDEO PLAYER MODAL
+══════════════════════════════════════════════════ -->
+<div class="video-player-modal" id="videoPlayerModal">
+    <div class="video-player-container">
+        <button class="video-player-close" onclick="closeVideoPlayer()">&#x2715;</button>
+        <div class="video-iframe-container">
+            <iframe class="video-iframe" id="videoPlayerIframe" src="" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentView = 'main';
+    let currentCategory = '';
+    let currentSubcategory = '';
+    let currentAgent = '';
+
+    function goHome() {
+        // Reset to main view from any depth
+        currentView = 'main';
+        currentCategory = '';
+        currentSubcategory = '';
+        currentAgent = '';
+        document.querySelectorAll('.subcategory-grid').forEach(g => g.classList.remove('active'));
+        document.getElementById('aiAgentsGrid').classList.remove('active');
+        const detailView = document.getElementById('agentDetailView');
+        if (detailView) detailView.classList.remove('active');
+        document.getElementById('categoryGrid').style.display = 'grid';
+        document.getElementById('heroSection').style.display = 'block';
+        document.getElementById('backButton').classList.remove('visible');
+        document.getElementById('navHomeBtn').style.display = 'none';
+        updateBreadcrumb([{label:'Home', active:true}]);
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    // ── Agent Data ───────────────────────────────────────
+    const agentData = {
+        'finance-advisor': {
+            name: 'Finance Advisor',
+            category: 'Finance',
+            icon: '💰',
+            description: 'An intelligent AI agent that delivers personalized financial advice, comprehensive budget analysis, and strategic investment recommendations tailored to individual financial goals.',
+            useCases: [
+                { title: 'Investment Portfolio Management', description: 'Analyze market trends and provide personalized investment recommendations based on risk tolerance and financial goals.' },
+                { title: 'Budget Optimization', description: 'Review spending patterns and suggest budget adjustments to maximize savings and financial efficiency.' },
+                { title: 'Risk Assessment', description: 'Evaluate financial risks across investments and provide mitigation strategies.' }
+            ],
+            benefits: [
+                { icon: '📈', title: '35% ROI Increase', description: 'Average portfolio performance improvement' },
+                { icon: '⏱️', title: '80% Time Saved', description: 'Automated financial analysis and reporting' },
+                { icon: '🎯', title: '95% Accuracy', description: 'Precise risk assessment and forecasting' }
+            ],
+            timeline: [
+                { title: 'Data Integration', description: 'Connect financial accounts and data sources' },
+                { title: 'AI Training', description: 'Configure personalized financial parameters' },
+                { title: 'Testing Phase', description: 'Validate recommendations with sample data' },
+                { title: 'Full Deployment', description: 'Launch comprehensive financial advisory system' }
+            ]
+        },
+        'ledger-agent': {
+            name: 'Ledger Agent',
+            category: 'Finance',
+            icon: '📒',
+            description: 'A sophisticated financial monitoring system that continuously tracks account balances, detects anomalies, and provides real-time insights for enhanced financial oversight and compliance.',
+            useCases: [
+                { title: 'Real-time Account Monitoring', description: 'Monitor all financial accounts 24/7 with instant alerts for unusual activity or balance changes.' },
+                { title: 'Anomaly Detection', description: 'Identify suspicious transactions and patterns that deviate from normal financial behavior.' },
+                { title: 'Automated Reporting', description: 'Generate comprehensive financial reports and compliance documentation automatically.' }
+            ],
+            benefits: [
+                { icon: '⚡', title: '99.9% Uptime', description: 'Continuous monitoring and alerts' },
+                { icon: '🛡️', title: '95% Accuracy', description: 'Fraud and anomaly detection rate' },
+                { icon: '📊', title: '75% Time Saved', description: 'Automated report generation' }
+            ],
+            timeline: [
+                { title: 'System Integration', description: 'Connect to financial systems and databases' },
+                { title: 'Baseline Setup', description: 'Establish normal patterns and thresholds' },
+                { title: 'Alert Configuration', description: 'Configure monitoring rules and notifications' },
+                { title: 'Full Monitoring', description: 'Deploy comprehensive ledger monitoring' }
+            ]
+        },
+        'fraud-detection': {
+            name: 'Fraud Detection Agent',
+            category: 'Finance',
+            icon: '🛡️',
+            description: 'An advanced security system that uses machine learning to identify suspicious transactions in real-time, preventing financial fraud before it impacts your organization.',
+            useCases: [
+                { title: 'Transaction Monitoring', description: 'Analyze every transaction in real-time against behavioral patterns and risk indicators.' },
+                { title: 'Risk Scoring', description: 'Assign risk scores to transactions and automatically flag high-risk activities.' },
+                { title: 'Investigation Support', description: 'Provide detailed forensic analysis and evidence collection for fraud investigations.' }
+            ],
+            benefits: [
+                { icon: '🚫', title: '98% Prevention', description: 'Fraud detection and prevention rate' },
+                { icon: '💰', title: '$2M+ Saved', description: 'Average annual fraud losses prevented' },
+                { icon: '⚡', title: '50ms Response', description: 'Real-time transaction analysis speed' }
+            ],
+            timeline: [
+                { title: 'Data Collection', description: 'Gather historical transaction and fraud data' },
+                { title: 'Model Training', description: 'Train ML models on fraud patterns' },
+                { title: 'Integration Testing', description: 'Test with live transaction streams' },
+                { title: 'Production Deploy', description: 'Launch real-time fraud monitoring' }
+            ]
+        },
+        'employee-advisor': {
+            name: 'Employee Advisor',
+            category: 'HR',
+            icon: '👥',
+            description: 'A comprehensive HR management system that streamlines recruitment processes, manages position requests, and optimizes job offer workflows for enhanced talent acquisition.',
+            useCases: [
+                { title: 'Position Management', description: 'Automate the creation, approval, and tracking of new position requests across departments.' },
+                { title: 'Recruitment Coordination', description: 'Coordinate hiring workflows from job posting to candidate selection and onboarding.' },
+                { title: 'Offer Processing', description: 'Streamline job offer creation, negotiation, and acceptance processes.' }
+            ],
+            benefits: [
+                { icon: '⏱️', title: '60% Faster', description: 'Recruitment cycle time reduction' },
+                { icon: '🤝', title: '40% Better', description: 'Candidate quality improvement' },
+                { icon: '📋', title: '85% Automated', description: 'Administrative task automation' }
+            ],
+            timeline: [
+                { title: 'HR System Integration', description: 'Connect with existing HR and ATS platforms' },
+                { title: 'Workflow Design', description: 'Map and optimize recruitment processes' },
+                { title: 'User Training', description: 'Train HR team on new automated workflows' },
+                { title: 'Full Implementation', description: 'Deploy complete employee advisory system' }
+            ]
+        },
+        'hr-companion': {
+            name: 'HR Companion Agent',
+            category: 'HR',
+            icon: '🤝',
+            description: 'An intelligent HR support system that provides employees with instant access to HR policies, benefits information, and personalized guidance for all HR-related inquiries.',
+            useCases: [
+                { title: 'Policy Assistance', description: 'Provide instant answers to HR policy questions and procedural guidance.' },
+                { title: 'Benefits Navigation', description: 'Help employees understand and navigate their benefits options and enrollment processes.' },
+                { title: 'Career Guidance', description: 'Offer personalized career development advice and internal opportunity recommendations.' }
+            ],
+            benefits: [
+                { icon: '🌐', title: '24/7 Support', description: 'Always available HR assistance' },
+                { icon: '😊', title: '92% Satisfaction', description: 'Employee satisfaction with HR support' },
+                { icon: '📉', title: '70% Reduction', description: 'HR service desk ticket volume' }
+            ],
+            timeline: [
+                { title: 'Knowledge Base Setup', description: 'Build comprehensive HR knowledge repository' },
+                { title: 'Integration Config', description: 'Connect with HR systems and databases' },
+                { title: 'Pilot Testing', description: 'Test with select employee groups' },
+                { title: 'Company Rollout', description: 'Deploy to all employees organization-wide' }
+            ]
+        },
+        'lead-scoring': {
+            name: 'Lead Scoring Agent',
+            category: 'Sales',
+            icon: '🎯',
+            description: 'An intelligent sales optimization system that ranks and prioritizes leads based on conversion probability to maximize sales team efficiency and revenue potential.',
+            useCases: [
+                { title: 'Lead Qualification', description: 'Automatically score and qualify leads based on behavioral and demographic data.' },
+                { title: 'Priority Ranking', description: 'Rank leads by conversion probability to optimize sales team focus.' },
+                { title: 'Conversion Optimization', description: 'Identify high-value prospects and optimal engagement strategies.' }
+            ],
+            benefits: [
+                { icon: '📈', title: '45% Increase', description: 'Sales conversion rate improvement' },
+                { icon: '⏱️', title: '50% Time Saved', description: 'Lead qualification efficiency' },
+                { icon: '💰', title: '35% Revenue', description: 'Average revenue growth' }
+            ],
+            timeline: [
+                { title: 'Data Collection', description: 'Gather historical lead and conversion data' },
+                { title: 'Model Development', description: 'Build predictive scoring algorithms' },
+                { title: 'CRM Integration', description: 'Connect with existing sales systems' },
+                { title: 'Sales Training', description: 'Train team on new lead scoring system' }
+            ]
+        },
+        'contract-review': {
+            name: 'Contract Review Agent',
+            category: 'Legal & Compliance',
+            icon: '📜',
+            description: 'An intelligent legal document analysis system that reviews contracts, extracts key clauses, identifies risks, and ensures compliance with legal standards and company policies.',
+            useCases: [
+                { title: 'Contract Analysis', description: 'Automatically review and analyze legal contracts for key terms, obligations, and risks.' },
+                { title: 'Clause Extraction', description: 'Extract and categorize important clauses including payment terms, termination conditions, and liability provisions.' },
+                { title: 'Risk Assessment', description: 'Identify potential legal risks and compliance issues within contract documents.' }
+            ],
+            benefits: [
+                { icon: '⚡', title: '90% Faster', description: 'Contract review speed improvement' },
+                { icon: '🎯', title: '98% Accuracy', description: 'Clause identification precision' },
+                { icon: '⚖️', title: '85% Risk Reduction', description: 'Legal risk mitigation' }
+            ],
+            timeline: [
+                { title: 'Legal Training', description: 'Train AI on legal language and contract types' },
+                { title: 'Template Setup', description: 'Configure contract templates and standards' },
+                { title: 'Workflow Integration', description: 'Integrate with legal management systems' },
+                { title: 'Quality Assurance', description: 'Establish legal review and approval processes' }
+            ]
+        },
+        'predictive-maintenance': {
+            name: 'Predictive Maintenance Agent',
+            category: 'Operations',
+            icon: '⚙️',
+            description: 'An intelligent maintenance system that monitors equipment health, predicts failures before they occur, and optimizes maintenance schedules to minimize downtime and costs.',
+            useCases: [
+                { title: 'Equipment Monitoring', description: 'Continuously monitor equipment sensors and performance metrics for early warning signs.' },
+                { title: 'Failure Prediction', description: 'Predict equipment failures days or weeks in advance using advanced analytics.' },
+                { title: 'Maintenance Optimization', description: 'Optimize maintenance schedules based on actual equipment condition and usage patterns.' }
+            ],
+            benefits: [
+                { icon: '📉', title: '50% Reduction', description: 'Unplanned downtime decrease' },
+                { icon: '💰', title: '30% Savings', description: 'Maintenance cost reduction' },
+                { icon: '🔧', title: '25% Increase', description: 'Equipment lifespan extension' }
+            ],
+            timeline: [
+                { title: 'Sensor Installation', description: 'Install IoT sensors on critical equipment' },
+                { title: 'Data Collection', description: 'Gather baseline equipment performance data' },
+                { title: 'Model Development', description: 'Build predictive failure models' },
+                { title: 'Maintenance Integration', description: 'Integrate with maintenance management systems' }
+            ]
+        },
+        'supply-chain': {
+            name: 'Supply Chain Optimization Agent',
+            category: 'Operations',
+            icon: '🚚',
+            description: 'A comprehensive logistics optimization system that enhances supply chain efficiency through intelligent routing, inventory management, and demand forecasting.',
+            useCases: [
+                { title: 'Route Optimization', description: 'Optimize delivery routes and logistics networks for cost and time efficiency.' },
+                { title: 'Inventory Management', description: 'Balance inventory levels across the supply chain to minimize costs and stockouts.' },
+                { title: 'Demand Forecasting', description: 'Predict demand patterns to optimize procurement and production planning.' }
+            ],
+            benefits: [
+                { icon: '📊', title: '25% Efficiency', description: 'Logistics efficiency improvement' },
+                { icon: '📦', title: '40% Reduction', description: 'Inventory carrying costs' },
+                { icon: '🎯', title: '90% Accuracy', description: 'Demand forecast precision' }
+            ],
+            timeline: [
+                { title: 'System Integration', description: 'Connect with ERP and logistics systems' },
+                { title: 'Data Mapping', description: 'Map supply chain data and relationships' },
+                { title: 'Optimization Models', description: 'Deploy routing and inventory algorithms' },
+                { title: 'Process Automation', description: 'Automate supply chain decision-making' }
+            ]
+        },
+        'ai-chatbot': {
+            name: 'AI Chatbot for Customer Support',
+            category: 'Customer Service',
+            icon: '💬',
+            description: 'An intelligent customer service system that handles customer queries efficiently, provides instant support, and delivers consistent service quality 24/7.',
+            useCases: [
+                { title: 'Customer Query Handling', description: 'Respond to customer inquiries instantly with accurate information.' },
+                { title: '24/7 Support', description: 'Provide round-the-clock customer assistance and support.' },
+                { title: 'Issue Resolution', description: 'Resolve common customer issues automatically without human intervention.' }
+            ],
+            benefits: [
+                { icon: '🌐', title: '24/7 Availability', description: 'Always-on customer support' },
+                { icon: '⚡', title: '80% Resolution', description: 'First-contact issue resolution rate' },
+                { icon: '😊', title: '90% Satisfaction', description: 'Customer satisfaction score' }
+            ],
+            timeline: [
+                { title: 'Knowledge Training', description: 'Train chatbot on product and service information' },
+                { title: 'Platform Integration', description: 'Integrate with existing customer service platforms' },
+                { title: 'Testing Phase', description: 'Test with real customer interactions' },
+                { title: 'Full Deployment', description: 'Launch complete customer support automation' }
+            ]
+        },
+        'sentiment-analysis': {
+            name: 'Sentiment Analysis Agent',
+            category: 'Customer Service',
+            icon: '😊',
+            description: 'An advanced analytics system that monitors customer sentiment across all touchpoints in real-time, providing insights to improve customer experience and satisfaction.',
+            useCases: [
+                { title: 'Real-time Monitoring', description: 'Monitor customer sentiment across emails, chats, calls, and social media interactions.' },
+                { title: 'Feedback Analysis', description: 'Analyze customer feedback and reviews to identify trends and improvement opportunities.' },
+                { title: 'Proactive Intervention', description: 'Alert teams to negative sentiment early to enable proactive customer retention efforts.' }
+            ],
+            benefits: [
+                { icon: '🎯', title: '95% Accuracy', description: 'Sentiment detection precision' },
+                { icon: '⚡', title: 'Real-time', description: 'Instant sentiment analysis' },
+                { icon: '📈', title: '30% Improvement', description: 'Customer satisfaction increase' }
+            ],
+            timeline: [
+                { title: 'Data Source Integration', description: 'Connect all customer communication channels' },
+                { title: 'Model Calibration', description: 'Train sentiment models on your customer data' },
+                { title: 'Dashboard Setup', description: 'Create real-time sentiment monitoring dashboards' },
+                { title: 'Alert Configuration', description: 'Set up automated alerts and workflows' }
+            ]
+        },
+        'content-generation': {
+            name: 'Content Generation Agent',
+            category: 'Marketing',
+            icon: '✏️',
+            description: 'A creative AI system that generates high-quality marketing content including blog posts, social media content, and advertising copy tailored to your brand voice and audience.',
+            useCases: [
+                { title: 'Blog Content Creation', description: 'Generate engaging blog posts, articles, and thought leadership content aligned with SEO best practices.' },
+                { title: 'Social Media Management', description: 'Create platform-specific social media posts, captions, and engagement content.' },
+                { title: 'Ad Copy Development', description: 'Develop compelling advertising copy for various channels and campaign objectives.' }
+            ],
+            benefits: [
+                { icon: '🚀', title: '300% Faster', description: 'Content creation speed increase' },
+                { icon: '💡', title: '85% Quality', description: 'Content approval rate on first draft' },
+                { icon: '📈', title: '150% Engagement', description: 'Average social media engagement lift' }
+            ],
+            timeline: [
+                { title: 'Brand Training', description: 'Train AI on brand voice and style guidelines' },
+                { title: 'Content Strategy', description: 'Define content types and publishing workflows' },
+                { title: 'Quality Assurance', description: 'Establish review and approval processes' },
+                { title: 'Content Production', description: 'Launch automated content generation' }
+            ]
+        },
+        'regulatory-compliance': {
+            name: 'Regulatory Compliance Agent',
+            category: 'Legal & Compliance',
+            icon: '📋',
+            description: 'A comprehensive compliance monitoring system that ensures adherence to regulatory requirements, tracks policy compliance, and maintains audit readiness across your organization.',
+            useCases: [
+                { title: 'Compliance Monitoring', description: 'Continuously monitor business processes and activities for regulatory compliance.' },
+                { title: 'Policy Enforcement', description: 'Ensure company policies are followed and flag violations automatically.' },
+                { title: 'Audit Preparation', description: 'Maintain audit trails and generate compliance reports for regulatory examinations.' }
+            ],
+            benefits: [
+                { icon: '🛡️', title: '99% Compliance', description: 'Regulatory adherence rate' },
+                { icon: '📊', title: '75% Automation', description: 'Compliance task automation' },
+                { icon: '⏱️', title: '50% Faster', description: 'Audit preparation time reduction' }
+            ],
+            timeline: [
+                { title: 'Regulatory Mapping', description: 'Map applicable regulations and requirements' },
+                { title: 'Control Implementation', description: 'Implement automated compliance controls' },
+                { title: 'Monitoring Setup', description: 'Establish continuous monitoring systems' },
+                { title: 'Reporting Automation', description: 'Automate compliance reporting and alerts' }
+            ]
+        },
+        'meeting-notes': {
+            name: 'AI Meeting Notes Agent',
+            category: 'General Business',
+            icon: '📝',
+            description: 'An intelligent meeting assistant that automatically transcribes conversations, summarizes key points, tracks action items, and distributes meeting notes to participants.',
+            useCases: [
+                { title: 'Meeting Transcription', description: 'Automatically transcribe meeting conversations with speaker identification and timestamps.' },
+                { title: 'Action Item Tracking', description: 'Identify and track action items, deadlines, and responsible parties from meeting discussions.' },
+                { title: 'Summary Generation', description: 'Generate concise meeting summaries highlighting key decisions and next steps.' }
+            ],
+            benefits: [
+                { icon: '⏱️', title: '95% Time Saved', description: 'Note-taking time elimination' },
+                { icon: '📋', title: '90% Accuracy', description: 'Action item capture rate' },
+                { icon: '🤝', title: '40% Productivity', description: 'Meeting productivity increase' }
+            ],
+            timeline: [
+                { title: 'Platform Integration', description: 'Integrate with video conferencing platforms' },
+                { title: 'Voice Training', description: 'Train speech recognition for your organization' },
+                { title: 'Template Creation', description: 'Create meeting summary templates' },
+                { title: 'Distribution Setup', description: 'Configure automatic note distribution' }
+            ]
+        },
+        'search-agent': {
+            name: 'AI-powered Search Agent',
+            category: 'General Business',
+            icon: '🔍',
+            description: 'An intelligent document and information retrieval system that quickly finds relevant documents, data, and knowledge across your organization\'s information repositories.',
+            useCases: [
+                { title: 'Document Discovery', description: 'Quickly locate documents, files, and information across multiple systems and repositories.' },
+                { title: 'Knowledge Retrieval', description: 'Find relevant knowledge and expertise within your organization\'s knowledge base.' },
+                { title: 'Content Recommendation', description: 'Suggest relevant content and documents based on user context and search patterns.' }
+            ],
+            benefits: [
+                { icon: '⚡', title: '80% Faster', description: 'Information retrieval speed' },
+                { icon: '🎯', title: '95% Relevance', description: 'Search result accuracy' },
+                { icon: '📊', title: '100% Coverage', description: 'Knowledge base accessibility' }
+            ],
+            timeline: [
+                { title: 'Content Indexing', description: 'Index all organizational documents and data' },
+                { title: 'Search Training', description: 'Train search algorithms on usage patterns' },
+                { title: 'Interface Development', description: 'Create user-friendly search interfaces' },
+                { title: 'Personalization', description: 'Implement personalized search recommendations' }
+            ]
+        }
+    };
+
+    // ── Video Database ───────────────────────────────────
+    const API = 'http://localhost:3456/api';
+    // videoDatabase is now loaded from the API; kept as cache
+    const videoDatabase = {};
+
+    const _videoDatabase_UNUSED = {
+        'healthcare': [
+            { title: 'AI Diagnostic Platform Implementation', description: 'Mayo Clinic reduced diagnostic time by 40% using AI-powered medical imaging analysis', duration: '12:30', type: 'ROI Study', aiType: 'Agentic', tags: [] },
+            { title: 'Patient Care Optimization at Scale', description: 'Kaiser Permanente automated care pathways resulting in 25% improved patient outcomes', duration: '8:45', type: 'Case Study', aiType: 'RPA', tags: [] },
+            { title: 'Drug Discovery Acceleration', description: 'Pfizer reduced compound identification time from years to months using AI algorithms', duration: '15:20', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Clinical Trial Management Revolution', description: 'Automated patient matching increased trial enrollment by 60% while reducing costs', duration: '10:15', type: 'Demo', aiType: 'IDP', tags: [] },
+            { title: 'Telemedicine AI Assistant', description: 'Regional healthcare network deployed AI triage system reducing wait times by 50%', duration: '9:30', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Medical Records Automation', description: 'Community hospital automated documentation saving 4 hours per physician daily', duration: '7:45', type: 'ROI Study', aiType: 'RPA', tags: [] }
+        ],
+        'finance': [
+            { title: 'Real-time Fraud Prevention System', description: 'JPMorgan Chase prevented $1.2B in fraud losses using AI transaction monitoring', duration: '11:25', type: 'ROI Study', aiType: 'Agentic', tags: [] },
+            { title: 'Algorithmic Trading Performance', description: 'Goldman Sachs improved trading efficiency by 35% with AI-powered market analysis', duration: '14:10', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Credit Risk Assessment Innovation', description: 'Wells Fargo reduced loan default rates by 28% using alternative data AI models', duration: '9:30', type: 'Case Study', aiType: 'IDP', tags: [] },
+            { title: 'Regulatory Compliance Automation', description: 'Deutsche Bank cut compliance costs by 45% with automated reporting systems', duration: '13:50', type: 'Demo', aiType: 'RPA', tags: [] },
+            { title: 'Investment Advisory Platform', description: 'Regional bank increased AUM by 60% using AI-powered investment recommendations', duration: '8:20', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Small Business Lending AI', description: 'Credit union automated loan decisions reducing approval time from days to minutes', duration: '6:55', type: 'ROI Study', aiType: 'RPA', tags: [] }
+        ],
+        'manufacturing': [
+            { title: 'Smart Factory Implementation', description: 'General Electric reduced production downtime by 50% using predictive maintenance AI', duration: '14:25', type: 'ROI Study', aiType: 'Agentic', tags: [] },
+            { title: 'Quality Control Automation', description: 'Toyota implemented AI vision systems achieving 99.8% defect detection accuracy', duration: '11:15', type: 'Case Study', aiType: 'IDP', tags: [] },
+            { title: 'Supply Chain Optimization', description: 'Siemens optimized global supply chain reducing costs by 25% and improving delivery times', duration: '12:40', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Production Planning AI', description: 'BMW automated production scheduling increasing efficiency by 30% while reducing waste', duration: '9:55', type: 'Demo', aiType: 'RPA', tags: [] },
+            { title: 'Equipment Monitoring System', description: 'Mid-size manufacturer prevented $2M in equipment failures using IoT and AI monitoring', duration: '8:35', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Inventory Management Optimization', description: 'Local manufacturer reduced inventory costs by 40% with AI-driven demand forecasting', duration: '7:20', type: 'ROI Study', aiType: 'RPA', tags: [] }
+        ],
+        'retail': [
+            { title: 'Personalization Engine Implementation', description: 'Amazon increased revenue by 35% through AI-powered product recommendations', duration: '13:30', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Inventory Optimization at Scale', description: 'Walmart reduced stockouts by 45% using AI demand forecasting across 4,000+ stores', duration: '10:50', type: 'ROI Study', aiType: 'Agentic', tags: [] },
+            { title: 'Dynamic Pricing Strategy', description: 'Target improved margins by 20% with AI-powered dynamic pricing algorithms', duration: '9:25', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Customer Journey Analytics', description: 'Nordstrom enhanced customer experience increasing loyalty by 30% using AI insights', duration: '11:40', type: 'Demo', aiType: 'IDP', tags: [] },
+            { title: 'E-commerce Automation Platform', description: 'Regional retailer automated order processing reducing fulfillment time by 60%', duration: '8:15', type: 'Case Study', aiType: 'RPA', tags: [] },
+            { title: 'Small Store AI Assistant', description: 'Local retailer increased sales by 25% using AI-powered customer service chatbot', duration: '6:45', type: 'ROI Study', aiType: 'Agentic', tags: [] }
+        ],
+        'energy': [
+            { title: 'Smart Grid Optimization', description: 'Con Edison reduced energy waste by 30% using AI-powered grid management systems', duration: '15:10', type: 'ROI Study', aiType: 'Agentic', tags: [] },
+            { title: 'Renewable Energy Forecasting', description: 'NextEra Energy improved wind farm efficiency by 25% with AI weather prediction models', duration: '12:35', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Predictive Maintenance for Utilities', description: 'Duke Energy prevented $50M in equipment failures using AI monitoring systems', duration: '11:20', type: 'Case Study', aiType: 'IDP', tags: [] },
+            { title: 'Energy Trading Optimization', description: 'Shell increased trading profits by 18% using AI market analysis and automated trading', duration: '13:45', type: 'Demo', aiType: 'RPA', tags: [] },
+            { title: 'Solar Farm Management', description: 'Regional solar company increased output by 22% with AI-optimized panel positioning', duration: '9:30', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Energy Efficiency Monitoring', description: 'Local utility reduced customer energy costs by 15% using AI consumption analytics', duration: '7:55', type: 'ROI Study', aiType: 'IDP', tags: [] }
+        ],
+        'logistics': [
+            { title: 'Route Optimization at Scale', description: 'UPS saved $400M annually using AI-powered route optimization across global fleet', duration: '14:15', type: 'ROI Study', aiType: 'Agentic', tags: [] },
+            { title: 'Warehouse Automation Revolution', description: 'Amazon reduced fulfillment time by 50% with AI-driven warehouse robotics', duration: '12:25', type: 'Case Study', aiType: 'RPA', tags: [] },
+            { title: 'Supply Chain Visibility', description: 'Maersk improved delivery accuracy by 35% using AI supply chain tracking', duration: '10:40', type: 'Case Study', aiType: 'IDP', tags: [] },
+            { title: 'Demand Forecasting Platform', description: 'DHL optimized inventory placement reducing shipping costs by 28%', duration: '11:55', type: 'Demo', aiType: 'Agentic', tags: [] },
+            { title: 'Last-Mile Delivery Optimization', description: 'Regional delivery service increased efficiency by 40% with AI route planning', duration: '8:50', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Fleet Management for SMBs', description: 'Local logistics company reduced fuel costs by 20% using AI fleet optimization', duration: '6:35', type: 'ROI Study', aiType: 'RPA', tags: [] }
+        ],
+        'sales-marketing': [
+            { title: 'Lead Scoring Transformation', description: 'Salesforce increased conversion rates by 50% using AI-powered lead qualification', duration: '9:15', type: 'ROI Study', aiType: 'Agentic', tags: [] },
+            { title: 'Marketing Campaign Optimization', description: 'Adobe achieved 3x ROAS improvement through real-time campaign adjustments', duration: '16:40', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Customer Journey Intelligence', description: 'Amazon personalization engine drives 35% of total revenue through AI recommendations', duration: '12:05', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Sales Forecasting Accuracy', description: 'Microsoft improved forecast precision by 40% using predictive analytics', duration: '11:30', type: 'Demo', aiType: 'IDP', tags: [] },
+            { title: 'Content Marketing Automation', description: 'Mid-size SaaS company increased leads by 200% with AI content generation', duration: '7:35', type: 'Case Study', aiType: 'RPA', tags: [] },
+            { title: 'Social Media Optimization', description: 'Local retailer boosted engagement by 300% using AI-powered social strategy', duration: '5:50', type: 'ROI Study', aiType: 'Agentic', tags: [] }
+        ],
+        'operations': [
+            { title: 'Business Process Automation', description: 'Accenture automated 70% of routine processes reducing operational costs by $50M', duration: '13:20', type: 'ROI Study', aiType: 'RPA', tags: [] },
+            { title: 'Resource Allocation Optimization', description: 'IBM optimized workforce scheduling improving productivity by 30% across divisions', duration: '11:45', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Workflow Intelligence Platform', description: 'Siemens automated approval workflows reducing processing time by 65%', duration: '10:25', type: 'Case Study', aiType: 'RPA', tags: [] },
+            { title: 'Operational Analytics Dashboard', description: 'GE created real-time operations visibility improving decision-making speed by 40%', duration: '9:55', type: 'Demo', aiType: 'IDP', tags: [] },
+            { title: 'Document Processing Automation', description: 'Mid-size consulting firm automated document review saving 25 hours per week', duration: '7:40', type: 'Case Study', aiType: 'IDP', tags: [] },
+            { title: 'Small Business Operations Suite', description: 'Local service company streamlined operations increasing capacity by 50%', duration: '6:20', type: 'ROI Study', aiType: 'RPA', tags: [] }
+        ],
+        'customer-service': [
+            { title: 'Conversational AI Implementation', description: 'Bank of America handled 2B+ customer interactions with 85% satisfaction rate', duration: '8:20', type: 'ROI Study', aiType: 'Agentic', tags: [] },
+            { title: 'Sentiment-Driven Support Routing', description: 'Airbnb reduced escalation rates by 60% using emotional intelligence AI', duration: '10:45', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Automated Issue Resolution', description: 'Spotify resolved 70% of support tickets automatically while improving customer satisfaction', duration: '13:15', type: 'Case Study', aiType: 'RPA', tags: [] },
+            { title: 'Omnichannel Experience Platform', description: 'Disney created seamless customer journeys across all touchpoints using AI orchestration', duration: '14:50', type: 'Demo', aiType: 'Agentic', tags: [] },
+            { title: 'Help Desk Automation', description: 'Tech startup reduced support costs by 65% with intelligent ticket routing', duration: '6:25', type: 'Case Study', aiType: 'RPA', tags: [] },
+            { title: 'Chat Support Enhancement', description: 'E-commerce store improved first-contact resolution by 80% with AI assistance', duration: '4:30', type: 'ROI Study', aiType: 'Agentic', tags: [] }
+        ],
+        'analytics': [
+            { title: 'Enterprise BI Transformation', description: 'Coca-Cola transformed decision-making with AI-powered business intelligence platform', duration: '14:35', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Predictive Analytics Implementation', description: 'Netflix improved content recommendations increasing viewer engagement by 80%', duration: '12:20', type: 'ROI Study', aiType: 'Agentic', tags: [] },
+            { title: 'Real-time Data Processing', description: 'Uber processes 15B+ location points daily for surge pricing and route optimization', duration: '11:10', type: 'Case Study', aiType: 'IDP', tags: [] },
+            { title: 'Customer Analytics Platform', description: 'Starbucks personalized customer experience increasing loyalty program engagement by 45%', duration: '10:30', type: 'Demo', aiType: 'Agentic', tags: [] },
+            { title: 'Marketing Analytics Suite', description: 'Mid-size agency improved campaign ROI by 150% with integrated analytics platform', duration: '8:45', type: 'Case Study', aiType: 'IDP', tags: [] },
+            { title: 'Small Business Intelligence', description: 'Local restaurant chain optimized menu and pricing increasing profits by 30%', duration: '6:55', type: 'ROI Study', aiType: 'RPA', tags: [] }
+        ],
+        'hr': [
+            { title: 'UiPath Maestro and Agentic Automation: Streamlining HR Onboarding Process', description: 'This video shows how UiPath Maestro and Agentic Automation transform HR onboarding end-to-end.', duration: '6:40', type: 'Demo Video', aiType: 'Agentic', tags: [] },
+            { title: 'HR Process Heatmap', description: 'Gain a high-level overview of potential process automation opportunities with this human resources (HR) process heatmap.', duration: '', type: 'Heatmap', aiType: 'IDP', tags: [] },
+            { title: 'Automating Employment Contract Generation in with RPA & IDP', description: 'This automation streamlines employment contract creation using IDs, templates, and Action Center.', duration: '4:35', type: 'Demo Video', aiType: 'IDP', tags: [] },
+            { title: 'Finance & HR - Payroll Request Processing - Agentic Demo', description: 'UiPath demo shows agentic orchestration automating payroll, saving time and improving employee service efficiency.', duration: '6:41', type: 'Demo', aiType: 'Agentic', tags: [] },
+            { title: 'HR Process Automation', description: 'Mid-size company automated onboarding reducing administrative time by 70%', duration: '7:30', type: 'Case Study', aiType: 'RPA', tags: [] },
+            { title: 'Small Business HR Suite', description: 'Local company streamlined HR operations saving 15 hours per week', duration: '5:45', type: 'ROI Study', aiType: 'RPA', tags: [] }
+        ],
+        'finance-ops': [
+            { title: 'Automated Accounts Payable', description: 'Johnson & Johnson processed 1M+ invoices annually with 99.5% accuracy using AI', duration: '12:15', type: 'ROI Study', aiType: 'IDP', tags: [] },
+            { title: 'Financial Reporting Automation', description: 'Deloitte reduced month-end close time by 50% with automated financial reporting', duration: '10:40', type: 'Case Study', aiType: 'RPA', tags: [] },
+            { title: 'Budget Forecasting Intelligence', description: 'Walmart improved budget accuracy by 35% using AI-powered forecasting models', duration: '11:30', type: 'Case Study', aiType: 'Agentic', tags: [] },
+            { title: 'Expense Management Platform', description: 'Expensify automated expense reporting saving employees 3 hours per report', duration: '8:50', type: 'Demo', aiType: 'RPA', tags: [] },
+            { title: 'Financial Analytics for Growth', description: 'Growing startup optimized cash flow management extending runway by 6 months', duration: '7:25', type: 'Case Study', aiType: 'IDP', tags: [] },
+            { title: 'Small Business Bookkeeping AI', description: 'Local business automated bookkeeping reducing accounting costs by 60%', duration: '5:35', type: 'ROI Study', aiType: 'RPA', tags: [] }
+        ]
+    }; // end _videoDatabase_UNUSED
+
+    let filteredVideos = [];
+    let activeFilters = { search: '', type: '', aiType: '', duration: '' };
+
+    // ── Helper: thumbnail class by AI type ───────────────
+    function thumbClass(aiType) {
+        if (aiType === 'Agentic') return 'thumb-agentic';
+        if (aiType === 'RPA') return 'thumb-rpa';
+        if (aiType === 'IDP') return 'thumb-idp';
+        return 'thumb-default';
+    }
+    function badgeClass(aiType) {
+        if (aiType === 'Agentic') return 'badge-agentic';
+        if (aiType === 'RPA') return 'badge-rpa';
+        if (aiType === 'IDP') return 'badge-idp';
+        return 'badge-agentic';
+    }
+    function typeClass(type) {
+        if (type === 'ROI Study') return 'type-roi';
+        if (type === 'Case Study') return 'type-case';
+        if (type === 'Demo' || type === 'Demo Video') return 'type-demo';
+        if (type === 'Heatmap') return 'type-heatmap';
+        return 'type-brief';
+    }
+
+    // ── Navigation ───────────────────────────────────────
+    // ── Live agent list from API ──────────────────────────
+    let liveAgents = []; // loaded from /api/agents
+
+    async function loadAgentsGrid() {
+        try {
+            liveAgents = await fetch(`${API}/agents`).then(r => r.json());
+        } catch(e) {
+            liveAgents = [];
+        }
+        const catColorMap = {
+            Finance:'cat-finance', HR:'cat-hr', Sales:'cat-sales', Legal:'cat-legal',
+            Operations:'cat-operations', Customer:'cat-customer', Marketing:'cat-marketing',
+            General:'cat-general', IT:'cat-general', Procurement:'cat-operations'
+        };
+        const grid = document.getElementById('aiAgentsGrid');
+        if (!liveAgents.length) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:#94A3B8;">No agents yet. Add some in the admin panel.</div>';
+            return;
+        }
+        grid.innerHTML = liveAgents.map(a => `
+            <div class="ai-agent-card" onclick="showAgentDetails('${a.id}')">
+                <div class="agent-card-top">
+                    <div class="ai-agent-icon">${a.icon || '&#x1F916;'}</div>
+                    <span class="ai-agent-category ${catColorMap[a.category] || 'cat-general'}">${a.category}</span>
+                </div>
+                <div class="ai-agent-name">${a.name}</div>
+                <div class="ai-agent-desc">${a.description}</div>
+                ${a.useCases ? `<div class="agent-use-cases">
+                    <div class="use-cases-label">Key Use Cases</div>
+                    <div class="use-cases-text">${a.useCases}</div>
+                </div>` : ''}
+            </div>`).join('');
+    }
+
+    async function showSubcategories(type) {
+        currentView = 'subcategories';
+        currentCategory = type;
+
+        document.getElementById('heroSection').style.display = 'none';
+        document.getElementById('categoryGrid').style.display = 'none';
+        document.getElementById('backButton').classList.add('visible');
+        document.getElementById('navHomeBtn').style.display = 'inline-flex';
+
+        if (type === 'industry') {
+            document.getElementById('industryGrid').classList.add('active');
+            updateBreadcrumb([{label:'Home'}, {label:'Industry Solutions', active:true}]);
+        } else if (type === 'business') {
+            document.getElementById('businessGrid').classList.add('active');
+            updateBreadcrumb([{label:'Home'}, {label:'Business Functions', active:true}]);
+        } else if (type === 'agents') {
+            document.getElementById('aiAgentsGrid').classList.add('active');
+            updateBreadcrumb([{label:'Home'}, {label:'AI Agents', active:true}]);
+            await loadAgentsGrid();
+        }
+    }
+
+    function showAgentDetails(agentId) {
+        currentView = 'agent-detail';
+        currentAgent = agentId;
+        document.getElementById('navHomeBtn').style.display = 'inline-flex';
+
+        // Prefer rich hardcoded detail data; fall back to live API data
+        const richAgent = agentData[agentId];
+        const liveAgent = liveAgents.find(a => a.id === agentId);
+        const base = richAgent || liveAgent;
+        if (!base) { showToast('Agent not found', 'info'); return; }
+
+        // Merge: API data overrides name/description/icon/category for live agents
+        const agent = richAgent
+            ? { ...richAgent, ...(liveAgent ? { name: liveAgent.name, description: liveAgent.description, icon: liveAgent.icon || richAgent.icon, iframeUrl: liveAgent.iframeUrl, downloadUrl: liveAgent.downloadUrl } : {}) }
+            : { ...liveAgent, useCases: null, benefits: null, timeline: null };
+
+        document.getElementById('aiAgentsGrid').classList.remove('active');
+        document.getElementById('agentDetailView').classList.add('active');
+
+        const demoBtn = agent.iframeUrl
+            ? `<button class="cta-btn cta-btn-primary" onclick="playAgentDemo('${agentId}')">&#x25B6; Watch Demo</button>`
+            : `<button class="cta-btn cta-btn-primary" onclick="requestDemo('${agentId}')">&#x1F4AC; Request Demo</button>`;
+        const downloadBtn = agent.downloadUrl
+            ? `<button class="cta-btn cta-btn-outline" onclick="window.open('${agent.downloadUrl}','_blank')">&#x2B07; Download Deck</button>`
+            : `<button class="cta-btn cta-btn-outline" onclick="downloadSpecs('${agentId}')">&#x2B07; Download Deck</button>`;
+
+        const useCasesHtml = agent.useCases && Array.isArray(agent.useCases)
+            ? `<div class="agent-section">
+                    <div class="agent-section-header">
+                        <div class="agent-section-icon">&#x1F3AF;</div>
+                        <span class="agent-section-title">Key Use Cases</span>
+                    </div>
+                    <ul class="use-case-list">
+                        ${agent.useCases.map(u => `
+                            <li class="use-case-item">
+                                <div class="use-case-name">${u.title}</div>
+                                <div class="use-case-desc">${u.description}</div>
+                            </li>`).join('')}
+                    </ul>
+                </div>`
+            : (agent.useCases && typeof agent.useCases === 'string'
+                ? `<div class="agent-section">
+                    <div class="agent-section-header">
+                        <div class="agent-section-icon">&#x1F3AF;</div>
+                        <span class="agent-section-title">Key Use Cases</span>
+                    </div>
+                    <ul class="use-case-list">
+                        ${agent.useCases.split('\u2022').map(u => u.trim()).filter(Boolean).map(u => `
+                            <li class="use-case-item"><div class="use-case-name">${u}</div></li>`).join('')}
+                    </ul>
+                </div>`
+                : '');
+
+        const benefitsHtml = agent.benefits
+            ? `<div class="agent-section">
+                    <div class="agent-section-header">
+                        <div class="agent-section-icon">&#x1F4C8;</div>
+                        <span class="agent-section-title">Key Benefits</span>
+                    </div>
+                    <div class="benefits-grid">
+                        ${agent.benefits.map(b => `
+                            <div class="benefit-item">
+                                <div class="benefit-icon">${b.icon}</div>
+                                <div class="benefit-value">${b.title}</div>
+                                <div class="benefit-desc">${b.description}</div>
+                            </div>`).join('')}
+                    </div>
+                </div>` : '';
+
+        const timelineHtml = agent.timeline
+            ? `<div class="timeline-section">
+                <div class="timeline-header">&#x26A1; Implementation Timeline</div>
+                <div class="timeline-steps">
+                    ${agent.timeline.map((s, i) => `
+                        <div class="timeline-step">
+                            <div class="step-num">${i+1}</div>
+                            <div class="step-title">${s.title}</div>
+                            <div class="step-desc">${s.description}</div>
+                        </div>`).join('')}
+                </div>
+            </div>` : '';
+
+        const html = `
+            <div class="agent-hero">
+                <div class="agent-hero-icon">${agent.icon || '&#x1F916;'}</div>
+                <div class="agent-hero-title">${agent.name}</div>
+                <div class="agent-hero-badge">${agent.category}</div>
+                <div class="agent-hero-desc">${agent.description}</div>
+            </div>
+            <div class="agent-content-grid">
+                ${useCasesHtml}
+                ${benefitsHtml}
+            </div>
+            ${timelineHtml}
+            <div class="cta-section">
+                <div class="cta-title">Ready to deploy ${agent.name}?</div>
+                <div class="cta-desc">Start your AI transformation journey with our expert implementation team</div>
+                <div class="cta-btns">${demoBtn}${downloadBtn}</div>
+            </div>
+        `;
+        document.getElementById('agentDetailView').innerHTML = html;
+        updateBreadcrumb([{label:'Home'}, {label:'AI Agents'}, {label:agent.name, active:true}]);
+    }
+
+    function playAgentDemo(agentId) {
+        const a = liveAgents.find(x => x.id === agentId);
+        if (!a?.iframeUrl) { showToast('No demo URL set', 'info'); return; }
+        const iframe = document.getElementById('videoPlayerIframe');
+        iframe.src = a.iframeUrl;
+        document.getElementById('videoPlayerTitle').textContent = a.name;
+        document.getElementById('videoPlayerModal').classList.add('active');
+    }
+
+    async function showVideoLibrary(subcategory) {
+        currentView = 'videos';
+        currentSubcategory = subcategory;
+        document.getElementById('navHomeBtn').style.display = 'inline-flex';
+
+        document.querySelectorAll('.subcategory-grid').forEach(g => g.classList.remove('active'));
+        document.getElementById('videoLibrary').classList.add('active');
+
+        const titles = {
+            'healthcare':'Healthcare & Life Sciences','finance':'Financial Services',
+            'manufacturing':'Manufacturing','retail':'Retail & E-commerce',
+            'energy':'Energy & Utilities','logistics':'Logistics & Transportation',
+            'sales-marketing':'Sales & Marketing','operations':'Operations',
+            'customer-service':'Customer Service','analytics':'Analytics & Intelligence',
+            'hr':'Human Resources','finance-ops':'Finance & Accounting'
+        };
+        const catPath = currentCategory === 'industry' ? 'Industry Solutions' : 'Business Functions';
+        updateBreadcrumb([{label:'Home'}, {label:catPath}, {label:titles[subcategory], active:true}]);
+
+        document.getElementById('libraryTitle').textContent = titles[subcategory];
+        document.getElementById('librarySubtitle').textContent = 'Loading...';
+
+        await populateVideoGrid(subcategory);
+    }
+
+    async function populateVideoGrid(subcategory) {
+        try {
+            const videos = await fetch(`${API}/videos/${subcategory}`).then(r => r.json());
+            videoDatabase[subcategory] = videos; // cache locally for filters
+            filteredVideos = videos;
+            document.getElementById('librarySubtitle').textContent =
+                `${videos.length} case studies, demos, and ROI analyses`;
+        } catch(e) {
+            filteredVideos = [];
+            document.getElementById('librarySubtitle').textContent = 'Failed to load — is the server running?';
+        }
+        renderVideoGrid(filteredVideos);
+        updateResultsCount();
+    }
+
+    function renderVideoGrid(videos) {
+        const grid = document.getElementById('videoGrid');
+        if (videos.length === 0) {
+            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted);">
+                <div style="font-size:2rem;margin-bottom:12px;">🔍</div>
+                <div style="font-weight:600;margin-bottom:6px;">No videos match your filters</div>
+                <div style="font-size:0.875rem;">Try adjusting or clearing your filters</div>
+            </div>`;
+            return;
+        }
+        grid.innerHTML = videos.map((v, i) => `
+            <div class="video-card">
+                <div class="video-thumbnail ${thumbClass(v.aiType)}" onclick="playVideo('${v.title.replace(/'/g,"\\'")}', ${i})">
+                    <div class="thumb-pattern"></div>
+                    <span class="thumb-type-badge ${badgeClass(v.aiType)}">${v.aiType}</span>
+                    <div class="play-btn">&#x25B6;</div>
+                </div>
+                <div class="video-body">
+                    <div class="video-title">${v.title}</div>
+                    <div class="video-description">${v.description}</div>
+                    <div class="video-meta">
+                        <span class="video-duration">${v.duration ? '&#x23F1; ' + v.duration : '&#x1F4CA; Presentation'}</span>
+                        <span class="video-type-pill ${typeClass(v.type)}">${v.type}</span>
+                    </div>
+                </div>
+                <div class="video-actions">
+                    <span class="video-status"><span class="status-dot"></span>Available</span>
+                    <div class="action-btns">
+                        <button class="action-btn action-btn-secondary" onclick="downloadVideo(${i}, '${v.title.replace(/'/g,"\\'")}')">&#x2B07; Download</button>
+                        <button class="action-btn action-btn-primary" onclick="shareVideo(${i}, '${v.title.replace(/'/g,"\\'")}')">&#x1F4E4; Share</button>
+                    </div>
+                </div>
+            </div>`).join('');
+    }
+
+    // ── Breadcrumb ───────────────────────────────────────
+    function updateBreadcrumb(items) {
+        const bc = document.getElementById('breadcrumb');
+        bc.innerHTML = items.map((item, i) => {
+            const isLast = i === items.length - 1;
+            const sep = i > 0 ? '<span class="breadcrumb-sep"> / </span>' : '';
+            // Non-active section labels (2nd crumb) are clickable — navigate to section root
+            const isClickable = !isLast && i > 0;
+            const isHome = item.label === 'Home' && !isLast;
+            const clickAttr = isHome
+                ? ' onclick="goToSectionHome()"'
+                : isClickable ? ' onclick="goToSectionHome()"' : '';
+            return `${sep}<span class="breadcrumb-item${isLast ? ' active' : ''}${(isHome || isClickable) ? ' breadcrumb-home' : ''}"${clickAttr}>${item.label}</span>`;
+        }).join('');
+    }
+
+    // Navigate to the section root (subcategory grid) for the current category
+    function goToSectionHome() {
+        if (currentView === 'main') return;
+        // From agent-detail → AI Agents grid
+        if (currentView === 'agent-detail') {
+            currentView = 'subcategories';
+            document.getElementById('agentDetailView').classList.remove('active');
+            document.getElementById('aiAgentsGrid').classList.add('active');
+            updateBreadcrumb([{label:'Home'}, {label:'AI Agents', active:true}]);
+        // From videos → industry or business grid
+        } else if (currentView === 'videos') {
+            currentView = 'subcategories';
+            document.getElementById('videoLibrary').classList.remove('active');
+            if (currentCategory === 'industry') {
+                document.getElementById('industryGrid').classList.add('active');
+                updateBreadcrumb([{label:'Home'}, {label:'Industry Solutions', active:true}]);
+            } else {
+                document.getElementById('businessGrid').classList.add('active');
+                updateBreadcrumb([{label:'Home'}, {label:'Business Functions', active:true}]);
+            }
+        }
+        // Already at subcategories — nothing to do
+    }
+
+    function navigateBack() {
+        if (currentView === 'agent-detail') {
+            currentView = 'subcategories';
+            document.getElementById('agentDetailView').classList.remove('active');
+            document.getElementById('aiAgentsGrid').classList.add('active');
+            updateBreadcrumb([{label:'Home'}, {label:'AI Agents', active:true}]);
+        } else if (currentView === 'videos') {
+            currentView = 'subcategories';
+            document.getElementById('videoLibrary').classList.remove('active');
+            if (currentCategory === 'industry') {
+                document.getElementById('industryGrid').classList.add('active');
+                updateBreadcrumb([{label:'Home'}, {label:'Industry Solutions', active:true}]);
+            } else {
+                document.getElementById('businessGrid').classList.add('active');
+                updateBreadcrumb([{label:'Home'}, {label:'Business Functions', active:true}]);
+            }
+        } else if (currentView === 'subcategories') {
+            currentView = 'main';
+            document.querySelectorAll('.subcategory-grid').forEach(g => g.classList.remove('active'));
+            document.getElementById('aiAgentsGrid').classList.remove('active');
+            document.getElementById('categoryGrid').style.display = 'grid';
+            document.getElementById('heroSection').style.display = 'block';
+            document.getElementById('backButton').classList.remove('visible');
+            document.getElementById('navHomeBtn').style.display = 'none';
+            updateBreadcrumb([{label:'Home', active:true}]);
+        }
+    }
+
+    // ── Filters ──────────────────────────────────────────
+    function applyFilters() {
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const type = document.getElementById('typeFilter').value;
+        const aiType = document.getElementById('aiTypeFilter').value;
+        const duration = document.getElementById('durationFilter').value;
+        activeFilters = { search, type, aiType, duration };
+
+        const all = videoDatabase[currentSubcategory] || filteredVideos;
+        filteredVideos = all.filter(v => {
+            if (search && !v.title.toLowerCase().includes(search) && !v.description.toLowerCase().includes(search)) return false;
+            if (type && v.type !== type) return false;
+            if (aiType && v.aiType !== aiType) return false;
+            if (duration && v.duration) {
+                const mins = parseDuration(v.duration);
+                if (duration === 'short' && mins >= 10) return false;
+                if (duration === 'medium' && (mins < 10 || mins > 15)) return false;
+                if (duration === 'long' && mins <= 15) return false;
+            }
+            return true;
+        });
+
+        renderVideoGrid(filteredVideos);
+        updateResultsCount();
+        updateFilterTags();
+    }
+
+    function parseDuration(d) {
+        const p = d.split(':');
+        return parseInt(p[0]) + parseInt(p[1] || 0) / 60;
+    }
+
+    function updateResultsCount() {
+        const count = filteredVideos.length;
+        const total = videoDatabase[currentSubcategory]?.length || 0;
+        document.getElementById('resultsCount').textContent =
+            count === total ? `Showing all ${total} items` : `Showing ${count} of ${total} items`;
+    }
+
+    function updateFilterTags() {
+        const labels = {
+            search: v => `Search: "${v}"`,
+            type: v => `Type: ${v}`,
+            aiType: v => `AI: ${v}`,
+            duration: v => ({ short:'< 10 min', medium:'10-15 min', long:'> 15 min' })[v]
+        };
+        const container = document.getElementById('filterTags');
+        container.innerHTML = Object.entries(activeFilters)
+            .filter(([,v]) => v)
+            .map(([k,v]) => `
+                <span class="filter-tag">
+                    ${labels[k](v)}
+                    <span class="filter-tag-remove" onclick="removeFilter('${k}')">×</span>
+                </span>`).join('');
+    }
+
+    function removeFilter(key) {
+        activeFilters[key] = '';
+        if (key === 'search') document.getElementById('searchInput').value = '';
+        if (key === 'type') document.getElementById('typeFilter').value = '';
+        if (key === 'aiType') document.getElementById('aiTypeFilter').value = '';
+        if (key === 'duration') document.getElementById('durationFilter').value = '';
+        applyFilters();
+    }
+
+    function clearAllFilters() {
+        ['searchInput','typeFilter','aiTypeFilter','durationFilter'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        activeFilters = { search:'', type:'', aiType:'', duration:'' };
+        applyFilters();
+    }
+
+    // ── Video Playback ───────────────────────────────────
+    function playVideo(title, index) {
+        const v = filteredVideos[index];
+        if (!v || !v.iframeUrl) {
+            showToast(`No embed URL set for "${title}" — add one in the admin panel.`, 'info');
+            return;
+        }
+        if (v.isPresentation) {
+            document.getElementById('videoPlayerIframe').outerHTML =
+                `<iframe id="videoPlayerIframe" class="video-iframe" src="${v.iframeUrl}" frameborder="0" allowfullscreen></iframe>`;
+        } else {
+            document.getElementById('videoPlayerIframe').src = v.iframeUrl;
+        }
+        document.getElementById('videoPlayerModal').classList.add('active');
+    }
+
+    function closeVideoPlayer() {
+        document.getElementById('videoPlayerModal').classList.remove('active');
+        const iframe = document.getElementById('videoPlayerIframe');
+        if (iframe) iframe.src = '';
+    }
+
+    // ── Download ─────────────────────────────────────────
+    function downloadVideo(index, title) {
+        const v = filteredVideos[index];
+        if (v?.downloadUrl) {
+            window.open(v.downloadUrl, '_blank');
+            showToast(`Opening download for "${title}"`, 'success');
+        } else {
+            showToast(`No download URL set — add one in the admin panel.`, 'info');
+        }
+    }
+
+    // ── Share ────────────────────────────────────────────
+    let currentVideoForSharing = null;
+
+    function shareVideo(index, title) {
+        currentVideoForSharing = { index, video: filteredVideos[index] };
+        document.getElementById('shareLink').value = `https://ai-library.uipath.com/video/${currentSubcategory}/${index}`;
+        document.getElementById('shareModal').classList.add('active');
+    }
+
+    function closeShareModal() {
+        document.getElementById('shareModal').classList.remove('active');
+        currentVideoForSharing = null;
+    }
+
+    function shareViaEmail() {
+        const v = currentVideoForSharing.video;
+        const url = document.getElementById('shareLink').value;
+        const sub = encodeURIComponent(`AI Case Study: ${v.title}`);
+        const body = encodeURIComponent(`I wanted to share this AI implementation case study:\n\n${v.title}\n${v.description}\n\nType: ${v.type} | AI: ${v.aiType} | Duration: ${v.duration}\n\nWatch here: ${url}`);
+        window.open(`mailto:?subject=${sub}&body=${body}`);
+        closeShareModal();
+    }
+
+    function shareViaLinkedIn() {
+        const url = document.getElementById('shareLink').value;
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+        closeShareModal();
+    }
+
+    function shareViaTeams() {
+        const url = document.getElementById('shareLink').value;
+        const v = currentVideoForSharing.video;
+        window.open(`https://teams.microsoft.com/share?msgText=${encodeURIComponent(`AI Case Study: ${v.title}\n${url}`)}`, '_blank');
+        closeShareModal();
+    }
+
+    function shareViaSlack() {
+        const url = document.getElementById('shareLink').value;
+        const v = currentVideoForSharing.video;
+        window.open(`slack://open?text=${encodeURIComponent(`*${v.title}*\n${v.description}\n${url}`)}`);
+        closeShareModal();
+    }
+
+    function copyShareLink() {
+        const input = document.getElementById('shareLink');
+        const btn = document.getElementById('copyBtn');
+        input.select();
+        try {
+            navigator.clipboard.writeText(input.value).catch(() => document.execCommand('copy'));
+            btn.textContent = '✓ Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+        } catch(e) {}
+    }
+
+    function requestDemo(agentId) {
+        showToast(`Demo request submitted for ${agentData[agentId]?.name}!`, 'success');
+    }
+
+    function downloadSpecs(agentId) {
+        showToast(`Downloading ${agentData[agentId]?.name} deck...`, 'info');
+    }
+
+    // ── Toast ────────────────────────────────────────────
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ── Close modals on backdrop click ───────────────────
+    document.getElementById('shareModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeShareModal(); });
+    document.getElementById('videoPlayerModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeVideoPlayer(); });
+
+    // ── Keyboard: Escape closes modals ───────────────────
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { closeVideoPlayer(); closeShareModal(); }
+    });
+</script>
+</body>
+</html>

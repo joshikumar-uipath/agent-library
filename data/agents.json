@@ -1,0 +1,152 @@
+[
+  {
+    "id": "finance-advisor",
+    "icon": "&#x1F4B0;",
+    "name": "Finance Advisor",
+    "description": "Delivers personalized financial advice, budget analysis, and investment recommendations",
+    "category": "Finance",
+    "useCases": "Investment strategy \u2022 Risk analysis \u2022 Budget optimization",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "ledger-agent",
+    "icon": "&#x1F4D2;",
+    "name": "Ledger Agent",
+    "description": "Monitors account balances, detects anomalies, and delivers insightful analyses",
+    "category": "Finance",
+    "useCases": "Account monitoring \u2022 Anomaly detection \u2022 Financial reporting",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "fraud-detection",
+    "icon": "&#x1F6E1;&#xFE0F;",
+    "name": "Fraud Detection Agent",
+    "description": "Identifies suspicious transactions and prevents financial fraud in real-time",
+    "category": "Finance",
+    "useCases": "Transaction monitoring \u2022 Fraud prevention \u2022 Risk assessment",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "employee-advisor",
+    "icon": "&#x1F465;",
+    "name": "Employee Advisor",
+    "description": "Manages formal requests for new positions and job offers",
+    "category": "HR",
+    "useCases": "Recruitment \u2022 Position management \u2022 Offer processing",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "hr-companion",
+    "icon": "&#x1F91D;",
+    "name": "HR Companion Agent",
+    "description": "Provides invaluable HR support for employees",
+    "category": "HR",
+    "useCases": "Employee support \u2022 HR guidance \u2022 Policy assistance",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "lead-scoring",
+    "icon": "&#x1F3AF;",
+    "name": "Lead Scoring Agent",
+    "description": "Ranks and prioritizes leads to optimize conversion potential",
+    "category": "Sales",
+    "useCases": "Lead qualification \u2022 Priority ranking \u2022 Conversion optimization",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "contract-review",
+    "icon": "&#x1F4DC;",
+    "name": "Contract Review Agent",
+    "description": "Extracts key clauses and reviews legal documents",
+    "category": "Legal",
+    "useCases": "Contract analysis \u2022 Legal review \u2022 Clause extraction",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "predictive-maintenance",
+    "icon": "&#x2699;&#xFE0F;",
+    "name": "Predictive Maintenance",
+    "description": "Prevents equipment failures through proactive monitoring",
+    "category": "Operations",
+    "useCases": "Equipment monitoring \u2022 Failure prevention \u2022 Scheduling",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "supply-chain",
+    "icon": "&#x1F69A;",
+    "name": "Supply Chain Optimizer",
+    "description": "Emphasizes logistics and supply chain efficiency",
+    "category": "Operations",
+    "useCases": "Logistics optimization \u2022 Supply chain \u2022 Efficiency",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "ai-chatbot",
+    "icon": "&#x1F4AC;",
+    "name": "AI Customer Support",
+    "description": "Handles customer queries efficiently 24/7",
+    "category": "Customer",
+    "useCases": "Customer support \u2022 Query handling \u2022 24/7 assistance",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "sentiment-analysis",
+    "icon": "&#x1F604;",
+    "name": "Sentiment Analysis",
+    "description": "Monitors customer satisfaction levels in real time",
+    "category": "Customer",
+    "useCases": "Sentiment monitoring \u2022 Feedback \u2022 Satisfaction",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "content-generation",
+    "icon": "&#x270F;&#xFE0F;",
+    "name": "Content Generation",
+    "description": "Creates blogs, ads, and social media posts",
+    "category": "Marketing",
+    "useCases": "Content creation \u2022 Social media \u2022 Ad copywriting",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "regulatory-compliance",
+    "icon": "&#x1F4CB;",
+    "name": "Regulatory Compliance",
+    "description": "Ensures policy adherence and compliance tracking",
+    "category": "Legal",
+    "useCases": "Compliance monitoring \u2022 Policy \u2022 Regulatory tracking",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "meeting-notes",
+    "icon": "&#x1F4DD;",
+    "name": "AI Meeting Notes",
+    "description": "Automatically transcribes and summarizes meetings",
+    "category": "General",
+    "useCases": "Meeting transcription \u2022 Note taking \u2022 Action items",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  },
+  {
+    "id": "search-agent",
+    "icon": "&#x1F50D;",
+    "name": "AI-powered Search",
+    "description": "Finds relevant documents and knowledge quickly",
+    "category": "General",
+    "useCases": "Document search \u2022 Information retrieval \u2022 Knowledge",
+    "iframeUrl": "",
+    "downloadUrl": ""
+  }
+]
