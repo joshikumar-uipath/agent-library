@@ -28,6 +28,8 @@ export default defineConfig(({ mode }) => {
         input: {
           main:  resolve(__dirname, 'index.html'),
           admin: resolve(__dirname, 'admin.html'),
+          entry: resolve(__dirname, 'entry.html'),
+          arcade: resolve(__dirname, 'arcade.html'),
         }
       }
     },

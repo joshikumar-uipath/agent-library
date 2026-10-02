@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UiPath FUSION Dubai 2026</title>
+<style>
+  :root { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: #03100a; overflow: hidden; }
+  .shader-frame { position: fixed; inset: 0; }
+  .threeui-background { position: relative; width: 100%; height: 100%; overflow: hidden; isolation: isolate; }
+  .threeui-background > canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+  /* Real input: invisible, but focusable so keyboards, paste, autofill and screen readers work */
+  .sr-input { position: fixed; left: 0; bottom: 0; width: 1px; height: 1px; opacity: 0; border: 0; padding: 0; font-size: 16px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .fallback { position: fixed; inset: 0; display: none; place-content: center; padding: 24px; color: #8df0b4; font: 600 16px/1.5 ui-monospace, Menlo, Consolas, monospace; text-align: center; }
+</style>
+</head>
+<body>
+<main class="shader-frame">
+  <h1 class="sr-only">UiPath FUSION Dubai 2026</h1>
+  <div id="crt" class="threeui-background crt crt-terminal" aria-hidden="true"><canvas></canvas></div>
+  <label class="sr-only" for="visitor-name" id="visitor-label">Your name</label>
+  <input id="visitor-name" class="sr-input" type="text" autocomplete="name" autocapitalize="words" spellcheck="false" maxlength="24" enterkeyhint="next">
+  <div id="live" class="sr-only" aria-live="polite"></div>
+  <p class="fallback" id="fallback">This page needs WebGL to show the terminal. Try a current version of Chrome, Edge, Safari or Firefox.</p>
+</main>
+<script>
+try {
+/* =====================================================================
+   CONFIG: edit these for your deployment
+   ===================================================================== */
+const CONFIG = {
+  // Seconds on the redirect screen before the page opens. 0 = wait for Enter / tap.
+  redirectSeconds: 5,
+  // Extra query parameters added to every destination, e.g. { utm_source: "entry-terminal" }.
+  // The visitor's name is never added to the URL.
+  urlParams: {},
+  typeSpeed: 1.0,   // boot text speed multiplier
+  motion: 1.0,      // CRT roll / flicker amount (0 = still)
+  hue: 0, saturation: 1.0, brightness: 1.0,
+  // Each industry opens its section of the AI Solutions Library (index.html?industry=<library key>).
+  // "solutions" (up to 3) are listed on the redirect screen.
+  industries: [
+    { key: "1", slug: "banking", label: "Banking & financial services",
+      url: "index.html?industry=finance",
+      solutions: ["Lending automation", "Financial crime compliance"] },
+    { key: "2", slug: "insurance", label: "Insurance",
+      url: "index.html?industry=insurance", solutions: [] },
+    { key: "3", slug: "healthcare", label: "Healthcare",
+      url: "index.html?industry=healthcare",
+      solutions: ["Prior authorization", "Claim denial resolution", "Medical record summarization"] },
+    { key: "4", slug: "life-sciences", label: "Life sciences",
+      url: "index.html?industry=life-sciences", solutions: [] },
+    { key: "5", slug: "manufacturing", label: "Manufacturing",
+      url: "index.html?industry=manufacturing",
+      solutions: ["Commercial pricing", "Inventory management"] },
+    { key: "6", slug: "retail", label: "Retail & consumer goods",
+      url: "index.html?industry=retail",
+      solutions: ["Merchandising"] },
+    { key: "7", slug: "public-sector", label: "Public sector",
+      url: "index.html?industry=public-sector", solutions: [] },
+    { key: "8", slug: "telecom", label: "Telecommunications",
+      url: "index.html?industry=telecom", solutions: [] },
+    { key: "9", slug: "high-tech", label: "High tech",
+      url: "index.html?industry=high-tech", solutions: [] },
+    { key: "0", slug: "customer-experience", label: "Customer experience",
+      url: "index.html?industry=customer-experience", solutions: [] },
+  ],
+};
+
+/* =====================================================================
+   Terminal content
+   Colours from the authored CRT: p = primary, d = dim, a = amber status, h = highlight
+   ===================================================================== */
+const COLS = 48, ROWS = 19, NAME_MAX = 24, COMPANY_MAX = 32;
+const s = (t, c = "p") => ({ t, c });
+const dots = (n) => "·".repeat(Math.max(2, n));
+// "Label ········ STATUS" padded so every status ends on the same column
+const row = (label, status, labelColor = "p", statusColor = "a") =>
+  [s(label + " ", labelColor), s(dots(COLS - 4 - label.length - status.length) + " ", "d"), s(status, statusColor)];
+
+const BOOT = [
+  [s("UIPATH FUSION DUBAI"), s("             2 November 2026", "d")],
+  [s("MUSEUM OF THE FUTURE, DUBAI   S/N FSN-DXB-2611", "d")],
+  [],
+  row("Waking agents, robots and people", "OK"),
+  row("Connecting business orchestration", "ONLINE"),
+  row("Scaling AI from pilot to production", "GO"),
+  row("agt0  AGENTIC AUTOMATION", "READY", "d"),
+  row("orc0  MAESTRO ORCHESTRATION", "READY", "d"),
+  row("tst0  AI-POWERED TESTING", "READY", "d"),
+  row("eco0  PARTNER ECOSYSTEM", "READY", "d"),
+  row("Loading real-world success stories", "OK"),
+  row("Opening innovation up close", "OK"),
+  [],
+  [s("Welcome to FUSION. Visitor check-in "), s("required.", "h")],
+];
+
+/* =====================================================================
+   CRT composite: authored ThreeUI shader + terminal style, unchanged
+   ===================================================================== */
+const SHADERS = {"v":"attribute vec2 aPos;\nvoid main(){ gl_Position = vec4(aPos,0.0,1.0); }","f":"precision highp float;\nuniform sampler2D uTex;\nuniform vec2 uRes;\nuniform float uTime;\nuniform float uMotion;\nuniform vec2 uCurve;\nuniform float uScan;\nuniform float uScanDepth;\nuniform float uTriad;\nuniform float uGrille;\nuniform float uChroma;\nuniform float uBar;\nuniform float uFlicker;\nuniform float uGrain;\nuniform float uNoise;\nuniform float uVignette;\nuniform float uMono;\nuniform float uGain;\nuniform float uHalo;\nuniform vec3 uSheen;\nuniform vec3 uRoom;\n\nfloat hash(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }\n\nvec2 curve(vec2 uv){\n  uv = uv*2.0-1.0;\n  vec2 o = uv.yx*uv.yx;\n  uv += uv * o * uCurve;\n  uv = uv*0.5+0.5;\n  return uv;\n}\n\nvoid main(){\n  vec2 fuv = gl_FragCoord.xy / uRes;\n  vec2 uv = curve(fuv);\n  float t = uTime;\n\n  /* analogue transport faults: per-row jitter, a rolling dropout band, and the\n     head-switching scramble along the bottom edge of the raster */\n  float band = 0.0;\n  if (uNoise > 0.001){\n    float row = floor(uv.y * 190.0);\n    float gate = step(0.905, hash(vec2(row, floor(t*15.0))));\n    uv.x += (hash(vec2(row*1.7, floor(t*15.0)+7.0)) - 0.5) * 0.052 * gate * uNoise;\n    float pos = fract(uv.y * 0.8 - t * 0.17);\n    band = smoothstep(0.075, 0.0, pos);\n    uv.x += band * (hash(vec2(floor(uv.y*260.0), floor(t*26.0))) - 0.5) * 0.030 * uNoise;\n    float head = smoothstep(0.030, 0.0, uv.y);\n    uv.x += head * (hash(vec2(floor(uv.y*520.0), floor(t*22.0))) - 0.32) * 0.075 * uNoise;\n    band = max(band, head);\n  }\n\n  vec2 inb = step(vec2(0.0), uv) * step(uv, vec2(1.0));\n  float inside = inb.x*inb.y;\n  vec2 ed = min(uv, 1.0-uv);\n  inside *= smoothstep(0.0,0.020, min(ed.x,ed.y));\n\n  vec2 dir = uv-0.5;\n  float d2 = dot(dir,dir);\n  vec2 ao = dir * (0.0010 + 0.0075*d2) * uChroma;\n  vec3 col;\n  col.r = texture2D(uTex, uv + ao).r;\n  col.g = texture2D(uTex, uv).g;\n  col.b = texture2D(uTex, uv - ao).b;\n\n  /* phosphor halation: a wide cheap tap ring so bright glyphs bloom into the\n     glass instead of relying on the text canvas alone */\n  if (uHalo > 0.001){\n    float s = 0.0038;\n    vec3 wide = texture2D(uTex, uv + vec2( s, 0.0)).rgb\n              + texture2D(uTex, uv + vec2(-s, 0.0)).rgb\n              + texture2D(uTex, uv + vec2(0.0,  s)).rgb\n              + texture2D(uTex, uv + vec2(0.0, -s)).rgb\n              + texture2D(uTex, uv + vec2( s,  s)*0.72).rgb\n              + texture2D(uTex, uv + vec2(-s, -s)*0.72).rgb;\n    col += wide * (uHalo / 6.0);\n  }\n\n  float sl = sin(uv.y*3.14159265*uScan + t*4.0*uMotion);\n  col *= mix(1.0 - uScanDepth, 1.0, sl*sl);\n\n  float gx = gl_FragCoord.x * (6.2831853/max(uTriad, 1.0));\n  vec3 grille = (1.0-uGrille) + uGrille*cos(gx + vec3(0.0,2.094,4.188));\n  col *= mix(vec3(1.0), grille, step(0.001, uGrille));\n  col *= uGain;\n\n  float bar = fract(uv.y*0.5 - t*0.07*uMotion);\n  bar = smoothstep(0.0,0.05,bar)*smoothstep(0.18,0.05,bar);\n  col += bar*uBar*uMotion;\n\n  float sheen = smoothstep(0.55,0.0, distance(uv, vec2(0.50,0.15)));\n  col += sheen*0.030*uSheen;\n\n  float vig = smoothstep(0.98,0.30, length((uv-0.5)*vec2(1.05,1.0)));\n  col *= mix(1.0-uVignette, 1.0, vig);\n  col *= 1.0 - uFlicker*uMotion*sin(t*8.0);\n\n  if (uNoise > 0.001){\n    float st = hash(fuv*uRes*0.5 + vec2(floor(t*24.0), floor(t*24.0)*1.7));\n    col += (st-0.5)*0.135*uNoise;\n    col += band*0.085*uNoise;\n  }\n  col += (hash(fuv + fract(t*0.37)) - 0.5)*uGrain;\n\n  float luma = dot(col, vec3(0.2126,0.7152,0.0722));\n  col = mix(col, vec3(luma), uMono);\n\n  float spill = smoothstep(0.85,0.18, length(fuv-0.5))*0.05;\n  vec3 room = uRoom + uSheen*spill*0.42;\n  col = mix(room, col, inside);\n  col = max(col, uRoom*0.34);\n  gl_FragColor = vec4(col,1.0);\n}"};
+const STYLE = {
+  curve: [0.115, 0.165], scanDensity: 0.44, scanDepth: 0.30, triadCss: 3.2, grille: 0.34, chroma: 1,
+  bar: 0.045, flicker: 0.028, grain: 0.022, noise: 0, vignette: 0.58, mono: 0, gain: 1.34, halo: 0.10,
+  sheen: [0.55, 1.0, 0.78], room: [0.012, 0.03, 0.022], background: "#03100a",
+};
+const COLORS = { p: { fill: "#8df0b4", glow: "rgba(28,236,132,0.95)" }, d: { fill: "#4f9a76", glow: "rgba(28,236,132,0.45)" }, a: { fill: "#ffba5e", glow: "rgba(255,150,52,0.95)" }, h: { fill: "#eafff3", glow: "rgba(120,255,190,0.95)" } };
+const FONT = (px) => `600 ${px.toFixed(2)}px ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace`;
+const MAX_BUFFER_WIDTH = 1920, MIN_BUFFER_WIDTH = 640, MAX_BUFFER_PIXELS = 2_400_000;
+
+const host = document.getElementById("crt"), canvas = host.querySelector("canvas");
+const input = document.getElementById("visitor-name"), live = document.getElementById("live");
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+host.style.background = STYLE.background;
+host.style.filter = `hue-rotate(${CONFIG.hue}deg) saturate(${CONFIG.saturation}) brightness(${CONFIG.brightness})`;
+
+const gl = canvas.getContext("webgl", { antialias: false, alpha: false, depth: false, premultipliedAlpha: false });
+const text = document.createElement("canvas"), ctx = text.getContext("2d");
+function compile(type, src) { const sh = gl.createShader(type); gl.shaderSource(sh, src); gl.compileShader(sh); if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh)); return sh; }
+const program = gl.createProgram();
+gl.attachShader(program, compile(gl.VERTEX_SHADER, SHADERS.v)); gl.attachShader(program, compile(gl.FRAGMENT_SHADER, SHADERS.f));
+gl.linkProgram(program); gl.useProgram(program);
+gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+const aPos = gl.getAttribLocation(program, "aPos"); gl.enableVertexAttribArray(aPos); gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+const U = (n) => gl.getUniformLocation(program, n);
+const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+for (const [k, v] of [[gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE], [gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR]]) gl.texParameteri(gl.TEXTURE_2D, k, v);
+gl.uniform1i(U("uTex"), 0);
+gl.uniform2f(U("uCurve"), ...STYLE.curve); gl.uniform1f(U("uScanDepth"), STYLE.scanDepth); gl.uniform1f(U("uGrille"), STYLE.grille); gl.uniform1f(U("uChroma"), STYLE.chroma);
+gl.uniform1f(U("uBar"), STYLE.bar); gl.uniform1f(U("uFlicker"), STYLE.flicker); gl.uniform1f(U("uGrain"), STYLE.grain); gl.uniform1f(U("uNoise"), STYLE.noise);
+gl.uniform1f(U("uVignette"), STYLE.vignette); gl.uniform1f(U("uMono"), STYLE.mono); gl.uniform1f(U("uGain"), STYLE.gain); gl.uniform1f(U("uHalo"), STYLE.halo);
+gl.uniform3f(U("uSheen"), ...STYLE.sheen); gl.uniform3f(U("uRoom"), ...STYLE.room);
+const uRes = U("uRes"), uTime = U("uTime"), uMotion = U("uMotion"), uScan = U("uScan"), uTriad = U("uTriad");
+
+/* ---------- layout (same proportions as the authored terminal) ---------- */
+let W = 1, H = 1, cssW = 1, cssH = 1, fontSize = 14, lineH = 20, startY = 0, charW = 8, originX = 0;
+function layout() {
+  startY = H * 0.135; lineH = H * 0.74 / ROWS;
+  fontSize = Math.max(5, Math.min(lineH * 0.8, W * 0.88 / (COLS * 0.62)));
+  ctx.font = FONT(fontSize); charW = ctx.measureText("M").width || fontSize * 0.6;
+  originX = Math.floor((W - COLS * charW) / 2);
+}
+function resize() {
+  const b = host.getBoundingClientRect(); cssW = Math.max(1, b.width); cssH = Math.max(1, b.height);
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  let w = Math.max(MIN_BUFFER_WIDTH, Math.round(Math.min(cssW * dpr, MAX_BUFFER_WIDTH))), h = Math.max(1, Math.round(w * cssH / cssW));
+  if (w * h > MAX_BUFFER_PIXELS) { const f = Math.sqrt(MAX_BUFFER_PIXELS / (w * h)); w = Math.round(w * f); h = Math.round(h * f); }
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+  if (text.width !== w || text.height !== h) { text.width = W = w; text.height = H = h; layout(); dirty = true; }
+  gl.viewport(0, 0, w, h); gl.uniform2f(uRes, w, h);
+  gl.uniform1f(uScan, Math.max(120, Math.min(cssH * STYLE.scanDensity, 900)));
+  gl.uniform1f(uTriad, Math.max(2, STYLE.triadCss * w / cssW));
+}
+
+/* ---------- state machine ---------- */
+let step = "rain", typedLines = BOOT, reveal = 0, name = "", company = "", field = "name", error = "", selected = 0, dirty = true, finishedAt = 0;
+let countdown = 0, navigated = false, stalled = false;
+const coarse = matchMedia("(pointer: coarse)").matches;
+const lineLen = (l) => l.reduce((n, x) => n + x.t.length, 0);
+const totalOf = (lines) => lines.reduce((n, l) => n + lineLen(l), 0);
+const typingDone = () => reveal >= totalOf(typedLines);
+const clip = (str, n) => (str.length > n ? str.slice(0, n - 1) + "…" : str);
+
+function liveLines() {
+  if (step === "name") {
+    const out = [[s("Enter your name: "), s(name, "h")]];
+    if (field === "company") out.push([s("Company: "), s(company, "h")]);
+    out.push(error ? [s(error, "a")] : []);
+    out.push([s(field === "company" ? "Press Enter to continue. Esc: edit name." : "Press Enter to continue.", "d")]);
+    return { lines: out, caretLine: field === "company" ? 1 : 0 };
+  }
+  if (step === "industry") {
+    const out = CONFIG.industries.map((ind, i) => i === selected
+      ? [s("> ", "a"), s(`[${ind.key}] `, "h"), s(ind.label, "h")]
+      : [s("  "), s(`[${ind.key}] `, "d"), s(ind.label)]);
+    out.push([], [s(matchMedia("(pointer: coarse)").matches ? "Tap an industry to continue." : "Arrow keys or a number, then Enter. Esc: back.", "d")]);
+    return { lines: out, menuStart: typedLines.length };
+  }
+  if (step === "done") {
+    const status = navigated ? [s("Opening now", "h"), s(" ...", "d")]
+      : CONFIG.redirectSeconds > 0 ? [s("Opening in "), s(String(countdown), "a"), s(countdown === 1 ? " second" : " seconds")]
+      : [s("Ready.", "h")];
+    const hint = stalled ? (coarse ? "Didn't open? Tap the screen." : "Didn't open? Press Enter.")
+      : coarse ? "Tap to go now." : "Enter: go now   Esc: change industry";
+    return { lines: [status, [], [s(hint, "d")]] };
+  }
+  return { lines: [] };
+}
+
+function go(next) {
+  const back = (step === "done" && next === "industry");
+  step = next; reveal = reduceMotion || back ? Infinity : 0; dirty = true;
+  if (next === "name") {
+    typedLines = BOOT; reveal = Infinity; // coming back: no re-typing
+    setField("company");
+  } else if (next === "industry") {
+    const n = clip(name, NAME_MAX);
+    typedLines = [[s("Welcome to FUSION, "), s(n, "h"), s(".")], [], [s("Which industry would you like to explore?")], []];
+    input.blur();
+    announce(`Welcome to FUSION, ${name}. Which industry would you like to explore? ` +
+      CONFIG.industries.map((i) => `${i.key}, ${i.label}`).join(". ") + `. Selected: ${CONFIG.industries[selected].label}.`);
+  } else if (next === "done") {
+    const ind = CONFIG.industries[selected];
+    typedLines = [
+      [s("Profile confirmed.", "h")], [],
+      [s("  visitor   ", "d"), s(clip(name, NAME_MAX))],
+      [s("  company   ", "d"), s(clip(company, COMPANY_MAX))],
+      [s("  industry  ", "d"), s(ind.label)], [],
+      row("Matching UiPath solutions", "OK"),
+      ...(ind.solutions || []).slice(0, 3).map((x) => [s("  > ", "a"), s(clip(x, COLS - 4))]),
+      [],
+      [s("Redirecting you to", "d")],
+      [s(displayUrl(destination()), "h")], [],
+    ];
+    finishedAt = 0; navigated = false; stalled = false; countdown = CONFIG.redirectSeconds;
+    announce(`Profile confirmed. ${name}, ${company}, ${ind.label}. Redirecting to ${ind.label} solutions` +
+      (CONFIG.redirectSeconds > 0 ? ` in ${CONFIG.redirectSeconds} seconds. Press Enter to go now, or Escape to change industry.` : `. Press Enter to go.`));
+  }
+}
+
+function destination() {
+  const ind = CONFIG.industries[selected], url = new URL(ind.url, location.href);
+  for (const [k, v] of Object.entries(CONFIG.urlParams || {})) url.searchParams.set(k, v);
+  return url.toString();
+}
+function displayUrl(u) {
+  const url = new URL(u), full = url.host.replace(/^www\./, "") + url.pathname.replace(/\/$/, "") + url.search;
+  if (full.length <= COLS) return full;
+  const tail = url.pathname.replace(/\/$/, "").split("/").pop();
+  return clip(url.host.replace(/^www\./, "") + "/…/" + tail, COLS);
+}
+function complete() {
+  const ind = CONFIG.industries[selected];
+  const profile = { name, company, industry: ind.slug, industryLabel: ind.label, url: destination(), at: new Date().toISOString() };
+  try { sessionStorage.setItem("uipath-entry", JSON.stringify(profile)); } catch (e) {}
+  window.dispatchEvent(new CustomEvent("uipath:entry-complete", { detail: profile }));
+}
+function navigate(fromGesture) {
+  const url = destination(); navigated = true; dirty = true;
+  announce("Opening " + CONFIG.industries[selected].label + " solutions.");
+  try {
+    if (window.top !== window) window.top.location.href = url; // embedded: leave the frame
+    else window.location.href = url;
+  } catch (e) {
+    // Sandboxed frames can block top-level navigation; a click or key press may still open a tab.
+    if (fromGesture) window.open(url, "_blank", "noopener");
+  }
+  setTimeout(() => { if (!document.hidden) { stalled = true; navigated = false; dirty = true; } }, 2500);
+}
+
+/* ---------- intro: digital rain (loops until the visitor begins) ---------- */
+const RAIN_GLYPHS = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789Z:.=*+-<>";
+const randGlyph = () => RAIN_GLYPHS[(Math.random() * RAIN_GLYPHS.length) | 0];
+let rain = null;
+function rainGeometry() {
+  const size = Math.max(10, Math.min(H / 40, W / 34)), cellW = size * 0.72, cellH = size * 1.08;
+  return { size, cellW, cellH, cols: Math.ceil(W / cellW), rows: Math.ceil(H / cellH) + 1 };
+}
+function newDrop(rows, first) {
+  const len = 8 + ((Math.random() * 18) | 0);
+  const y = reduceMotion ? Math.random() * (rows + len) : first ? -Math.random() * rows * 0.35 : -Math.random() * 12;
+  return { y, speed: rows * (0.28 + Math.random() * 0.42), len, glyphs: Array.from({ length: len + 1 }, randGlyph) };
+}
+function updateRain(now, dt) {
+  const g = rainGeometry();
+  if (!rain || rain.cols !== g.cols) rain = { cols: g.cols, drops: Array.from({ length: g.cols }, () => newDrop(g.rows, true)) };
+  if (reduceMotion) return; // still field, no falling
+  for (const d of rain.drops) {
+    d.y += d.speed * dt;
+    if (Math.random() < 0.08) d.glyphs[(Math.random() * d.glyphs.length) | 0] = randGlyph();
+    if (d.y - d.len > g.rows) Object.assign(d, newDrop(g.rows, false));
+  }
+}
+function drawRain(blink) {
+  const g = rainGeometry();
+  ctx.font = FONT(g.size); ctx.textAlign = "center";
+  if (rain) rain.drops.forEach((d, i) => {
+    const x = (i + 0.5) * g.cellW, head = Math.floor(d.y);
+    for (let k = 0; k <= d.len; k++) {
+      const r = head - k; if (r < 0 || r > g.rows) continue;
+      const y = r * g.cellH, ch = d.glyphs[k % d.glyphs.length];
+      if (k === 0) {
+        ctx.globalAlpha = 1; paint("h", true); ctx.fillText(ch, x, y); paint("h", false); ctx.fillText(ch, x, y);
+      } else {
+        const fade = 1 - k / (d.len + 1);
+        ctx.globalAlpha = Math.max(0.08, fade); ctx.shadowBlur = 0; ctx.shadowColor = "transparent";
+        ctx.fillStyle = k < 3 || fade > 0.45 ? COLORS.p.fill : COLORS.d.fill;
+        ctx.fillText(ch, x, y);
+      }
+    }
+  });
+  ctx.globalAlpha = 1;
+  drawTitleCard(blink);
+  ctx.textAlign = "left"; ctx.font = FONT(fontSize);
+}
+function drawTitleCard(blink) {
+  // Event card over the rain
+  const big = Math.max(18, Math.min(W / 11, H / 7.5)), portrait = H > W;
+  const mid = portrait ? big * 0.5 : big * 0.42, small = portrait ? Math.min(big * 0.44, W * 0.036) : big * 0.3;
+  const pad = big * 0.55, cw = Math.min(W * 0.86, big * 9.4), ch = big * 1.05 + mid * 1.5 + small * 1.7 + small * 3 + pad * 2;
+  const cx = W / 2, top = H / 2 - ch / 2;
+  ctx.shadowBlur = 0; ctx.shadowColor = "transparent";
+  ctx.fillStyle = "rgba(3,16,10,0.86)"; ctx.fillRect(cx - cw / 2, top, cw, ch);
+  ctx.strokeStyle = "rgba(141,240,180,0.55)"; ctx.lineWidth = Math.max(1, big * 0.03);
+  ctx.strokeRect(cx - cw / 2, top, cw, ch);
+  ctx.textAlign = "center";
+  let y = top + pad;
+  const line = (t, c, px) => { ctx.font = FONT(px); paint(c, true); ctx.fillText(t, cx, y); paint(c, false); ctx.fillText(t, cx, y); };
+  line("UiPath FUSION", "h", big);                 y += big * 1.05;
+  line("DUBAI 2026", "a", mid);                    y += mid * 1.5;
+  line("2 November · Museum of the Future", "d", small); y += small * 3;
+  if (blink || reduceMotion) line(coarse ? "[ Tap to begin ]" : "[ Click or press Enter to begin ]", "p", small);
+}
+function endRain() {
+  if (step !== "rain") return;
+  rain = null; step = "name"; typedLines = BOOT; reveal = reduceMotion ? Infinity : 0; dirty = true;
+  focusInput(); announce("Enter your name, then press Enter.");
+}
+
+/* ---------- drawing (two-pass glyphs, as authored) ---------- */
+function paint(c, glow) { const col = COLORS[c]; ctx.fillStyle = col.fill; ctx.shadowColor = glow ? col.glow : "transparent"; ctx.shadowBlur = glow ? fontSize * 0.38 : 0; }
+function drawLine(line, y, limit = Infinity) {
+  let x = originX, used = 0;
+  for (const seg of line) {
+    if (used >= limit) break;
+    const t = seg.t.slice(0, Math.max(0, limit - used));
+    if (t) { paint(seg.c, true); ctx.fillText(t, x, y); paint(seg.c, false); ctx.fillText(t, x, y); x += charW * t.length; }
+    used += seg.t.length;
+  }
+  return x;
+}
+function drawCursor(x, y) {
+  const w = Math.max(charW * 0.92, 4), top = y + fontSize * 0.06, h = fontSize * 0.96;
+  ctx.shadowColor = COLORS.p.glow; ctx.shadowBlur = fontSize * 0.42; ctx.fillStyle = "#bdf8d2"; ctx.fillRect(x, top, w, h);
+  ctx.shadowBlur = 0; ctx.fillRect(x, top, w, h);
+}
+function drawScreen(blink) {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = "#03100a"; ctx.fillRect(0, 0, W, H);
+  ctx.textAlign = "left"; ctx.textBaseline = "top"; ctx.font = FONT(fontSize);
+  if (step === "rain") return drawRain(blink);
+  let y = startY, left = reveal, caret = null;
+  for (const line of typedLines) {
+    const len = lineLen(line), shown = Math.min(left, len);
+    const x = drawLine(line, y, shown); left -= shown;
+    caret = [x, y]; y += lineH;
+    if (left <= 0 && !typingDone()) break;
+  }
+  if (typingDone()) {
+    const extra = liveLines();
+    extra.lines.forEach((line, i) => { const x = drawLine(line, y); if (i === extra.caretLine) caret = [x, y]; y += lineH; });
+    if (step !== "name") caret = null;
+  }
+  if (blink && caret) drawCursor(caret[0], caret[1]);
+}
+
+/* ---------- pointer → text row, through the shader's own curvature ---------- */
+function rowAt(clientX, clientY) {
+  const b = host.getBoundingClientRect();
+  let u = (clientX - b.left) / b.width * 2 - 1, v = (1 - (clientY - b.top) / b.height) * 2 - 1;
+  const ou = v * v, ov = u * u; // uv.yx * uv.yx
+  u += u * ou * STYLE.curve[0]; v += v * ov * STYLE.curve[1];
+  const ty = (1 - (v * 0.5 + 0.5)) * H; // texture is uploaded flipped
+  return Math.floor((ty - startY) / lineH);
+}
+function menuIndexAt(e) {
+  if (step !== "industry" || !typingDone()) return -1;
+  const i = rowAt(e.clientX, e.clientY) - typedLines.length;
+  return i >= 0 && i < CONFIG.industries.length ? i : -1;
+}
+
+/* ---------- input ---------- */
+function announce(msg) { live.textContent = msg; }
+function setField(f) {
+  field = f; error = ""; dirty = true;
+  const isName = f === "name";
+  input.value = isName ? name : company;
+  input.maxLength = isName ? NAME_MAX : COMPANY_MAX;
+  input.autocomplete = isName ? "name" : "organization";
+  document.getElementById("visitor-label").textContent = isName ? "Your name" : "Your company";
+  focusInput();
+  announce(isName ? "Enter your name, then press Enter." : "Enter your company, then press Enter. Escape to edit your name.");
+}
+function focusInput() { if (step === "name") input.focus({ preventScroll: true }); }
+function select(i) { if (i !== selected) { selected = i; dirty = true; announce(CONFIG.industries[i].label); } }
+
+input.addEventListener("input", () => {
+  if (step === "rain") { input.value = ""; return; }
+  const max = field === "name" ? NAME_MAX : COMPANY_MAX;
+  const v = input.value.replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trimStart().slice(0, max);
+  if (input.value !== v) input.value = v;
+  if (field === "name") name = v; else company = v;
+  if (error && v) error = "";
+  dirty = true;
+});
+window.addEventListener("keydown", (e) => {
+  if (step === "rain") { if (e.key !== "Tab" && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); endRain(); } return; }
+  if (step === "name") {
+    if (e.key === "Escape" && field === "company" && typingDone()) { e.preventDefault(); setField("name"); return; }
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    if (!typingDone()) { reveal = Infinity; dirty = true; return; } // Enter skips the boot
+    if (field === "name") {
+      name = name.trim();
+      if (!name) { error = "A name is needed to continue."; announce(error); dirty = true; return; }
+      setField("company"); return;
+    }
+    company = company.trim();
+    if (!company) { error = "A company name is needed to continue."; announce(error); dirty = true; return; }
+    go("industry");
+  } else if (step === "industry") {
+    if (!typingDone()) { if (e.key === "Enter") { reveal = Infinity; dirty = true; } return; }
+    const n = CONFIG.industries.length, digit = CONFIG.industries.findIndex((i) => i.key === e.key);
+    if (e.key === "ArrowDown") { e.preventDefault(); select((selected + 1) % n); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); select((selected - 1 + n) % n); }
+    else if (digit >= 0) select(digit);
+    else if (e.key === "Enter") { e.preventDefault(); go("done"); }
+    else if (e.key === "Escape") { go("name"); }
+  } else if (step === "done") {
+    if (e.key === "Escape") go("industry");
+    else if (e.key === "Enter") { e.preventDefault(); if (!typingDone()) { reveal = Infinity; dirty = true; } else navigate(true); }
+  }
+});
+host.addEventListener("pointermove", (e) => { const i = menuIndexAt(e); host.style.cursor = i >= 0 ? "pointer" : ""; if (i >= 0 && e.pointerType === "mouse") select(i); });
+host.addEventListener("click", (e) => {
+  if (step === "rain") { endRain(); return; }
+  if (step === "name") return focusInput();
+  if (!typingDone()) { reveal = Infinity; dirty = true; return; }
+  if (step === "done") return navigate(true);
+  const i = menuIndexAt(e);
+  if (i >= 0) { select(i); go("done"); }
+});
+
+/* ---------- loop ---------- */
+const startedAt = performance.now(); let last = startedAt, lastDraw = 0, lastBlink = -1, frame = 0, visible = true;
+const CHARS_PER_SEC = 264 * CONFIG.typeSpeed; // authored 4.4 chars/frame at 60 fps, made frame-rate independent
+function tick(now) {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  if (step === "rain") { updateRain(now, dt); dirty = !reduceMotion || dirty; }
+  else if (!typingDone()) { reveal += dt * CHARS_PER_SEC; dirty = true; if (typingDone()) announceAfterTyping(); }
+  if (step === "done" && typingDone()) {
+    if (!finishedAt) { finishedAt = now; complete(); dirty = true; }
+    if (CONFIG.redirectSeconds > 0 && !navigated && !stalled) {
+      const left = Math.max(0, Math.ceil(CONFIG.redirectSeconds - (now - finishedAt) / 1000));
+      if (left !== countdown) { countdown = left; dirty = true; }
+      if (left === 0) navigate(false);
+    }
+  }
+  const blink = Math.floor((now - startedAt) / 420) % 2 === 0 ? 1 : 0;
+  if ((dirty && now - lastDraw > 42) || blink !== lastBlink) {
+    drawScreen(blink); lastDraw = now; lastBlink = blink; dirty = false;
+    gl.bindTexture(gl.TEXTURE_2D, tex); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, text); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+  }
+  gl.uniform1f(uTime, (now - startedAt) * 0.001); gl.uniform1f(uMotion, reduceMotion ? 0 : CONFIG.motion);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  frame = visible && !document.hidden ? requestAnimationFrame(tick) : 0;
+}
+function announceAfterTyping() { if (step === "name") { announce("Enter your name, then press Enter."); focusInput(); } }
+new ResizeObserver(() => { resize(); dirty = true; }).observe(host);
+new IntersectionObserver(([e]) => { visible = e ? e.isIntersecting : true; if (visible && !frame) { last = performance.now(); frame = requestAnimationFrame(tick); } }).observe(host);
+document.addEventListener("visibilitychange", () => { if (!document.hidden && !frame) { last = performance.now(); frame = requestAnimationFrame(tick); } });
+if (reduceMotion) reveal = Infinity;
+announce("UiPath FUSION Dubai, 2 November 2026, Museum of the Future. Press Enter or tap to begin.");
+resize(); focusInput(); frame = requestAnimationFrame(tick);
+
+} catch (err) {
+  console.error(err);
+  document.getElementById("fallback").style.display = "grid";
+}
+</script>
+</body>
+</html>

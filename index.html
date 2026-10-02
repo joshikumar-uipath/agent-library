@@ -3453,10 +3453,13 @@
             'customer-service':'Customer Service','analytics':'Analytics & Intelligence',
             'hr':'Human Resources','finance-ops':'Finance & Accounting'
         };
+        // Fall back to the card's own title for categories not listed above
+        const card = document.querySelector(`.subcategory-card[onclick="showVideoLibrary('${subcategory}')"] .subcategory-title`);
+        const title = titles[subcategory] || (card ? card.textContent.trim() : subcategory);
         const catPath = currentCategory === 'industry' ? 'Industry Solutions' : 'Business Functions';
-        updateBreadcrumb([{label:'Home'}, {label:catPath}, {label:titles[subcategory], active:true}]);
+        updateBreadcrumb([{label:'Home'}, {label:catPath}, {label:title, active:true}]);
 
-        document.getElementById('libraryTitle').textContent = titles[subcategory];
+        document.getElementById('libraryTitle').textContent = title;
         document.getElementById('librarySubtitle').textContent = 'Loading...';
 
         await populateVideoGrid(subcategory);
@@ -3464,7 +3467,9 @@
 
     async function populateVideoGrid(subcategory) {
         try {
-            const videos = await fetch(`${API}/videos/${subcategory}`).then(r => r.json());
+            const res = await fetch(`${API}/videos/${subcategory}`);
+            const videos = res.ok ? await res.json() : [];
+            if (!Array.isArray(videos)) throw new Error('Unexpected response');
             videoDatabase[subcategory] = videos; // cache locally for filters
             filteredVideos = videos;
             document.getElementById('librarySubtitle').textContent =
@@ -3798,6 +3803,14 @@
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') { closeVideoPlayer(); closeShareModal(); }
     });
+
+    // ── Deep link from the entry pages: /?industry=<slug> ──
+    (function openFromQuery() {
+        const slug = new URLSearchParams(location.search).get('industry');
+        if (!slug || !document.querySelector(`#industryGrid [onclick="showVideoLibrary('${CSS.escape(slug)}')"]`)) return;
+        showSubcategories('industry');
+        showVideoLibrary(slug);
+    })();
 </script>
 </body>
 </html>
